@@ -16,3 +16,18 @@ export const sx = {
     }, // Focused border color
   },
 };
+
+export const sx2 = (mode: string) => ({
+  "& .MuiInputBase-input": {
+    color: `${mode === "dark" ? "white" : "black"}`,
+  },
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": { borderColor: "lightblue" }, // Default outline color
+    "&:hover fieldset": {
+      borderColor: "rgb(15, 211, 252)",
+    }, // Hover border color
+    "&.Mui-focused fieldset": {
+      borderColor: "rgb(14, 165, 233)",
+    }, // Focused border color
+  },
+});

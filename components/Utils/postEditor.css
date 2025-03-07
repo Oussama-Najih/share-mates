@@ -1,0 +1,18 @@
+.tiptap p.is-editor-empty:first-child::before {
+  color: theme("colors.muted.foreground");
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.tiptap {
+  white-space: pre-wrap; /* Ensures long text wraps */
+  word-break: break-word; /* Breaks long words */
+  overflow-wrap: break-word; /* Alternative for word wrapping */
+  max-width: 100%; /* Prevents overflow */
+}
+
+.tiptap.ProseMirror {
+  outline: none;
+}

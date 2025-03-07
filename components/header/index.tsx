@@ -1,11 +1,16 @@
-import { auth, signOut } from "@/auth";
-import "animate.css";
-import { SheetDemo } from "../sideBars/MainSideBar";
+import { auth } from "@/auth";
+import MainSideBar from "../sideBars/MainSideBar";
 import UserButton from "../user/UserButton";
-import { User } from "@prisma/client";
-import { UserInfo } from "@/index/types";
+import ModeToggle from "./ModeToggle";
+import SubjectsDrawer from "./SubjectsDrawer";
+import Search from "./Search";
+import { filterType } from "@/index/helpers";
 
-export default async function index() {
+export default async function index({
+  isSubjectsPage,
+}: {
+  isSubjectsPage: boolean;
+}) {
   const session = await auth();
 
   if (!session) {
@@ -15,16 +20,23 @@ export default async function index() {
   const user = session.user;
 
   return (
-    <header className="flex justify-between items-center px-12 py-8  h-14 fixed w-full top-0  shadow-md">
-      <div className="flex items-center space-x-4">
-        <SheetDemo />
+    <header className="flex mb-5 justify-between border-b border-border items-center px-8 py-8  h-14 relative w-full top-0  shadow-md">
+      <div className="flex items-center space-x-6 md:space-x-12">
+        <MainSideBar />
         <h1 className="text-2xl text-foreground font-poppins font-bold">
           Flow
         </h1>
       </div>
-      <UserButton user={user as UserInfo} />
-
-      {/* {children} */}
+      {isSubjectsPage && (
+        <div className="flex justify-center gap-4 items-center">
+          <SubjectsDrawer />
+          <Search />
+        </div>
+      )}
+      <div className="flex items-center space-x-6 md:space-x-12">
+        <ModeToggle />
+        <UserButton user={user} />
+      </div>
     </header>
   );
 }

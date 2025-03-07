@@ -2,7 +2,7 @@
 
 import { FormProvider, useForm } from "react-hook-form";
 import { TextField } from "@mui/material";
-import { signInFormType } from "@/index/types";
+import { signInFormType } from "@/index/validationTypes/types";
 import { useState, useTransition } from "react";
 import PasswordInput from "@/components/form/PasswordInput";
 import { signInWithCredentials } from "@/lib/actions/user.actions";
@@ -10,10 +10,12 @@ import { sx } from "@/CSS_Configs/mui";
 import LoadingButton from "@/components/form/LoadingButton";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInFormSchema } from "@/lib/validators";
+import { signInDefaultValues } from "@/lib/constants";
 
 export default function SignInForm() {
   const form = useForm<signInFormType>({
     resolver: zodResolver(signInFormSchema),
+    defaultValues: signInDefaultValues,
   });
   const {
     register,
@@ -34,10 +36,10 @@ export default function SignInForm() {
   };
 
   return (
-    <div className="h-[100vh] flex  items-center justify-center bg-[url('/knowledge.jpg')] bg-center bg-cover">
+    <div className="h-[100vh] flex  items-center justify-center bg-[url('/images/knowledge.jpg')] bg-center bg-cover">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-8 backdrop-blur-sm w-4/6 max-w-[400px] mx-auto flex flex-col border-[2px] bg-transparent p-6 rounded-lg shadow-md"
+        className="space-y-8 backdrop-blur-sm w-4/6 max-w-[400px] mx-auto flex flex-col border-[1px] bg-transparent p-6 rounded-lg shadow-md"
       >
         <h1 className="text-center font-poppins font-semibold text-[oklch(var(--border-focus))]">
           Welcome to Flow

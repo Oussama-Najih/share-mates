@@ -2,7 +2,7 @@
 
 import { signIn, signOut } from "@/auth";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
-import { signInFormType } from "@/index/types";
+import { signInFormType } from "@/index/validationTypes/types";
 
 /// Sign in the user with credentials
 export async function signInWithCredentials(formData: signInFormType) {

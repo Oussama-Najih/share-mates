@@ -9,14 +9,94 @@ datasource db {
 }
 
 model User {
-  id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name     String
-  image    String?
-  password String
-  role     Role    @default(USER)
+  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String
+  image         String?
+  password      String
+  role          Role           @default(USER)
+  posts         Post[]
+  announcements Announcement[]
+  createdAt     DateTime       @default(now())
+  Comment       Comment[]
 }
 
 enum Role {
   USER
   ADMIN
+}
+
+model Announcement {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title     String
+  image     String
+  createdAt DateTime @default(now())
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String   @db.Uuid
+}
+
+model Post {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title      String
+  subject    Subject
+  content    String?
+  category   Categorie
+  createdAt  DateTime  @default(now())
+  author     User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId   String    @db.Uuid
+  attachment Media[] // Removed the `@relation` field-specific arguments
+  correction Boolean   @default(false)
+  Comment    Comment[]
+}
+
+model Comment {
+  id        String    @id @default(uuid())
+  message   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
+  parent    Comment?  @relation("ParentChild", fields: [parentId], references: [id], onDelete: Cascade)
+  children  Comment[] @relation("ParentChild")
+  parentId  String?
+}
+
+model Media {
+  id        String    @id @default(cuid())
+  postId    String?   @unique @db.Uuid
+  post      Post?     @relation(fields: [postId], references: [id], onDelete: SetNull)
+  type      MediaType
+  url       String
+  createdAt DateTime  @default(now())
+}
+
+enum MediaType {
+  IMAGE
+  PDF
+}
+
+enum Subject {
+  ANGLAIS
+  COMPTABILITE_GENERALE
+  BASES_DE_DONNEES
+  ELECTRONIQUE_ANALOGIQUE_2
+  TEC_2
+  ANALYSE_4
+  PROGRAMMATION_WEB
+  INFORMATIQUE_INDUSTRIELLE
+  STRUCTURE_DONNEES_2
+  STATISTIQUE
+  SYSTEMES_EXPLOITATION_2
+  TP_ELECTRONIQUE_ANALOGIQUE_2
+  TP_STRUCTURE_DONNEES_2
+  TP_INFORMATIQUE_INDUSTRIELLE
+}
+
+enum Categorie {
+  PHOTOS
+  EXAMENS
+  CONTROLES
+  TDS
+  TPS
 }

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+const requiredString = z.string().trim().min(1, "Required");
+
 // Schema for signing users in
 export const signInFormSchema = z.object({
   name: z.string().regex(/^[A-Za-z]+ [A-Za-z]+$/, {
@@ -24,3 +26,12 @@ export const updatePasswordSchema = z
   .regex(/[\W_]/, {
     message: "Password must contain at least one special character.",
   });
+
+export const createPostSchema = z.object({
+  title: z
+    .string()
+    .min(1, { message: "Title must be atleast 3 characters long" })
+    .max(15, { message: "Title must be most 15 characters long" }),
+  content: z.string().optional(),
+  mediaId: z.string(),
+});

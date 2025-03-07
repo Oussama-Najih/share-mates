@@ -1,0 +1,95 @@
+import { useUploadThing } from "@/lib/uploadthing";
+import { useState } from "react";
+import toast from "react-hot-toast";
+
+export interface Attachment {
+  file: File; //We get the file immediately
+  mediaId?: string; //Optional because we only get it after the upload is finished
+  isUploading: boolean;
+}
+
+export default function useMediaUpload() {
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
+
+  const [uploadProgress, setUploadProgress] = useState<number>();
+
+  const { startUpload, isUploading } = useUploadThing("attachment", {
+    //When we get a mediaId back, we can identify the corresponding file
+    onBeforeUploadBegin(files) {
+      console.log("before_uplo");
+      console.log({ files });
+      const renamedFiles = files.map((file) => {
+        const extension = file.name.split(".").pop();
+        return new File(
+          [file],
+          `attachment_${crypto.randomUUID()}.${extension}`,
+          {
+            type: file.type,
+          }
+        );
+      });
+
+      setAttachments((prev) => [
+        ...prev,
+        ...renamedFiles.map((file) => ({ file, isUploading: true })),
+      ]);
+      console.log({ renamedFiles });
+      return renamedFiles;
+      //The return renamedFiles; inside onBeforeUploadBegin(files) is received by the useUploadThing hook.
+      // Specifically, useUploadThing internally uses this return value as the new list of files to upload. Instead of uploading the original files array, it uploads renamedFiles (which contains the same file data but with new names).
+    },
+    onUploadProgress: setUploadProgress,
+    // The `res` parameter in `onClientUploadComplete(res)` comes from the `startUpload` function provided by `useUploadThing`.
+    onClientUploadComplete(res) {
+      console.log("complete");
+      setAttachments((prev) =>
+        prev.map((a) => {
+          const uploadResult = res.find((r) => r.name === a.file.name);
+
+          if (!uploadResult) return a;
+          //return to frontend
+          return {
+            ...a,
+            mediaId: uploadResult.serverData.mediaId,
+            isUploading: false,
+          };
+        })
+      );
+    },
+    onUploadError(e) {
+      setAttachments((prev) => prev.filter((a) => !a.isUploading));
+      toast.error(e.message);
+    },
+  });
+
+  function handleStartUpload(files: File[]) {
+    if (isUploading) {
+      toast.error("Please wait for the current upload to finish.");
+    }
+
+    if (attachments.length && files.length > 1) {
+      toast.error("You can only upload 1 attachments per post.");
+      return;
+    }
+
+    startUpload(files);
+  }
+
+  function removeAttachment(fileName: string) {
+    setAttachments((prev) => prev.filter((a) => a.file.name !== fileName));
+  }
+
+  function reset() {
+    setAttachments([]);
+    setUploadProgress(undefined);
+  }
+
+  return {
+    startUpload: handleStartUpload,
+    attachments,
+    isUploading,
+    uploadProgress,
+    removeAttachment,
+    reset,
+  };
+}

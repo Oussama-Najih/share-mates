@@ -1,10 +1,13 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import type { NextAuthConfig } from "next-auth";
 import { compare } from "bcrypt-ts-edge";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "./db/prisma";
-import NextAuth from "next-auth";
 import authConfig from "./auth.config";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import type { Adapter } from "next-auth/adapters"; // Import the Adapter type
+import NextAuth from "next-auth";
+
+const prismaAdapter = PrismaAdapter(prisma) as Adapter; // Explicitly cast
 
 export const config = {
   pages: {
@@ -15,7 +18,7 @@ export const config = {
     strategy: "jwt",
     maxAge: 7 * 24 * 60 * 60,
   },
-  adapter: PrismaAdapter(prisma),
+  adapter: prismaAdapter, // Use the casted adapter
   providers: [
     CredentialsProvider({
       credentials: {
@@ -50,35 +53,29 @@ export const config = {
             };
           }
         }
-        // If user does not exist or password does not match return null
         return null;
       },
     }),
   ],
   callbacks: {
     ...authConfig,
-    async session({ session, token }: any) {
-      // Set the user ID from the token
+    async session({ session, token }) {
       session.user.id = token.sub;
       session.user.role = token.role;
       session.user.name = token.name;
       session.user.image = token.image;
-
       return session;
     },
-    async jwt({ token, user, trigger, session }: any) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.role = user.role;
         token.name = user.name;
         token.image = user.image;
       }
-
-      // Handle session updates
       if (session?.user.name && trigger === "update") {
         token.name = session.user.name;
       }
-
       return token;
     },
   },

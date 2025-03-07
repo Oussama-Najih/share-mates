@@ -6,7 +6,11 @@ async function main() {
 
   try {
     // Seed new product data
-    await prisma.user.createMany({ data: sampleData.users });
+    await prisma.user.deleteMany();
+
+    await prisma.user.createMany({
+      data: sampleData.users,
+    });
 
     console.log("✅ Data seeded successfully");
   } catch (error) {

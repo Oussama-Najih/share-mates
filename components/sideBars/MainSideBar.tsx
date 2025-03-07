@@ -3,27 +3,27 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { lowerCaseFirstLetter } from "@/lib/utils";
 import { Menu } from "lucide-react";
 import Link from "next/link";
 
 const sideBarOptions = [
-  "Cours",
-  "Controles",
-  "Examens",
-  "TDs",
-  "TPs",
+  "Matieres",
+  "Notifications",
+  // "Controles",
+  // "Examens",
+  // "TDs",
+  // "TPs",
   "Memoires",
 ];
 
-export function SheetDemo() {
+export default function MainSideBar() {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -35,7 +35,7 @@ export function SheetDemo() {
         <SheetHeader>
           <SheetTitle className="font-bold">Menu</SheetTitle>
         </SheetHeader>
-        <div className="mt-8 font-roboto flex flex-col space-y-6">
+        <div className="mt-8 font-roboto flex flex-col space-y-8">
           {sideBarOptions.map((option) => (
             <Button
               key={option}
@@ -43,7 +43,10 @@ export function SheetDemo() {
               asChild
               className="bg-primary py-3 rounded-md flex justify-center items-center "
             >
-              <Link href={`/${option}`} className="text-primary-foreground">
+              <Link
+                href={`/${lowerCaseFirstLetter(option)}`}
+                className="text-primary-foreground"
+              >
                 {option}
               </Link>
             </Button>
