@@ -1,6 +1,6 @@
 import NotFound from "@/components/error/NotFound";
 import { prisma } from "@/db/prisma";
-import { getServerUser } from "@/lib/hooks";
+import { getServerUser } from "@/lib/serverFuncs";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";

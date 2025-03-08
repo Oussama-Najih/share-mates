@@ -74,6 +74,8 @@ export function useSubmitPostMutation() {
           return queryFilter.predicate(query) && !query.state.data;
         },
       });
+
+      toast.success("Post Created");
     },
     onError() {
       toast.error("Failed to post. Please try again.");

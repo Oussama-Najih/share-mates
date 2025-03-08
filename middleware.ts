@@ -12,7 +12,8 @@ export default auth((req) => {
   // Allow API routes like /api/auth and /api/uploadthing to bypass auth
   if (
     nextUrl.pathname.startsWith("/api/auth") ||
-    nextUrl.pathname.startsWith("/api/uploadthing")
+    nextUrl.pathname.startsWith("/api/uploadthing") ||
+    nextUrl.pathname.startsWith("/api/comments")
   ) {
     return NextResponse.next();
   }
@@ -32,3 +33,7 @@ export default auth((req) => {
 export const config = {
   matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 };
+
+// export const config = {
+//   matcher: ["/((?!.+\\.[\\w]+$|_next|api).*)", "/", "/(trpc)(.*)"],
+// };

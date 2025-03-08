@@ -5,7 +5,6 @@ export function getUserDataSelect(loggedInUserId: string) {
     id: true,
     name: true,
     image: true,
-    bio: true,
     createdAt: true,
     _count: {
       select: {
@@ -25,8 +24,22 @@ export function getPostDataInclude(loggedInUserId: string) {
       select: getUserDataSelect(loggedInUserId), // ✅ Fix here
     },
     attachment: true,
+    comments: true,
   } satisfies Prisma.PostInclude;
 }
+
+export function getCommentDataInclude(loggedInUserId: string) {
+  return {
+    user: {
+      select: getUserDataSelect(loggedInUserId),
+    },
+    children: true,
+  } satisfies Prisma.CommentInclude;
+}
+
+export type CommentData = Prisma.CommentGetPayload<{
+  include: ReturnType<typeof getCommentDataInclude>;
+}>;
 
 export type PostData = Prisma.PostGetPayload<{
   include: ReturnType<typeof getPostDataInclude>;
@@ -34,5 +47,10 @@ export type PostData = Prisma.PostGetPayload<{
 
 export interface PostsPage {
   posts: PostData[];
+  nextCursor: string | null;
+}
+
+export interface CommentsPage {
+  comments: CommentData[];
   nextCursor: string | null;
 }

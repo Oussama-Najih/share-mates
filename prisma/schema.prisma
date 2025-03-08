@@ -17,7 +17,7 @@ model User {
   posts         Post[]
   announcements Announcement[]
   createdAt     DateTime       @default(now())
-  Comment       Comment[]
+  comments      Comment[]
 }
 
 enum Role {
@@ -45,25 +45,26 @@ model Post {
   authorId   String    @db.Uuid
   attachment Media[] // Removed the `@relation` field-specific arguments
   correction Boolean   @default(false)
-  Comment    Comment[]
+  comments   Comment[]
 }
 
 model Comment {
-  id        String    @id @default(uuid())
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
   message   String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
+  userId    String    @db.Uuid
   post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId    String
+  postId    String    @db.Uuid
   parent    Comment?  @relation("ParentChild", fields: [parentId], references: [id], onDelete: Cascade)
   children  Comment[] @relation("ParentChild")
-  parentId  String?
+  parentId  String?   @db.Uuid
 }
 
 model Media {
-  id        String    @id @default(cuid())
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   postId    String?   @unique @db.Uuid
   post      Post?     @relation(fields: [postId], references: [id], onDelete: SetNull)
   type      MediaType

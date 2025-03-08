@@ -1,12 +1,13 @@
-import { auth } from "@/auth";
+import kyInstance from "@/lib/ky";
+import { useQuery } from "@tanstack/react-query";
 
-export async function getServerUser() {
-  const session = await auth();
+export default function useCommentsCount(postId: string, initialState: number) {
+  const query = useQuery({
+    queryKey: ["commentsCount", postId],
+    queryFn: () =>
+      kyInstance.get(`/api/commentsCount/${postId}`).json<number>(),
+    initialData: initialState,
+  });
 
-  if (session) {
-    const { user } = session;
-    return user;
-  }
-
-  return null;
+  return query;
 }

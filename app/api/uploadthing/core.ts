@@ -1,5 +1,5 @@
 import { prisma } from "@/db/prisma";
-import { getServerUser } from "@/lib/hooks";
+import { getServerUser } from "@/lib/serverFuncs";
 import { MediaType } from "@prisma/client";
 import { createUploadthing, FileRouter } from "uploadthing/next";
 import { UploadThingError, UTApi } from "uploadthing/server";

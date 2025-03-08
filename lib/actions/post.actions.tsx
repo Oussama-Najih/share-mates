@@ -3,7 +3,7 @@
 import { createPostSchema } from "../validators";
 import { prisma } from "@/db/prisma";
 import { getPostDataInclude } from "@/index/prisma/types";
-import { getServerUser } from "../hooks";
+import { getServerUser } from "../serverFuncs";
 import { Subject, Categorie } from "@prisma/client"; // ✅ Import Enums from Prisma
 
 export async function submitPost(data: {

@@ -1,6 +1,6 @@
 import { prisma } from "@/db/prisma";
 import { getPostDataInclude, PostsPage } from "@/index/prisma/types";
-import { getServerUser } from "@/lib/hooks";
+import { getServerUser } from "@/lib/serverFuncs";
 import { Categorie, Prisma, Subject } from "@prisma/client";
 import { NextRequest } from "next/server";
 

@@ -1,11 +1,13 @@
 import { prisma } from "@/db/prisma";
-import { getPostDataInclude } from "@/index/prisma/types";
-import { getServerUser } from "@/lib/hooks";
+import { getPostDataInclude, PostData } from "@/index/prisma/types";
+import { getServerUser } from "@/lib/serverFuncs";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache, useState } from "react";
 import Image from "next/image";
-import PostInput from "./PostInput";
+import Help from "./Help";
+import { SessionProvider } from "next-auth/react";
+import { auth } from "@/auth";
 
 interface PageProps {
   params: Promise<{ postId: string }>;
@@ -40,19 +42,21 @@ export async function generateMetadata({
 }
 
 export default async function Page({ params }: PageProps) {
-  const user = await getServerUser();
+  const session = await auth();
 
-  const { postId } = await params;
-
-  //Normally they should not see this ever because we check login in layout, but we still have to handle null case
-
-  if (!user) {
+  if (!session) {
     return (
       <p className="text-destructive">
         You&apos;re not authorized to view this page.
       </p>
     );
   }
+
+  const { user } = session;
+
+  const { postId } = await params;
+
+  //Normally they should not see this ever because we check login in layout, but we still have to handle null case
 
   const post = await getPost(postId, user.id);
 
@@ -63,7 +67,7 @@ export default async function Page({ params }: PageProps) {
         alt={post.title}
         width={350}
         height={300}
-        className="w-full object-cover rounded-md"
+        className="w-full aspect-video object-cover rounded-md"
       />
       {post.content ? (
         <h2>{post.content}</h2>
@@ -73,7 +77,9 @@ export default async function Page({ params }: PageProps) {
           any description
         </h1>
       )}
-      <PostInput />
+      <SessionProvider session={session}>
+        <Help post={post} />
+      </SessionProvider>
     </main>
   );
 }

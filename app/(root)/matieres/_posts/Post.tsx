@@ -1,6 +1,5 @@
 import UserAvatar from "@/components/user/UserAvatar";
 import { PostData } from "@/index/prisma/types";
-import { formatRelativeDate } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -27,7 +26,7 @@ export default function Post({ post }: { post: PostData }) {
         alt={post.title}
         width={350}
         height={300}
-        className="w-full object-cover"
+        className="w-full aspect-video object-cover"
       />
     </article>
   );
