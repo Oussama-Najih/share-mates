@@ -55,9 +55,17 @@ export default function Posts() {
 
   if (status === "success" && !posts.length && !hasNextPage) {
     return (
-      <p className="text-center text-2xl md:text-3xl text-muted-foreground">
-        No one has posted anything yet.
-        <br /> Be the first !!
+      <p className="leading-loose text-center text-2xl md:text-3xl text-muted-foreground">
+        <span className="font-semibold">Personne n'a encore rien posté.</span>
+        <br />
+        <span className="px-4">
+          Soit le premier
+          {!matiere && categorie && " en choisissant une matière "}
+          {matiere && !categorie && " en choisissant une catégorie !!"}
+          {!matiere &&
+            !categorie &&
+            " en choisissant une matière et une catégorie !!"}
+        </span>
       </p>
     );
   }

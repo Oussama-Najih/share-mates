@@ -7,6 +7,7 @@ import { Loader2, Trash } from "lucide-react";
 import { CommentData } from "@/index/prisma/types";
 import { useDeleteCommentMutation } from "@/lib/mutations/comment.mutations";
 import { useSession } from "next-auth/react";
+import LikeButton from "./LikeButton";
 
 type CommentProps = {
   comment: CommentData;
@@ -18,6 +19,10 @@ export default function Comment({ comment }: CommentProps) {
   const mutation = useDeleteCommentMutation();
 
   const { data } = useSession();
+
+  if (!data) {
+    throw new Error("Not authenticated");
+  }
 
   return (
     <div className="mb-4 p-4 border rounded-lg bg-gray-100 dark:bg-gray-800">
@@ -50,6 +55,15 @@ export default function Comment({ comment }: CommentProps) {
             </button>
           )}
         </div>
+        <LikeButton
+          commentId={comment.id}
+          initialState={{
+            likes: comment.likes.length,
+            isLikedByUser: comment.likes.some(
+              (like) => like.userId === data?.user.id
+            ),
+          }}
+        />
 
         {/* Child Comments */}
         {!areChildrenHidden && (

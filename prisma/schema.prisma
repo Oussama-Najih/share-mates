@@ -18,6 +18,7 @@ model User {
   announcements Announcement[]
   createdAt     DateTime       @default(now())
   comments      Comment[]
+  likes         Like[]
 }
 
 enum Role {
@@ -61,6 +62,17 @@ model Comment {
   parent    Comment?  @relation("ParentChild", fields: [parentId], references: [id], onDelete: Cascade)
   children  Comment[] @relation("ParentChild")
   parentId  String?   @db.Uuid
+  likes     Like[]
+}
+
+model Like {
+  userId    String  @db.Uuid
+  //when we delete a user, the likes are deleted
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  commentId String  @db.Uuid
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, commentId])
 }
 
 model Media {

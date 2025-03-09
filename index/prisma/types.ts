@@ -34,6 +34,7 @@ export function getCommentDataInclude(loggedInUserId: string) {
       select: getUserDataSelect(loggedInUserId),
     },
     children: true,
+    likes: true,
   } satisfies Prisma.CommentInclude;
 }
 
@@ -53,4 +54,9 @@ export interface PostsPage {
 export interface CommentsPage {
   comments: CommentData[];
   nextCursor: string | null;
+}
+
+export interface LikeInfo {
+  likes: number;
+  isLikedByUser: boolean;
 }
