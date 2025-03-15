@@ -15,7 +15,6 @@ import { signInDefaultValues } from "@/lib/constants";
 export default function SignInForm() {
   const form = useForm<signInFormType>({
     resolver: zodResolver(signInFormSchema),
-    defaultValues: signInDefaultValues,
   });
   const {
     register,
