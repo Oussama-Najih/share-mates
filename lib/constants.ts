@@ -17,6 +17,7 @@ import {
   FileText,
   BookOpen,
   School,
+  FileCheck,
 } from "lucide-react";
 
 export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "Prostore";
@@ -27,8 +28,8 @@ export const SERVER_URL =
   process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
 
 export const signInDefaultValues = {
-  name: "Oussama Najih",
-  password: "A1b2C3!d4E5",
+  name: "Hamza ElMessyaf",
+  password: "SecureP@ss123",
 };
 
 export const matieresWithIcons = [
@@ -90,9 +91,8 @@ export const matieresWithIcons = [
 
 export const categories = [
   { name: "Toutes_les_categories", icon: null }, // Represents photos or images
-  { name: "PHOTOS", icon: Camera }, // Represents photos or images
   { name: "CONTROLES", icon: ClipboardList }, // Represents tests or checklists
-  { name: "EXAMENS", icon: FileText }, // Represents written documents
+  { name: "EXAMENS", icon: FileCheck }, // Represents written documents
   { name: "TDS", icon: BookOpen }, // Represents theoretical work/study
   { name: "TPS", icon: FlaskConical }, // Represents lab experiments
 ];

@@ -1,13 +1,14 @@
 import {
   InfiniteData,
+  Query,
   QueryFilters,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { submitPost } from "../actions/post.actions";
+import { deletePost, submitPost } from "../actions/post.actions";
 import { useSession } from "next-auth/react";
 import { PostsPage } from "@/index/prisma/types";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 
 export function useSubmitPostMutation() {
@@ -21,6 +22,8 @@ export function useSubmitPostMutation() {
   const searchParams = useSearchParams();
   const matiere = searchParams.get("matiere");
   const categorie = searchParams.get("categorie");
+  const option = searchParams.get("option");
+  const mediaType = searchParams.get("type_Media");
 
   const mutation = useMutation({
     mutationFn: submitPost,
@@ -29,15 +32,64 @@ export function useSubmitPostMutation() {
         {
           queryKey: ["matieres"],
           predicate(query) {
-            return (
-              query.queryKey.length === 1 ||
-              (query.queryKey.includes(matiere) &&
-                query.queryKey.includes(categorie)) ||
-              (query.queryKey.includes(matiere) &&
-                query.queryKey.length === 2) ||
-              (query.queryKey.includes(categorie) &&
-                query.queryKey.length === 2)
-            );
+            const qk = query.queryKey;
+
+            // Ensure `matiere`, `categorie`, `option`, and `mediaType` exist before filtering
+            const includesMatiere = matiere && qk.includes(matiere);
+            const includesCategorie = categorie && qk.includes(categorie);
+            const includesOption = option && qk.includes(option);
+            const includesMediaType = mediaType && qk.includes(mediaType);
+
+            // Base case: query with only "matieres"
+            if (qk.length === 1) return true;
+
+            // Cases with one filter
+            if (
+              (includesMatiere ||
+                includesCategorie ||
+                includesOption ||
+                includesMediaType) &&
+              qk.length === 2
+            ) {
+              return true;
+            }
+
+            // Cases with two filters
+            if (
+              ((includesMatiere && includesCategorie) ||
+                (includesMatiere && includesOption) ||
+                (includesMatiere && includesMediaType) ||
+                (includesCategorie && includesOption) ||
+                (includesCategorie && includesMediaType) ||
+                (includesOption && includesMediaType)) &&
+              qk.length === 3
+            ) {
+              return true;
+            }
+
+            // Cases with three filters
+            if (
+              ((includesMatiere && includesCategorie && includesOption) ||
+                (includesMatiere && includesCategorie && includesMediaType) ||
+                (includesMatiere && includesOption && includesMediaType) ||
+                (includesCategorie && includesOption && includesMediaType)) &&
+              qk.length === 4
+            ) {
+              return true;
+            }
+
+            // Case where all filters are included
+            if (
+              includesMatiere &&
+              includesCategorie &&
+              includesOption &&
+              includesMediaType &&
+              qk.length === 5
+            ) {
+              return true;
+            }
+
+            return false;
           },
         };
 
@@ -71,14 +123,71 @@ export function useSubmitPostMutation() {
       queryClient.invalidateQueries({
         queryKey: queryFilter.queryKey,
         predicate(query) {
-          return queryFilter.predicate(query) && !query.state.data;
+          return queryFilter.predicate
+            ? queryFilter.predicate(
+                query as Query<
+                  InfiniteData<PostsPage, string | null>,
+                  Error,
+                  InfiniteData<PostsPage, string | null>,
+                  readonly unknown[]
+                >
+              ) && !query.state.data
+            : false;
         },
       });
 
-      toast.success("Post Created");
+      toast.success("Post créé avec succès");
     },
     onError() {
-      toast.error("Failed to post. Please try again.");
+      toast.error("La création du post a échoué. Veuillez réessayer.");
+    },
+  });
+
+  return mutation;
+}
+
+export function useDeletePostMutation() {
+  const queryClient = useQueryClient();
+
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const mutation = useMutation({
+    mutationFn: deletePost,
+    onSuccess: async (deletedPost) => {
+      const queryFilter: QueryFilters<InfiniteData<PostsPage, string | null>> =
+        {
+          queryKey: ["matieres"],
+        };
+
+      await queryClient.cancelQueries(queryFilter);
+
+      queryClient.setQueriesData<InfiniteData<PostsPage, string | null>>(
+        queryFilter,
+        (oldData) => {
+          if (!oldData) return;
+
+          return {
+            pageParams: oldData.pageParams,
+            pages: oldData.pages.map((page) => ({
+              nextCursor: page.nextCursor,
+              posts: page.posts.filter((p) => p.id !== deletedPost.id),
+            })),
+          };
+        }
+      );
+
+      //No need for invalidateQueries because we can't delete a post if the feed is empty
+
+      toast.success("Post supprimé avec succès");
+
+      if (pathname === `/posts/${deletedPost.id}`) {
+        router.push("/profile");
+      }
+    },
+    onError(error) {
+      console.error(error);
+      toast.error("Échec de la suppression du post. Veuillez réessayer.");
     },
   });
 

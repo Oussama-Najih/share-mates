@@ -9,16 +9,18 @@ datasource db {
 }
 
 model User {
-  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name          String
-  image         String?
-  password      String
-  role          Role           @default(USER)
-  posts         Post[]
-  announcements Announcement[]
-  createdAt     DateTime       @default(now())
-  comments      Comment[]
-  likes         Like[]
+  id                    String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                  String
+  image                 String?
+  password              String
+  role                  Role           @default(USER)
+  posts                 Post[]
+  announcements         Announcement[]
+  createdAt             DateTime       @default(now())
+  comments              Comment[]
+  likes                 Like[]
+  receivedNotifications Notification[] @relation("Recipient")
+  issuedNotifications   Notification[] @relation("Issuer")
 }
 
 enum Role {
@@ -29,40 +31,42 @@ enum Role {
 model Announcement {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title     String
-  image     String
+  media     Media[]
   createdAt DateTime @default(now())
   author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String   @db.Uuid
 }
 
 model Post {
-  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title      String
-  subject    Subject
-  content    String?
-  category   Categorie
-  createdAt  DateTime  @default(now())
-  author     User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId   String    @db.Uuid
-  attachment Media[] // Removed the `@relation` field-specific arguments
-  correction Boolean   @default(false)
-  comments   Comment[]
+  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title         String
+  subject       Subject
+  content       String?
+  category      Categorie
+  createdAt     DateTime       @default(now())
+  author        User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId      String         @db.Uuid
+  attachment    Media[] // Removed the `@relation` field-specific arguments
+  correction    Boolean        @default(false)
+  comments      Comment[]
+  notifications Notification[]
 }
 
 model Comment {
   id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
-  message   String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String    @db.Uuid
-  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId    String    @db.Uuid
-  parent    Comment?  @relation("ParentChild", fields: [parentId], references: [id], onDelete: Cascade)
-  children  Comment[] @relation("ParentChild")
-  parentId  String?   @db.Uuid
-  likes     Like[]
+  message       String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String         @db.Uuid
+  post          Post           @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId        String         @db.Uuid
+  parent        Comment?       @relation("ParentChild", fields: [parentId], references: [id], onDelete: Cascade)
+  children      Comment[]      @relation("ParentChild")
+  parentId      String?        @db.Uuid
+  likes         Like[]
+  notifications Notification[]
 }
 
 model Like {
@@ -76,12 +80,30 @@ model Like {
 }
 
 model Media {
-  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  postId    String?   @unique @db.Uuid
-  post      Post?     @relation(fields: [postId], references: [id], onDelete: SetNull)
-  type      MediaType
-  url       String
-  createdAt DateTime  @default(now())
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  postId         String?       @unique @db.Uuid
+  post           Post?         @relation(fields: [postId], references: [id], onDelete: SetNull)
+  type           MediaType
+  url            String
+  createdAt      DateTime      @default(now())
+  announcement   Announcement? @relation(fields: [announcementId], references: [id], onDelete: SetNull)
+  announcementId String?       @db.Uuid
+}
+
+model Notification {
+  id          String           @id @default(cuid())
+  recipientId String           @db.Uuid
+  recipient   User             @relation("Recipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  issuerId    String           @db.Uuid
+  issuer      User             @relation("Issuer", fields: [issuerId], references: [id], onDelete: Cascade)
+  postId      String?          @db.Uuid
+  post        Post?            @relation(fields: [postId], references: [id], onDelete: Cascade)
+  commentId   String?          @db.Uuid
+  comment     Comment?         @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  type        NotificationType
+  read        Boolean          @default(false)
+
+  createdAt DateTime @default(now())
 }
 
 enum MediaType {
@@ -107,9 +129,15 @@ enum Subject {
 }
 
 enum Categorie {
-  PHOTOS
+  PDF
   EXAMENS
   CONTROLES
   TDS
   TPS
+}
+
+enum NotificationType {
+  LIKE
+  COMMENT
+  REPLY
 }

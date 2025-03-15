@@ -18,8 +18,6 @@ import {
 } from "../ui/dropdown-menu";
 import UserAvatar from "./UserAvatar";
 import { signOutUser } from "@/lib/actions/user.actions";
-import { User } from "@prisma/client";
-import { UserInfo } from "@/index/validationTypes/types";
 import { ExtendedUser } from "@/types/next-auth";
 
 export type UserButtonProps = {
@@ -40,7 +38,7 @@ export default function UserButton({ className, user }: UserButtonProps) {
       <DropdownMenuContent>
         <DropdownMenuLabel>Logged in as @{user.name}</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <Link href={`/users/${user.name}`}>
+        <Link href={`/profile`}>
           <DropdownMenuItem>
             <UserIcon className="mr-2 size-4" />
             Profile

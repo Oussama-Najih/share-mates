@@ -3,37 +3,85 @@ import PostEditor from "../../../components/Utils/PostEditor";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import Posts from "./_posts/Posts";
+import NotFound from "@/components/error/NotFound";
+import { Categorie, Subject } from "@prisma/client";
 
 export default async function page(props: {
   searchParams: Promise<{
     matiere?: string;
     categorie?: string;
+    option?: string;
+    type_Media?: string;
   }>;
 }) {
   const session = await auth();
 
+  if (!session) {
+    return <NotFound message="Unauthorized access." />;
+  }
+  const userId = session.user.id;
+
   const {
     matiere = "Toutes les matieres",
     categorie = "Toutes les categories",
+    option = "COURS_ET_EXERCICES",
+    type_Media = "PDF_ET_IMAGE",
   } = await props.searchParams;
+
+  // Validate `matiere`, `categorie`, and `option`
+  if (
+    matiere !== "Toutes les matieres" &&
+    !Object.values(Subject).includes(matiere as Subject)
+  ) {
+    return <NotFound message={`Invalid subject: ${matiere}`} />;
+  }
+
+  if (
+    categorie !== "Toutes les categories" &&
+    !Object.values(Categorie).includes(categorie as Categorie)
+  ) {
+    return <NotFound message={`Invalid category: ${categorie}`} />;
+  }
+
+  if (
+    option !== "COURS_ET_EXERCICES" &&
+    !["CORRECTIONS", "EXERCICES"].includes(option)
+  ) {
+    return <NotFound message={`Invalid option: ${option}`} />;
+  }
+
+  if (type_Media !== "PDF_ET_IMAGE" && !["PDF", "IMAGE"].includes(type_Media)) {
+    return <NotFound message={`Invalid mediaType: ${type_Media}`} />;
+  }
 
   return (
     <div>
-      <Header isSubjectsPage={true} />
+      <Header
+        isSubjectsPage={true}
+        isWork={["TDS", "TPS"].includes(categorie)}
+      />
       <h1
-        className="font-poppins text-xl border-b border-primary
-      pb-4 text-center text-primary mb-5"
+        className="font-poppins border-t-2 p-2 text-xl border-b-2 border-primary
+        pb-4 text-center text-primary mb-5"
       >
-        {matiere} / {categorie}
+        {matiere} / {categorie}{" "}
+        {["TDS", "TPS"].includes(categorie) && `/ ${option}`} / {type_Media}
       </h1>
+
+      {/* Conditionally render PostEditor if applicable */}
       {matiere !== "Toutes les matieres" &&
-      categorie !== "Toutes les categories" ? (
-        <SessionProvider session={session}>
-          <PostEditor />
-        </SessionProvider>
-      ) : null}
-      <div className="flex flex-col items-center ">
-        <Posts />
+        categorie !== "Toutes les categories" &&
+        (!["TDS", "TPS"].includes(categorie) ||
+          option !== "COURS_ET_EXERCICES") && (
+          <SessionProvider session={session}>
+            {type_Media !== "PDF_ET_IMAGE" && (
+              <PostEditor isPdf={type_Media === "PDF"} />
+            )}
+          </SessionProvider>
+        )}
+
+      <div className="flex flex-col items-center">
+        <Posts userId={userId} />
       </div>
     </div>
   );

@@ -8,12 +8,14 @@ export interface Attachment {
   isUploading: boolean;
 }
 
-export default function useMediaUpload() {
+export default function useMediaUpload(
+  mediaType: "attachment_image" | "attachment_pdf"
+) {
   const [attachments, setAttachments] = useState<Attachment[]>([]);
 
   const [uploadProgress, setUploadProgress] = useState<number>();
 
-  const { startUpload, isUploading } = useUploadThing("attachment", {
+  const { startUpload, isUploading } = useUploadThing(mediaType, {
     //When we get a mediaId back, we can identify the corresponding file
     onBeforeUploadBegin(files) {
       console.log("before_uplo");
@@ -64,11 +66,13 @@ export default function useMediaUpload() {
 
   function handleStartUpload(files: File[]) {
     if (isUploading) {
-      toast.error("Please wait for the current upload to finish.");
+      toast.error("Veuillez attendre la fin du téléchargement en cours.");
     }
 
     if (attachments.length && files.length > 1) {
-      toast.error("You can only upload 1 attachments per post.");
+      toast.error(
+        "Vous ne pouvez télécharger qu'un seul fichier joint par publication."
+      );
       return;
     }
 
@@ -87,6 +91,7 @@ export default function useMediaUpload() {
   return {
     startUpload: handleStartUpload,
     attachments,
+    setAttachments,
     isUploading,
     uploadProgress,
     removeAttachment,

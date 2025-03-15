@@ -1,4 +1,3 @@
-import { options } from "@/lib/constants";
 import Link from "next/link";
 
 type OptionsProps = {

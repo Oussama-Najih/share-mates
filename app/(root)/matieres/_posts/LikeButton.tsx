@@ -50,7 +50,7 @@ export default function LikeButton({
     onError(error, _variables, context) {
       queryClient.setQueryData(queryKey, context?.previousState);
       console.error(error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error("Quelque chose s'est mal passé. Veuillez réessayer.");
     },
   });
 

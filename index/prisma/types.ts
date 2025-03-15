@@ -9,6 +9,7 @@ export function getUserDataSelect(loggedInUserId: string) {
     _count: {
       select: {
         posts: true,
+        comments: true,
       },
     },
   } satisfies Prisma.UserSelect;
@@ -59,4 +60,42 @@ export interface CommentsPage {
 export interface LikeInfo {
   likes: number;
   isLikedByUser: boolean;
+}
+
+export const notificationsInclude = {
+  issuer: {
+    select: {
+      name: true,
+      image: true,
+    },
+  },
+  comment: {
+    select: {
+      message: true,
+      post: true,
+    },
+  },
+} satisfies Prisma.NotificationInclude;
+
+export const AnnouncementsInclude = {
+  media: {
+    select: { url: true },
+  },
+} satisfies Prisma.AnnouncementInclude;
+
+export type NotificationData = Prisma.NotificationGetPayload<{
+  include: typeof notificationsInclude;
+}>;
+
+export type AnnouncementData = Prisma.AnnouncementGetPayload<{
+  include: typeof AnnouncementsInclude;
+}>;
+
+export interface NotificationsPage {
+  notifications: NotificationData[];
+  nextCursor: string | null;
+}
+
+export interface NotificationCountInfo {
+  unreadCount: number;
 }

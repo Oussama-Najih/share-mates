@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Header from "@/components/header";
+import ScrollToTop from "@/components/Utils/ScrollToTop";
 
 export const metadata: Metadata = {
-  title: "Prostore",
+  title: "Flow",
   description: "A modern school platform",
 };
 
@@ -11,5 +12,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <div className="flex min-h-screen flex-col container">{children}</div>;
+  return (
+    <div className="flex min-h-screen flex-col container">
+      <ScrollToTop />
+      {children}
+    </div>
+  );
 }

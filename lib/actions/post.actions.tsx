@@ -12,26 +12,25 @@ export async function submitPost(data: {
   title: string;
   content?: string;
   mediaId: string;
+  option?: string;
 }) {
-  console.log({ data });
   const user = await getServerUser();
   if (!user) throw new Error("Unauthorized");
 
   const { categorie, matiere, ...rest } = data;
 
-  // Convert raw string to Prisma Enum
+  // Validate and map to Prisma Enum safely
+  if (!Object.values(Subject).includes(matiere as Subject)) {
+    throw new Error(`Matiere invalide: ${matiere}`);
+  }
+  if (!Object.values(Categorie).includes(categorie as Categorie)) {
+    throw new Error(`categorie invalide: ${categorie}`);
+  }
+
   const subject = matiere as Subject;
   const category = categorie as Categorie;
 
-  // Ensure they match valid enum values
-  if (!Object.values(Subject).includes(subject)) {
-    throw new Error(`Invalid subject: ${data.matiere}`);
-  }
-  if (!Object.values(Categorie).includes(category)) {
-    throw new Error(`Invalid category: ${data.categorie}`);
-  }
-
-  const { title, content, mediaId } = createPostSchema.parse(rest);
+  const { title, content, mediaId, option } = createPostSchema.parse(rest);
 
   const newPost = await prisma.post.create({
     data: {
@@ -43,9 +42,31 @@ export async function submitPost(data: {
       attachment: {
         connect: { id: mediaId },
       },
+      correction: option === "CORRECTIONS", // ✅ Simplified condition
     },
     include: getPostDataInclude(user.id),
   });
 
   return newPost;
+}
+
+export async function deletePost(id: string) {
+  const user = await getServerUser();
+
+  if (!user) throw new Error("Unauthorized");
+
+  const post = await prisma.post.findUnique({
+    where: { id },
+  });
+
+  if (!post) throw new Error("Post not found");
+
+  if (post.authorId !== user.id) throw new Error("Unauthorized");
+
+  const deletedPost = await prisma.post.delete({
+    where: { id },
+    include: getPostDataInclude(user.id),
+  });
+
+  return deletedPost;
 }

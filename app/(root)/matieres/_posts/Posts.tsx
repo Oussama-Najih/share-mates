@@ -7,13 +7,14 @@ import { useSearchParams } from "next/navigation";
 import PostsLoadingSkeleton from "./PostsLoadingSkeleten";
 import InfiniteScrollContainer from "@/components/Utils/InfiniteScrollContainer";
 import Post from "./Post";
-import Link from "next/link";
 import { Loader2 } from "lucide-react";
 
-export default function Posts() {
+export default function Posts({ userId }: { userId: string }) {
   const searchParams = useSearchParams();
   const matiere = searchParams.get("matiere");
   const categorie = searchParams.get("categorie");
+  const option = searchParams.get("option");
+  const mediaType = searchParams.get("type_Media");
 
   const queryKey = ["matieres"];
   if (matiere) {
@@ -21,6 +22,12 @@ export default function Posts() {
   }
   if (categorie) {
     queryKey.push(categorie);
+  }
+  if (option) {
+    queryKey.push(option);
+  }
+  if (mediaType) {
+    queryKey.push(mediaType);
   }
 
   const {
@@ -37,6 +44,8 @@ export default function Posts() {
 
       if (matiere) searchParams.matiere = matiere;
       if (categorie) searchParams.categorie = categorie;
+      if (option) searchParams.option = option;
+      if (mediaType) searchParams.type_Media = mediaType;
       if (pageParam) searchParams.cursor = pageParam;
 
       return kyInstance
@@ -50,23 +59,35 @@ export default function Posts() {
   const posts = data?.pages.flatMap((page) => page.posts) || [];
 
   if (status === "pending") {
-    return <PostsLoadingSkeleton />;
+    return (
+      <div className="w-screen">
+        <PostsLoadingSkeleton />
+      </div>
+    );
   }
 
   if (status === "success" && !posts.length && !hasNextPage) {
     return (
-      <p className="leading-loose text-center text-2xl md:text-3xl text-muted-foreground">
-        <span className="font-semibold">Personne n'a encore rien posté.</span>
+      <div className="leading-loose text-center text-2xl md:text-3xl text-muted-foreground">
+        <h1 className="font-semibold ">
+          Personne n'a encore rien posté.
+          <br /> Soyez le premier !!
+        </h1>
         <br />
-        <span className="px-4">
-          Soit le premier
-          {!matiere && categorie && " en choisissant une matière "}
-          {matiere && !categorie && " en choisissant une catégorie !!"}
-          {!matiere &&
-            !categorie &&
-            " en choisissant une matière et une catégorie !!"}
-        </span>
-      </p>
+        {(!matiere ||
+          !categorie ||
+          (categorie && ["TDS", "TPS"].includes(categorie) && !option)) && (
+          <h2 className="mb-4">Pour créer un post, choisissez : </h2>
+        )}
+        <ul className="list-disc list-inside flex flex-col items-center">
+          {!matiere ? <li>Une matiere</li> : null}
+          {!categorie ? <li>Une categorie</li> : null}
+          {categorie && ["TDS", "TPS"].includes(categorie) && !option ? (
+            <li>Une option (Correction ou Exercices)</li>
+          ) : null}
+          {!mediaType ? <li>Un type de media</li> : null}
+        </ul>
+      </div>
     );
   }
 
@@ -84,7 +105,7 @@ export default function Posts() {
       onBottomReached={() => hasNextPage && !isFetching && fetchNextPage()}
     >
       {posts.map((post) => (
-        <Post key={post.id} post={post} />
+        <Post key={post.id} post={post} userId={userId} />
       ))}
       {isFetchingNextPage && <Loader2 className="mx-auto my-3 animate-spin" />}
     </InfiniteScrollContainer>

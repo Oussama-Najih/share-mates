@@ -21,6 +21,10 @@ const Search = () => {
   const handleSelectChange = (categorie: string) => {
     const params = new URLSearchParams(searchParams.toString());
 
+    if (!["TDs", "TPs"].includes(categorie)) {
+      params.delete("option");
+    }
+
     if (categorie !== "Toutes_les_categories") {
       params.set("categorie", categorie);
     } else {
@@ -32,7 +36,7 @@ const Search = () => {
 
   return (
     <form action="/search" method="GET">
-      <div className="flex w-full max-w-sm items-center space-x-2">
+      <div className="flex w-40 md:w-64 items-center space-x-2">
         <Select value={selectedOption} onValueChange={handleSelectChange}>
           <SelectTrigger className="w-[180px]">
             <SelectValue>{selectedOption}</SelectValue>

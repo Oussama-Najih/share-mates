@@ -11,8 +11,7 @@ import { extractRouterConfig } from "uploadthing/server";
 
 export const metadata: Metadata = {
   title: {
-    template: `%s | Prostore`,
-    default: APP_NAME,
+    absolute: APP_NAME,
   },
   description: APP_DESCRIPTION,
   metadataBase: new URL(SERVER_URL),
@@ -47,7 +46,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             {children}
-            <Toaster />
+            <Toaster position="bottom-right" />
           </ThemeProvider>
         </ReactQueryProvider>
       </body>

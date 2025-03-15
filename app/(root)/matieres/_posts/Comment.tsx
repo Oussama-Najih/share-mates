@@ -2,12 +2,13 @@
 
 import { formatRelativeDate } from "@/lib/utils";
 import Comments from "./Comments";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader2, Trash } from "lucide-react";
 import { CommentData } from "@/index/prisma/types";
 import { useDeleteCommentMutation } from "@/lib/mutations/comment.mutations";
 import { useSession } from "next-auth/react";
 import LikeButton from "./LikeButton";
+import { useSearchParams } from "next/navigation";
 
 type CommentProps = {
   comment: CommentData;
@@ -25,7 +26,10 @@ export default function Comment({ comment }: CommentProps) {
   }
 
   return (
-    <div className="mb-4 p-4 border rounded-lg bg-gray-100 dark:bg-gray-800">
+    <div
+      id={comment.id}
+      className="mb-4 p-4 border rounded-lg bg-gray-100 dark:bg-gray-800"
+    >
       <div>
         <div className="flex justify-between items-center mb-2">
           <h2 className="font-semibold">@{comment.user.name}</h2>

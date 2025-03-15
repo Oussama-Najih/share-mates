@@ -1,33 +1,77 @@
 import UserAvatar from "@/components/user/UserAvatar";
 import { PostData } from "@/index/prisma/types";
+import { formatRelativeDate } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import DeleteButton from "@/components/Utils/DeleteButton";
 
-export default function Post({ post }: { post: PostData }) {
+export default function Post({
+  post,
+  userId,
+}: {
+  post: PostData;
+  userId: string;
+}) {
   return (
     <article
-      className="space-y-3 max-w-[480px] dark:border-blue-950 w-[70%] mx-auto py-2 px-1 rounded-md border-2 border-primary/40 bg-card shadow-sm"
+      className="p-3 space-y-1 max-w-[480px] dark:border-blue-950 w-[70%] mx-auto rounded-md border-2 border-primary/40 bg-card shadow-sm"
       key={post.id}
     >
-      <section className="flex items-center gap-10 font-roboto">
+      <section className="flex relative items-center border-b-2 pb-2 gap-10 font-roboto">
         <UserAvatar avatarUrl={post.author.image} />
         <div className="flex flex-col items-start">
           <p className="text-muted-foreground">@{post.author.name}</p>
           <Link
             href={`post/${post.id}`}
-            className="dark:text-blue-400 hover:underline text-blue-600"
+            className="hover:underline text-blue-500 font-roboto text-sm md:text-md"
           >
-            {post.title}
+            {formatRelativeDate(post.createdAt)}
           </Link>
         </div>
       </section>
-      <Image
-        src={post.attachment[0].url}
-        alt={post.title}
-        width={350}
-        height={300}
-        className="w-full aspect-video object-cover"
-      />
+      <h1 className="text-center text-base lg:text-xl">{post.title}</h1>
+      {post.attachment[0].type === "IMAGE" ? (
+        <Image
+          src={post.attachment[0].url}
+          alt={post.title}
+          width={350}
+          height={300}
+          className="w-full aspect-video object-cover"
+        />
+      ) : (
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href={post.attachment[0].url}
+          className="inline-block"
+        >
+          Titre :{" "}
+          <button
+            className="text-blue-500 hover:cursor-pointer hover:underline hover:underline-offset-2"
+            aria-label={`Open post: ${post.title}`}
+          >
+            {post.title}
+          </button>
+        </a>
+      )}
+      <footer className="flex pt-2 justify-between items-center">
+        <Link
+          href={`post/${post.id}`}
+          className="hover:underline text-blue-500 font-roboto text-sm md:text-md"
+        >
+          {post.content
+            ? post.content.slice(0, 10) +
+              (post.content.length > 10 ? "..." : "")
+            : "No description"}
+        </Link>
+        {post.authorId === userId ? (
+          <DeleteButton
+            post={post}
+            className="absolute right-2 transition-opacity"
+          />
+        ) : null}
+      </footer>
     </article>
   );
 }

@@ -30,8 +30,15 @@ export const updatePasswordSchema = z
 export const createPostSchema = z.object({
   title: z
     .string()
-    .min(1, { message: "Title must be atleast 3 characters long" })
-    .max(15, { message: "Title must be most 15 characters long" }),
+    .min(3, { message: "Title must be atleast 3 characters long" }),
   content: z.string().optional(),
+  mediaId: z.string(),
+  option: z.string().optional(),
+});
+
+export const addAnnouncement = z.object({
+  titre: z
+    .string()
+    .min(3, { message: "Title must be atleast 3 characters long" }),
   mediaId: z.string(),
 });

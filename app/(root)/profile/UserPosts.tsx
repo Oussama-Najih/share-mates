@@ -1,21 +1,14 @@
 "use client";
 
-import InfiniteScrollContainer from "@/components/Utils/InfiniteScrollContainer";
 import { PostsPage } from "@/index/prisma/types";
 import kyInstance from "@/lib/ky";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
-import Post from "./_posts/Post";
-import PostsLoadingSkeleton from "./_posts/PostsLoadingSkeleten";
-import { useSearchParams } from "next/navigation";
+import PostsLoadingSkeleton from "../matieres/_posts/PostsLoadingSkeleten";
+import InfiniteScrollContainer from "@/components/Utils/InfiniteScrollContainer";
+import Post from "../matieres/_posts/Post";
 
-export default function ForYouFeed() {
-  const searchParams = useSearchParams();
-
-  params.set("subject", subject); // Update the subject parameter
-  params.set("subject", subject); // Update the subject parameter
-
-
+export default function UserPosts({ userId }: { userId: string }) {
   const {
     data,
     fetchNextPage,
@@ -24,11 +17,11 @@ export default function ForYouFeed() {
     isFetchingNextPage,
     status,
   } = useInfiniteQuery({
-    queryKey: ["matieres", ],
+    queryKey: ["matieres", "user-posts"],
     queryFn: ({ pageParam }) =>
       kyInstance
         .get(
-          "/api/posts/for-you",
+          `/api/userPosts`,
           pageParam ? { searchParams: { cursor: pageParam } } : {}
         )
         .json<PostsPage>(),
@@ -45,7 +38,7 @@ export default function ForYouFeed() {
   if (status === "success" && !posts.length && !hasNextPage) {
     return (
       <p className="text-center text-muted-foreground">
-        No one has posted anything yet.
+        This user hasn&apos;t posted anything yet.
       </p>
     );
   }
@@ -64,7 +57,7 @@ export default function ForYouFeed() {
       onBottomReached={() => hasNextPage && !isFetching && fetchNextPage()}
     >
       {posts.map((post) => (
-        <Post key={post.id} post={post} />
+        <Post key={post.id} post={post} userId={userId} />
       ))}
       {isFetchingNextPage && <Loader2 className="mx-auto my-3 animate-spin" />}
     </InfiniteScrollContainer>

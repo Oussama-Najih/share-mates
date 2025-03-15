@@ -17,9 +17,9 @@ export const sx = {
   },
 };
 
-export const sx2 = (mode: string) => ({
+export const sx2 = {
   "& .MuiInputBase-input": {
-    color: `${mode === "dark" ? "white" : "black"}`,
+    color: "white",
   },
   "& .MuiOutlinedInput-root": {
     "& fieldset": { borderColor: "lightblue" }, // Default outline color
@@ -30,4 +30,19 @@ export const sx2 = (mode: string) => ({
       borderColor: "rgb(14, 165, 233)",
     }, // Focused border color
   },
-});
+};
+
+export const sx3 = {
+  "& .MuiInputBase-input": {
+    color: "black",
+  },
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": { borderColor: "lightblue" }, // Default outline color
+    "&:hover fieldset": {
+      borderColor: "rgb(15, 211, 252)",
+    }, // Hover border color
+    "&.Mui-focused fieldset": {
+      borderColor: "rgb(14, 165, 233)",
+    }, // Focused border color
+  },
+};

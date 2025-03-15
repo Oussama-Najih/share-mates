@@ -12,19 +12,76 @@ export async function submitComment(data: {
   console.log("submitCommentaction");
   const { postId, parentId, message } = data;
 
-  const user = await getServerUser();
+  const loggedInUser = await getServerUser();
 
-  if (!user) throw new Error("Unauthorized");
+  if (!loggedInUser) throw new Error("Unauthorized");
 
-  const newComment = await prisma.comment.create({
-    data: {
-      parentId,
-      message,
-      userId: user.id,
-      postId,
+  const post = await prisma.post.findUnique({
+    where: {
+      id: postId,
     },
-    include: getCommentDataInclude(user.id),
   });
+
+  const parentComment = parentId
+    ? await prisma.comment.findUnique({
+        where: {
+          id: parentId,
+          postId,
+        },
+      })
+    : null;
+
+  if (!post) {
+    throw new Error("Post not found");
+  }
+
+  const recipientId = parentComment ? parentComment.userId : post.authorId;
+
+  const [newComment] = await prisma.$transaction([
+    prisma.comment.create({
+      data: {
+        parentId,
+        message,
+        userId: loggedInUser.id,
+        postId,
+      },
+      include: getCommentDataInclude(loggedInUser.id),
+    }),
+    ...(!(
+      (loggedInUser.id === post.authorId && parentId === null) ||
+      parentComment?.userId === loggedInUser.id
+    )
+      ? [
+          prisma.notification.create({
+            data: {
+              issuerId: loggedInUser.id,
+              recipientId,
+              commentId: null, // This will be updated after transaction
+              postId,
+              type: parentId ? "REPLY" : "COMMENT",
+            },
+          }),
+        ]
+      : []),
+  ]);
+
+  // Update the notification's commentId with the actual new comment ID
+  if (newComment) {
+    console.log("updating comment id");
+    console.log({ newCommentId: newComment.id });
+
+    await prisma.notification.updateMany({
+      where: {
+        issuerId: loggedInUser.id,
+        recipientId,
+        postId,
+        commentId: null,
+      },
+      data: {
+        commentId: newComment.id,
+      },
+    });
+  }
 
   return newComment;
 }

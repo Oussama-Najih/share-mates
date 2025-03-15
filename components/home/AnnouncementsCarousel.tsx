@@ -10,9 +10,17 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import { useRef } from "react";
-import { Announcement } from "@prisma/client";
+import Add from "./Add";
+import { AnnouncementData } from "@/index/prisma/types";
+import DeleteButton from "../Utils/DeleteButton";
 
-const AnnouncementsCarousel = ({ data }: { data: Announcement[] }) => {
+const AnnouncementsCarousel = ({
+  data,
+  userId,
+}: {
+  data: AnnouncementData[];
+  userId: string;
+}) => {
   const autoplayPlugin = useRef(
     Autoplay({
       delay: 6000, // Adjust delay if needed
@@ -27,17 +35,25 @@ const AnnouncementsCarousel = ({ data }: { data: Announcement[] }) => {
       opts={{ loop: true }}
       plugins={[autoplayPlugin.current]} // Use the ref instance
     >
+      <div className="flex mt-8 text-primary mb-5 justify-center items-center gap-5">
+        <Add />
+      </div>
       <CarouselContent>
-        {data.map((announcement: Announcement) => (
+        {data.map((announcement) => (
           <CarouselItem key={announcement.id}>
-            <div className="rounded-md w-9/12 border-2 relative mx-auto">
-              <div className="w-full bg-primary  dark:bg-muted">
-                <h2 className="relative text-accent-foreground bg-opacity-40 rounded-md text-2xl font-bold px-4 py-2 text-white text-center">
+            <div className="rounded-md w-9/12 border-2 mx-auto">
+              <div className="w-full pr-4 flex justify-between bg-primary  dark:bg-muted">
+                <h2 className="text-accent-foreground bg-opacity-40 rounded-md text-2xl font-bold px-4 py-2 text-white text-center">
                   {announcement.title}
                 </h2>
+                {announcement.authorId === userId && (
+                  <DeleteButton announcement={announcement} className="" />
+                )}
               </div>
               <Image
-                src={announcement.image!}
+                src={
+                  announcement.media[0]?.url || "/images/avatar-placeHolder.png"
+                }
                 alt="announcement"
                 height={200}
                 width={200}

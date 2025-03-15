@@ -1,14 +1,19 @@
 import { prisma } from "@/db/prisma";
 import { getPostDataInclude, PostsPage } from "@/index/prisma/types";
 import { getServerUser } from "@/lib/serverFuncs";
-import { Categorie, Prisma, Subject } from "@prisma/client";
+import { Categorie, MediaType, Prisma, Subject } from "@prisma/client";
 import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams;
+    console.log({ params: req.nextUrl.searchParams });
     const cursor = searchParams.get("cursor") || undefined;
     const matiere = searchParams.get("matiere") as keyof typeof Subject | null;
+    const option = searchParams.get("option") || null;
+    const mediaType = searchParams.get("type_Media") as
+      | keyof typeof MediaType
+      | null;
     const categorie = searchParams.get("categorie") as
       | keyof typeof Categorie
       | null;
@@ -24,7 +29,18 @@ export async function GET(req: NextRequest) {
     const filters: Prisma.PostWhereInput = {
       ...(matiere ? { subject: matiere as Subject } : {}),
       ...(categorie ? { category: categorie as Categorie } : {}),
+      ...(option ? { correction: option === "CORRECTIONS" } : {}), // Corrected filter for 'option'
+      ...(mediaType
+        ? {
+            attachment: {
+              some: { type: mediaType as MediaType }, // Filter mediaType for attached media
+            },
+          }
+        : {}),
     };
+
+    console.log("mediaType:", mediaType);
+    console.log("Filters:", JSON.stringify(filters, null, 2));
 
     const posts = await prisma.post.findMany({
       where: filters,

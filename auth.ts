@@ -60,21 +60,34 @@ export const config = {
   callbacks: {
     ...authConfig,
     async session({ session, token }) {
+      console.log("session cb");
+      if (!token.sub) return session;
+
+      // Fetch the latest user data from the database
+      const user = await prisma.user.findUnique({
+        where: { id: token.sub },
+        select: { image: true }, // Only fetch the image
+      });
+
       session.user.id = token.sub;
       session.user.role = token.role;
-      session.user.name = token.name;
-      session.user.image = token.image;
+      session.user.name = token.name!;
+      session.user.image = user?.image ?? token.image; // Always get the latest image
+
       return session;
     },
+
     async jwt({ token, user, trigger, session }) {
+      console.log("jwt cb");
+
       if (user) {
         token.id = user.id;
         token.role = user.role;
         token.name = user.name;
         token.image = user.image;
       }
-      if (session?.user.name && trigger === "update") {
-        token.name = session.user.name;
+      if (session?.user.image && trigger === "update") {
+        token.image = session.user.image;
       }
       return token;
     },

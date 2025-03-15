@@ -8,7 +8,10 @@ CREATE TYPE "MediaType" AS ENUM ('IMAGE', 'PDF');
 CREATE TYPE "Subject" AS ENUM ('ANGLAIS', 'COMPTABILITE_GENERALE', 'BASES_DE_DONNEES', 'ELECTRONIQUE_ANALOGIQUE_2', 'TEC_2', 'ANALYSE_4', 'PROGRAMMATION_WEB', 'INFORMATIQUE_INDUSTRIELLE', 'STRUCTURE_DONNEES_2', 'STATISTIQUE', 'SYSTEMES_EXPLOITATION_2', 'TP_ELECTRONIQUE_ANALOGIQUE_2', 'TP_STRUCTURE_DONNEES_2', 'TP_INFORMATIQUE_INDUSTRIELLE');
 
 -- CreateEnum
-CREATE TYPE "Categorie" AS ENUM ('PHOTOS', 'EXAMENS', 'CONTROLES', 'TDS', 'TPS');
+CREATE TYPE "Categorie" AS ENUM ('PDF', 'EXAMENS', 'CONTROLES', 'TDS', 'TPS');
+
+-- CreateEnum
+CREATE TYPE "NotificationType" AS ENUM ('LIKE', 'COMMENT', 'REPLY');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -77,6 +80,20 @@ CREATE TABLE "Media" (
     CONSTRAINT "Media_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Notification" (
+    "id" TEXT NOT NULL,
+    "recipientId" UUID NOT NULL,
+    "issuerId" UUID NOT NULL,
+    "postId" UUID,
+    "commentId" UUID,
+    "type" "NotificationType" NOT NULL,
+    "read" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Notification_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Like_userId_commentId_key" ON "Like"("userId", "commentId");
 
@@ -106,3 +123,15 @@ ALTER TABLE "Like" ADD CONSTRAINT "Like_commentId_fkey" FOREIGN KEY ("commentId"
 
 -- AddForeignKey
 ALTER TABLE "Media" ADD CONSTRAINT "Media_postId_fkey" FOREIGN KEY ("postId") REFERENCES "Post"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Notification" ADD CONSTRAINT "Notification_recipientId_fkey" FOREIGN KEY ("recipientId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Notification" ADD CONSTRAINT "Notification_issuerId_fkey" FOREIGN KEY ("issuerId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Notification" ADD CONSTRAINT "Notification_postId_fkey" FOREIGN KEY ("postId") REFERENCES "Post"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Notification" ADD CONSTRAINT "Notification_commentId_fkey" FOREIGN KEY ("commentId") REFERENCES "Comment"("id") ON DELETE CASCADE ON UPDATE CASCADE;

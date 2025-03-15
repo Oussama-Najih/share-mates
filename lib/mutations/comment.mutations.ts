@@ -53,11 +53,11 @@ export function useSubmitCommentMutation({
         (oldData: number | undefined) => (oldData ?? 0) + 1 // Fix: Increase count instead of decreasing
       );
 
-      toast.success("Comment created");
+      toast.success("Commentaire créé");
     },
     onError(error) {
       console.error(error);
-      toast.error("Comment submission failed. Please try again.");
+      toast.error("La soumission du commentaire a échoué. Veuillez réessayez.");
     },
   });
 
@@ -97,11 +97,13 @@ export function useDeleteCommentMutation() {
           Math.max((oldData ?? 0) - descendantsCount - 1, 0) // Fix: Ensure count doesn't go negative
       );
 
-      toast.success("Comment deleted");
+      toast.success("Commentaire supprimé avec succès");
     },
     onError(error) {
       console.error(error);
-      toast.error("Failed to delete comment. Please try again.");
+      toast.error(
+        "Échec de la suppression du commentaire. Veuillez réessayer."
+      );
     },
   });
 

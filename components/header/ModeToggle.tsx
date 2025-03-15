@@ -23,7 +23,7 @@ const ModeToggle = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger className="ml-10" asChild>
         <Button
           className="focus-visible:ring-0 focus-visible:ring-offset-0"
           variant="ghost"
