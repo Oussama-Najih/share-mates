@@ -10,8 +10,6 @@ import { PostsPage } from "@/index/prisma/types";
 import toast from "react-hot-toast";
 
 export function useUpdateAvatarMutation(userId: string) {
-  console.log("useUpdateProfileMutation");
-
   const router = useRouter();
   const queryClient = useQueryClient();
   const { startUpload: startAvatarUpload } = useUploadThing("avatar");
