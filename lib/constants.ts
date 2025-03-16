@@ -95,7 +95,4 @@ export const subjectsWithIcons = [
   { name: "STRUCTURE_DONNEES_2", icon: FolderTree },
   { name: "STATISTIQUE", icon: BarChart2 },
   { name: "SYSTEMES_EXPLOITATION_2", icon: HardDrive },
-  { name: "TP_ELECTRONIQUE_ANALOGIQUE_2", icon: FlaskConical },
-  { name: "TP_STRUCTURE_DONNEES_2", icon: Terminal },
-  { name: "TP_INFORMATIQUE_INDUSTRIELLE", icon: Server },
 ];
