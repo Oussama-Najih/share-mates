@@ -11,34 +11,45 @@ import { Heart } from "lucide-react";
 import toast from "react-hot-toast";
 
 interface LikeButtonProps {
-  commentId: string;
+  commentId?: string;
+  postId?: string;
   initialState: LikeInfo;
 }
 
 export default function LikeButton({
   commentId,
+  postId,
   initialState,
 }: LikeButtonProps) {
   const queryClient = useQueryClient();
 
-  const queryKey: QueryKey = ["like-info", commentId];
+  // Use the appropriate query key based on whether it's a comment or post
+  const queryKey: QueryKey = ["like-info", commentId ?? postId];
+
+  // Determine the API URL dynamically based on the presence of commentId or postId
+  const apiUrl = commentId
+    ? `/api/likes/comments/${commentId}`
+    : postId
+    ? `/api/likes/posts/${postId}`
+    : "";
+
+  // Query to get the like data for a comment or post
   const { data } = useQuery({
     queryKey,
-    queryFn: () => kyInstance.get(`/api/likes/${commentId}`).json<LikeInfo>(),
+    queryFn: () => kyInstance.get(apiUrl).json<LikeInfo>(),
     initialData: initialState,
     staleTime: Infinity,
   });
 
   const { mutate } = useMutation({
     mutationFn: () =>
-      data.isLikedByUser
-        ? kyInstance.delete(`/api/likes/${commentId}`)
-        : kyInstance.post(`/api/likes/${commentId}`),
+      data.isLikedByUser ? kyInstance.delete(apiUrl) : kyInstance.post(apiUrl),
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey });
 
       const previousState = queryClient.getQueryData<LikeInfo>(queryKey);
 
+      // Optimistically update the like count and the user's like state
       queryClient.setQueryData<LikeInfo>(queryKey, () => ({
         likes:
           (previousState?.likes || 0) + (previousState?.isLikedByUser ? -1 : 1),
@@ -48,6 +59,7 @@ export default function LikeButton({
       return { previousState };
     },
     onError(error, _variables, context) {
+      // Rollback to previous state on error
       queryClient.setQueryData(queryKey, context?.previousState);
       console.error(error);
       toast.error("Quelque chose s'est mal passé. Veuillez réessayer.");

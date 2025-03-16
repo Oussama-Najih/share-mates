@@ -18,7 +18,8 @@ model User {
   announcements         Announcement[]
   createdAt             DateTime       @default(now())
   comments              Comment[]
-  likes                 Like[]
+  likesC                LikeC[]
+  likesP                LikeP[]
   receivedNotifications Notification[] @relation("Recipient")
   issuedNotifications   Notification[] @relation("Issuer")
 }
@@ -50,6 +51,7 @@ model Post {
   correction    Boolean        @default(false)
   comments      Comment[]
   notifications Notification[]
+  likes         LikeP[]
 }
 
 model Comment {
@@ -65,11 +67,11 @@ model Comment {
   parent        Comment?       @relation("ParentChild", fields: [parentId], references: [id], onDelete: Cascade)
   children      Comment[]      @relation("ParentChild")
   parentId      String?        @db.Uuid
-  likes         Like[]
+  likes         LikeC[]
   notifications Notification[]
 }
 
-model Like {
+model LikeC {
   userId    String  @db.Uuid
   //when we delete a user, the likes are deleted
   user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -77,6 +79,16 @@ model Like {
   comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
 
   @@unique([userId, commentId])
+}
+
+model LikeP {
+  userId String @db.Uuid
+  //when we delete a user, the likes are deleted
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId String @db.Uuid
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
 }
 
 model Media {

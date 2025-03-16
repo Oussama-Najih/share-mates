@@ -15,14 +15,16 @@ const Search = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // State to hold the selected category
-  const [selectedOption, setSelectedOption] = useState("Toutes_les_categories");
+  // ✅ Initialize state properly
+  const [selectedOption, setSelectedOption] = useState(() => {
+    return searchParams.get("categorie") || "Toutes_les_categories";
+  });
 
   useEffect(() => {
-    // Sync the selectedOption state with the current searchParam
+    // ✅ Ensure state updates correctly when URL changes
     const category = searchParams.get("categorie") || "Toutes_les_categories";
     setSelectedOption(category);
-  }, [searchParams]); // Re-run effect when searchParams change
+  }, [searchParams]);
 
   const handleSelectChange = (categorie: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -33,6 +35,8 @@ const Search = () => {
       params.delete("categorie");
     }
 
+    // ✅ Update local state before routing (Prevents flicker)
+    setSelectedOption(categorie);
     router.push(`/matieres?${params.toString()}`);
   };
 

@@ -3,7 +3,7 @@ import { getPostDataInclude, PostData } from "@/index/prisma/types";
 import { getServerUser } from "@/lib/serverFuncs";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { cache } from "react";
+import { cache, use } from "react";
 import Image from "next/image";
 import Help from "./Help";
 import { SessionProvider } from "next-auth/react";
@@ -74,11 +74,16 @@ export default async function Page({ params }: PageProps) {
           className="size-full max-h-60 max-w-60 rounded-full"
         />
       </section>
-      <a target="_blank" href={post.attachment[0].url}>
-        <h1 className="font-serif text-xl hover:underline underline-offset-8 border-b-2">
-          {post.title}
-        </h1>
-      </a>
+      {post.attachment[0].type === "IMAGE" ? (
+        <h1 className="font-serif text-xl border-b-2">{post.title}</h1>
+      ) : (
+        <a target="_blank" href={post.attachment[0].url}>
+          <h1 className="font-serif text-xl hover:underline underline-offset-8 border-b-2">
+            {post.title}
+          </h1>
+        </a>
+      )}
+
       {post.attachment[0].type === "IMAGE" ? (
         // <TransformWrapper
         //   initialScale={1}
@@ -115,13 +120,11 @@ export default async function Page({ params }: PageProps) {
         <h2 className="border-b-2">{post.content}</h2>
       ) : (
         <h1 className="font-roboto w-full text-center pb-3 border-b-2 text-xl">
-          <span className="text-blue-500">@{post.author.name}</span> didnt add
+          <span className="text-blue-500">@{post.author.name}</span> didn't add
           any description
         </h1>
       )}
-      <SessionProvider session={session}>
-        <Help post={post} />
-      </SessionProvider>
+      <Help post={post} userId={user.id} />
     </main>
   );
 }

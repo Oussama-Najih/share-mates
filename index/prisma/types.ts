@@ -26,6 +26,7 @@ export function getPostDataInclude(loggedInUserId: string) {
     },
     attachment: true,
     comments: true,
+    likes: true,
   } satisfies Prisma.PostInclude;
 }
 

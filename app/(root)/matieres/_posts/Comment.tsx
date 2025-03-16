@@ -9,21 +9,17 @@ import { useDeleteCommentMutation } from "@/lib/mutations/comment.mutations";
 import { useSession } from "next-auth/react";
 import LikeButton from "./LikeButton";
 import { useSearchParams } from "next/navigation";
+import UserAvatar from "@/components/user/UserAvatar";
 
 type CommentProps = {
   comment: CommentData;
+  userId: string;
 };
 
-export default function Comment({ comment }: CommentProps) {
+export default function Comment({ comment, userId }: CommentProps) {
   const [areChildrenHidden, setAreChildrenHidden] = useState(true);
 
   const mutation = useDeleteCommentMutation();
-
-  const { data } = useSession();
-
-  if (!data) {
-    throw new Error("Not authenticated");
-  }
 
   return (
     <div
@@ -32,7 +28,10 @@ export default function Comment({ comment }: CommentProps) {
     >
       <div>
         <div className="flex justify-between items-center mb-2">
-          <h2 className="font-semibold">@{comment.user.name}</h2>
+          <div className="flex items-center gap-4">
+            <UserAvatar size={40} avatarUrl={comment.user.image} />
+            <h2 className="font-semibold">@{comment.user.name}</h2>
+          </div>
           <span className="text-sm text-gray-500">
             {formatRelativeDate(comment.createdAt)}
           </span>
@@ -49,7 +48,7 @@ export default function Comment({ comment }: CommentProps) {
           >
             {areChildrenHidden ? "Show Replies" : "Hide Replies"}
           </button>
-          {data?.user.id === comment.userId && (
+          {userId === comment.userId && (
             <button onClick={() => mutation.mutate(comment.id)}>
               {!mutation.isPending ? (
                 <Trash size={20} className="hover:text-destructive" />
@@ -63,16 +62,18 @@ export default function Comment({ comment }: CommentProps) {
           commentId={comment.id}
           initialState={{
             likes: comment.likes.length,
-            isLikedByUser: comment.likes.some(
-              (like) => like.userId === data?.user.id
-            ),
+            isLikedByUser: comment.likes.some((like) => like.userId === userId),
           }}
         />
 
         {/* Child Comments */}
         {!areChildrenHidden && (
           <div className="mt-3 pl-4 border-l border-gray-300 dark:border-gray-600">
-            <Comments postId={comment.postId} parentId={comment.id} />
+            <Comments
+              userId={userId}
+              postId={comment.postId}
+              parentId={comment.id}
+            />
           </div>
         )}
       </>

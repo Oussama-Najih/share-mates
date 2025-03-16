@@ -4,6 +4,7 @@ import { formatRelativeDate } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import DeleteButton from "@/components/Utils/DeleteButton";
+import LikeButton from "./LikeButton";
 
 export default function Post({
   post,
@@ -51,12 +52,18 @@ export default function Post({
               (post.content.length > 10 ? "..." : "")
             : "No description"}
         </Link>
-        {post.authorId === userId ? (
-          <DeleteButton
-            post={post}
-            className="absolute right-2 transition-opacity"
+        <div className="flex relative items-end gap-4">
+          <LikeButton
+            postId={post.id}
+            initialState={{
+              likes: post.likes.length,
+              isLikedByUser: post.likes.some((like) => like.userId === userId),
+            }}
           />
-        ) : null}
+          {post.authorId !== userId ? (
+            <DeleteButton post={post} className="absolute transition-opacity" />
+          ) : null}
+        </div>
       </footer>
     </article>
   );

@@ -17,13 +17,12 @@ import { NotificationCountInfo } from "@/index/prisma/types";
 
 const sideBarOptions = [
   "Accueil",
-  "Matieres",
+  "Matières",
   "Notifications",
   // "Controles",
   // "Examens",
   // "TDs",
   // "TPs",
-  "Memoires",
 ];
 
 export default function MainSideBar({

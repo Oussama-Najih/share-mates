@@ -28,7 +28,9 @@ export default function Notification({ notification }: NotificationProps) {
       href: `/post/${notification.postId}`,
     },
     LIKE: {
-      message: `${notification.issuer.name} liked your comment`,
+      message: `${notification.issuer.name} liked your ${
+        notification.postId ? "post" : "comment"
+      }`,
       icon: <Heart className="size-7 fill-red-500 text-red-500" />,
       href: `/post/${notification.postId}`,
     },
