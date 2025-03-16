@@ -68,7 +68,11 @@ export default function MainSideBar({
               >
                 <Link
                   href={`/${
-                    option === "Accueil" ? "/" : lowerCaseFirstLetter(option)
+                    option === "Accueil"
+                      ? ""
+                      : option === "Matières"
+                      ? "matieres"
+                      : lowerCaseFirstLetter(option)
                   }`}
                   className="text-primary-foreground"
                 >

@@ -127,7 +127,7 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
   return (
     <div className="flex flex-col border-b gap-5 pt-8 mb-5 rounded-2xl bg-card p-5 shadow-sm">
       <div className="grid grid-cols-5 px-4 items-center gap-5">
-        <h2 className="col-span-2"> Titre (min 3 caractères)</h2>
+        <h2 className="col-span-2">Titre</h2>
         <Input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
