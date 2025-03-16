@@ -34,7 +34,7 @@ export default function Add() {
   const form = useForm<z.infer<typeof addAnnouncement>>({
     resolver: zodResolver(addAnnouncement),
     defaultValues: {
-      titre: "",
+      title: "",
       mediaId: "",
     },
   });
@@ -94,10 +94,10 @@ export default function Add() {
             <div className="grid gap-4 py-4">
               <FormField
                 control={form.control}
-                name="titre"
+                name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Titre (min 3 caractères)</FormLabel>
+                    <FormLabel>Titre</FormLabel>
                     <FormControl>
                       <Input placeholder="Entrez un titre" {...field} />
                     </FormControl>
@@ -108,7 +108,13 @@ export default function Add() {
                 <FormLabel>Upload Image</FormLabel>
                 <FormControl>
                   <div>
-                    <AnnouncementImageUploader setMediaId={setMediaId} />
+                    <AnnouncementImageUploader
+                      title={form.watch("title")}
+                      setTitle={(value: string) =>
+                        form.setValue("title", value)
+                      }
+                      setMediaId={setMediaId}
+                    />
                   </div>
                 </FormControl>
               </FormItem>
@@ -119,7 +125,7 @@ export default function Add() {
                 size="lg"
                 className="w-full"
                 disabled={
-                  form.watch("titre").length < 3 ||
+                  form.watch("title").length < 3 ||
                   !mediaId ||
                   form.formState.isSubmitting
                 }

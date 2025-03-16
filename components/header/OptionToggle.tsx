@@ -9,17 +9,24 @@ import {
 } from "@/components/ui/select";
 import { CheckCircle, FileText, Search } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function OptionToggle() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Get the current value from the URL
-  const selectedOption = searchParams.get("option") || "Tous les posts";
+  // State to hold the selected option
+  const [selectedOption, setSelectedOption] = useState("Tous les posts");
+
+  useEffect(() => {
+    // Sync the selectedOption state with the current searchParam
+    const option = searchParams.get("option") || "Tous les posts";
+    setSelectedOption(option);
+  }, [searchParams]); // Re-run effect when searchParams change
 
   const options = [
     { icon: <CheckCircle size={16} />, label: "CORRECTIONS" },
-    { icon: <FileText size={16} />, label: "EXERCICES" },
+    { icon: <FileText size={16} />, label: "Énoncés" },
     { icon: <Search size={16} />, label: "Tous les posts" },
   ];
 

@@ -72,7 +72,6 @@ export const notificationsInclude = {
   comment: {
     select: {
       message: true,
-      post: true,
     },
   },
 } satisfies Prisma.NotificationInclude;

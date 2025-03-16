@@ -11,19 +11,26 @@ import {
 import { subjectsWithIcons } from "@/lib/constants";
 import { School } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function SubjectsDrawer() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
 
-  // Get the selected subject from the URL
-  const selectedSubject = searchParams.get("matiere") || "Toutes_les_matieres";
+  // State to hold the selected subject
+  const [selectedSubject, setSelectedSubject] = useState("Toutes_les_matieres");
   const selectedIcon =
     subjectsWithIcons.find((s) => s.name === selectedSubject)?.icon || School;
 
+  useEffect(() => {
+    // Sync the selectedSubject state with the current searchParam
+    const subject = searchParams.get("matiere") || "Toutes_les_matieres";
+    setSelectedSubject(subject);
+  }, [searchParams]); // Re-run effect when searchParams change
+
   const handleSubjectClick = (subject: string) => {
+    setSelectedSubject(subject);
     const params = new URLSearchParams(searchParams.toString());
 
     if (subject !== "Toutes_les_matieres") {

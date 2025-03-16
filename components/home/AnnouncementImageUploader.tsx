@@ -6,10 +6,15 @@ import { UploadButton } from "@/lib/uploadthing";
 import { AttachmentPreviews } from "../Utils/PostEditor";
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
+import { useDropzone } from "@uploadthing/react";
 
 export default function AnnouncementImageUploader({
+  title,
+  setTitle,
   setMediaId,
 }: {
+  title: string;
+  setTitle: (value: string) => void;
   setMediaId: (id: string) => void;
 }) {
   const {
@@ -27,7 +32,20 @@ export default function AnnouncementImageUploader({
       return;
     }
     startUpload(files);
+
+    // Automatically set the title for PDFs if the title is still empty
+    if (files.length > 0 && title.trim() === "") {
+      const fileName = files[0].name.replace(/\.[^/.]+$/, ""); // Remove file extension
+      setTitle(fileName);
+    }
   }
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: handleFileSelection,
+  });
+
+  // Don't want to trigger file input onClick
+  const { onClick, ...rootProps } = getRootProps();
 
   // Set mediaId when attachments change
   useEffect(() => {
@@ -37,8 +55,15 @@ export default function AnnouncementImageUploader({
   }, [attachments, setMediaId]);
 
   return (
-    <div className="flex flex-col items-center gap-4 border p-4 rounded-lg">
+    <div
+      {...rootProps}
+      className={`flex flex-col items-center  gap-4 border p-4 rounded-lg ${
+        isDragActive ? "outline-dashed outline-blue-300" : ""
+      }`}
+    >
       <h2 className="text-lg font-semibold">Upload Announcement Image</h2>
+      {/* hidden is included in getInputProps */}
+      <input {...getInputProps()} />
       <UploadButton
         endpoint="attachment_image"
         onChange={handleFileSelection}
@@ -59,6 +84,7 @@ export default function AnnouncementImageUploader({
           attachments={attachments}
           removeAttachment={removeAttachment}
           afterRemoveAttachment={setMediaId}
+          afterRemoveAttachment2={setTitle}
         />
       )}
     </div>

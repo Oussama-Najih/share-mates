@@ -10,10 +10,8 @@ import { prisma } from "@/db/prisma";
 
 export default async function index({
   isSubjectsPage,
-  isWork,
 }: {
   isSubjectsPage: boolean;
-  isWork: boolean;
 }) {
   const session = await auth();
 
@@ -35,11 +33,9 @@ export default async function index({
       <section className="flex justify-between border-b border-border items-center px-8 py-8  h-14 relative w-full top-0 shadow-md">
         <nav className="flex w-full items-center justify-between space-x-6 md:space-x-12">
           <MainSideBar unreadNotificationCount={unreadNotificationCount} />
-          {!isSubjectsPage && (
-            <h1 className="text-2xl text-foreground font-poppins font-bold">
-              Flow
-            </h1>
-          )}
+          <h1 className="text-2xl text-foreground font-poppins font-bold">
+            {process.env.NEXT_PUBLIC_APP_NAME}
+          </h1>
           <div className="flex items-center space-x-6 md:space-x-12">
             <ModeToggle />
             <UserButton user={user} />
@@ -51,7 +47,7 @@ export default async function index({
           <div className="flex mb-4 py-4 border-b-2 w-full justify-around gap-4 items-center">
             <SubjectsDrawer />
             <Search />
-            {isWork && <OptionToggle />}
+            <OptionToggle />
           </div>
           <MediaTypeToggle />
         </div>

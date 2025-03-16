@@ -20,6 +20,7 @@ import { useSearchParams } from "next/navigation";
 import { useTheme } from "next-themes";
 import { UploadButton, UploadDropzone } from "@/lib/uploadthing";
 import toast from "react-hot-toast";
+
 import { Input } from "../ui/input";
 
 export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
@@ -35,7 +36,6 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
   const matiere = searchParams.get("matiere") as string;
   const categorie = searchParams.get("categorie") as string;
   const option = searchParams.get("option") as string;
-  const mediaType = searchParams.get("mediaType") as string;
 
   const mutation = useSubmitPostMutation();
 
@@ -88,7 +88,7 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
       title,
       content: input,
       mediaId: attachments[0].mediaId!, // We can safely access since we already checked the attachment
-      ...(option ? { option } : {}),
+      option,
     }; // Only add `option` if it's truthy
 
     mutation.mutate(payload, {
@@ -112,7 +112,6 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
   function handleFileSelection(files: File[]) {
     if (attachments.length >= 1) {
       toast.error("Un seul PDF est autorisé.");
-
       return;
     }
 
@@ -136,7 +135,12 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
           placeholder="Entrez un titre"
         />
         {isPdf ? (
-          <div>
+          <div
+            {...rootProps}
+            className={`w-[90vw] ${
+              isDragActive && "outline-dashed outline-blue-300"
+            }`}
+          >
             <UploadButton
               className="w-[90vw] mx-auto h-[10rem] border-2 block"
               endpoint="attachment_pdf"
@@ -153,7 +157,7 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
             {...rootProps}
             className="col-span-5 flex justify-between gap-44 items-center"
           >
-            <h2 className="col-span-2">Contenu</h2>
+            <h2 className="col-span-2">Description</h2>
             <EditorContent
               editor={editor}
               className={cn(
@@ -242,12 +246,14 @@ interface AttachmentPreviewsProps {
   attachments: Attachment[];
   removeAttachment: (fileName: string) => void;
   afterRemoveAttachment?: (mediaId: string) => void;
+  afterRemoveAttachment2?: (title: string) => void;
 }
 
 export function AttachmentPreviews({
   attachments,
   removeAttachment,
   afterRemoveAttachment,
+  afterRemoveAttachment2,
 }: AttachmentPreviewsProps) {
   return (
     <div
@@ -265,6 +271,9 @@ export function AttachmentPreviews({
               removeAttachment(attachment.file.name);
               if (afterRemoveAttachment) {
                 afterRemoveAttachment("");
+              }
+              if (afterRemoveAttachment2) {
+                afterRemoveAttachment2("");
               }
             }}
           />

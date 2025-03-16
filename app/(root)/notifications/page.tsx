@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <>
-      <Header isSubjectsPage={false} isWork={false} />
+      <Header isSubjectsPage={false} />
       <main className="flex w-full min-w-0 gap-5">
         <div className="w-full min-w-0 space-y-5">
           <div className="rounded-2xl bg-card p-5 shadow-sm">

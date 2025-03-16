@@ -12,7 +12,7 @@ export async function submitPost(data: {
   title: string;
   content?: string;
   mediaId: string;
-  option?: string;
+  option: string;
 }) {
   const user = await getServerUser();
   if (!user) throw new Error("Unauthorized");

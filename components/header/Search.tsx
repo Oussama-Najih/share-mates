@@ -9,21 +9,23 @@ import {
 } from "@/components/ui/select";
 import { categories } from "@/lib/constants";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const Search = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Get the current value from the URL
-  const selectedOption =
-    searchParams.get("categorie") || "Toutes_les_categories";
+  // State to hold the selected category
+  const [selectedOption, setSelectedOption] = useState("Toutes_les_categories");
+
+  useEffect(() => {
+    // Sync the selectedOption state with the current searchParam
+    const category = searchParams.get("categorie") || "Toutes_les_categories";
+    setSelectedOption(category);
+  }, [searchParams]); // Re-run effect when searchParams change
 
   const handleSelectChange = (categorie: string) => {
     const params = new URLSearchParams(searchParams.toString());
-
-    if (!["TDs", "TPs"].includes(categorie)) {
-      params.delete("option");
-    }
 
     if (categorie !== "Toutes_les_categories") {
       params.set("categorie", categorie);

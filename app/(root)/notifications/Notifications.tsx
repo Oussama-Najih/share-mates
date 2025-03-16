@@ -80,9 +80,15 @@ export default function Notifications() {
       className="space-y-5"
       onBottomReached={() => hasNextPage && !isFetching && fetchNextPage()}
     >
-      {notifications.map((notification) => (
-        <Notification key={notification.id} notification={notification} />
-      ))}
+      {notifications.map((notification) => {
+        const plainNotification = JSON.parse(JSON.stringify(notification));
+        return (
+          <Notification
+            key={plainNotification.id}
+            notification={plainNotification}
+          />
+        );
+      })}
       {isFetchingNextPage && <Loader2 className="mx-auto my-3 animate-spin" />}
     </InfiniteScrollContainer>
   );

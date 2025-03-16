@@ -32,7 +32,7 @@ export default function PasswordInput() {
       <Button
         type="button"
         variant="ghost"
-        className="hover:bg-[oklch(var(--button-pw))] text-[oklch(var(--icon-color))] transition-colors duration-300 absolute right-2 top-[1.8rem] p-2"
+        className="hover:bg-orange-300 hover:text-lime-700 text-[oklch(var(--icon-color))] transition-colors duration-300 absolute right-2 top-[1.8rem] p-2"
         onClick={() => setShowPassword((prev) => !prev)}
       >
         {showPassword ? <EyeIcon /> : <EyeOff />}

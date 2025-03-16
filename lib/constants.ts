@@ -12,9 +12,8 @@ import {
   FlaskConical,
   FolderTree,
   Terminal,
-  Camera,
+  BookA,
   ClipboardList,
-  FileText,
   BookOpen,
   School,
   FileCheck,
@@ -91,6 +90,7 @@ export const matieresWithIcons = [
 
 export const categories = [
   { name: "Toutes_les_categories", icon: null }, // Represents photos or images
+  { name: "COURS", icon: BookA }, // Represents photos or images
   { name: "CONTROLES", icon: ClipboardList }, // Represents tests or checklists
   { name: "EXAMENS", icon: FileCheck }, // Represents written documents
   { name: "TDS", icon: BookOpen }, // Represents theoretical work/study

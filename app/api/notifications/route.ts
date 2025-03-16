@@ -1,6 +1,7 @@
 import { prisma } from "@/db/prisma";
 import { notificationsInclude, NotificationsPage } from "@/index/prisma/types";
 import { getServerUser } from "@/lib/serverFuncs";
+import { convertToPlainObject } from "@/lib/utils";
 import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -29,7 +30,7 @@ export async function GET(req: NextRequest) {
       notifications.length > pageSize ? notifications[pageSize].id : null;
 
     const data: NotificationsPage = {
-      notifications: notifications.slice(0, pageSize),
+      notifications: convertToPlainObject(notifications.slice(0, pageSize)),
       nextCursor,
     };
 

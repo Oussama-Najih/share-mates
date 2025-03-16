@@ -2,7 +2,7 @@ import UserAvatar from "@/components/user/UserAvatar";
 import { NotificationData } from "@/index/prisma/types";
 import { cn } from "@/lib/utils";
 import { NotificationType } from "@prisma/client";
-import { Heart, MessageCircle, Reply, User2 } from "lucide-react";
+import { Heart, MessageCircle, Reply } from "lucide-react";
 import Link from "next/link";
 import { JSX } from "react";
 

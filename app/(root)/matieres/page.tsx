@@ -24,7 +24,7 @@ export default async function page(props: {
   const {
     matiere = "Toutes les matieres",
     categorie = "Toutes les categories",
-    option = "COURS_ET_EXERCICES",
+    option = "Énoncés_ET_Corrections",
     type_Media = "PDF_ET_IMAGE",
   } = await props.searchParams;
 
@@ -44,8 +44,8 @@ export default async function page(props: {
   }
 
   if (
-    option !== "COURS_ET_EXERCICES" &&
-    !["CORRECTIONS", "EXERCICES"].includes(option)
+    option !== "Énoncés_ET_Corrections" &&
+    !["CORRECTIONS", "Énoncés"].includes(option)
   ) {
     return <NotFound message={`Invalid option: ${option}`} />;
   }
@@ -56,23 +56,18 @@ export default async function page(props: {
 
   return (
     <div>
-      <Header
-        isSubjectsPage={true}
-        isWork={["TDS", "TPS"].includes(categorie)}
-      />
+      <Header isSubjectsPage={true} />
       <h1
         className="font-poppins border-t-2 p-2 text-xl border-b-2 border-primary
         pb-4 text-center text-primary mb-5"
       >
-        {matiere} / {categorie}{" "}
-        {["TDS", "TPS"].includes(categorie) && `/ ${option}`} / {type_Media}
+        {matiere} / {categorie} / {option} / {type_Media}
       </h1>
 
       {/* Conditionally render PostEditor if applicable */}
       {matiere !== "Toutes les matieres" &&
         categorie !== "Toutes les categories" &&
-        (!["TDS", "TPS"].includes(categorie) ||
-          option !== "COURS_ET_EXERCICES") && (
+        option !== "Énoncés_ET_Corrections" && (
           <SessionProvider session={session}>
             {type_Media !== "PDF_ET_IMAGE" && (
               <PostEditor isPdf={type_Media === "PDF"} />

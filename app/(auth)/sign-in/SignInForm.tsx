@@ -15,6 +15,8 @@ import { signInDefaultValues } from "@/lib/constants";
 export default function SignInForm() {
   const form = useForm<signInFormType>({
     resolver: zodResolver(signInFormSchema),
+    defaultValues:
+      process.env.NODE_ENV === "development" ? signInDefaultValues : {},
   });
   const {
     register,
@@ -41,7 +43,7 @@ export default function SignInForm() {
         className="space-y-8 backdrop-blur-sm w-4/6 max-w-[400px] mx-auto flex flex-col border-[1px] bg-transparent p-6 rounded-lg shadow-md"
       >
         <h1 className="text-center font-poppins font-semibold text-[oklch(var(--border-focus))]">
-          Welcome to Flow
+          Welcome to ShareMates
         </h1>
         <div className="space-y-4">
           <TextField

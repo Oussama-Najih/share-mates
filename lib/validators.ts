@@ -33,11 +33,11 @@ export const createPostSchema = z.object({
     .min(3, { message: "Title must be atleast 3 characters long" }),
   content: z.string().optional(),
   mediaId: z.string(),
-  option: z.string().optional(),
+  option: z.string(),
 });
 
 export const addAnnouncement = z.object({
-  titre: z
+  title: z
     .string()
     .min(3, { message: "Title must be atleast 3 characters long" }),
   mediaId: z.string(),

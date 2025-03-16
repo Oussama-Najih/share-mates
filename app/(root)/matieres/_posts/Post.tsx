@@ -3,7 +3,6 @@ import { PostData } from "@/index/prisma/types";
 import { formatRelativeDate } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import DeleteButton from "@/components/Utils/DeleteButton";
 
 export default function Post({
@@ -30,8 +29,10 @@ export default function Post({
           </Link>
         </div>
       </section>
-      <h1 className="text-center text-base lg:text-xl">{post.title}</h1>
-      {post.attachment[0].type === "IMAGE" ? (
+      <h1 className="text-center pb-2 border-b-2 text-base lg:text-xl">
+        {post.title}
+      </h1>
+      {post.attachment[0].type === "IMAGE" && (
         <Image
           src={post.attachment[0].url}
           alt={post.title}
@@ -39,21 +40,6 @@ export default function Post({
           height={300}
           className="w-full aspect-video object-cover"
         />
-      ) : (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href={post.attachment[0].url}
-          className="inline-block"
-        >
-          Titre :{" "}
-          <button
-            className="text-blue-500 hover:cursor-pointer hover:underline hover:underline-offset-2"
-            aria-label={`Open post: ${post.title}`}
-          >
-            {post.title}
-          </button>
-        </a>
       )}
       <footer className="flex pt-2 justify-between items-center">
         <Link

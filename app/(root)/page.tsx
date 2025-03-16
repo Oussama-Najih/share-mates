@@ -3,7 +3,6 @@ import Header from "@/components/header";
 import Add from "@/components/home/Add";
 import AnnouncementsCarousel from "@/components/home/AnnouncementsCarousel";
 import { getAnnouncements } from "@/lib/actions/announcements.actions";
-import { SessionProvider } from "next-auth/react";
 
 export default async function Page() {
   const announcements = await getAnnouncements();
@@ -17,7 +16,7 @@ export default async function Page() {
 
   return (
     <div className="flex min-h-screen flex-col py-2">
-      <Header isWork={false} isSubjectsPage={false} />
+      <Header isSubjectsPage={false} />
       {!!announcements.length ? (
         <AnnouncementsCarousel data={announcements} userId={session.user.id} />
       ) : (

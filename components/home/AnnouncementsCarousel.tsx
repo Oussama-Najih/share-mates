@@ -43,7 +43,7 @@ const AnnouncementsCarousel = ({
           <CarouselItem key={announcement.id}>
             <div className="rounded-md w-9/12 border-2 mx-auto">
               <div className="w-full pr-4 flex justify-between bg-primary  dark:bg-muted">
-                <h2 className="text-accent-foreground bg-opacity-40 rounded-md text-2xl font-bold px-4 py-2 text-white text-center">
+                <h2 className="text-accent-foreground break-all bg-opacity-40 rounded-md text-2xl font-bold px-4 py-2 text-white text-center">
                   {announcement.title}
                 </h2>
                 {announcement.authorId === userId && (

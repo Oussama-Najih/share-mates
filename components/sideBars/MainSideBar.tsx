@@ -1,6 +1,5 @@
 "use client";
 
-import NotificationsButton from "@/app/(root)/notifications/NotificationsButton";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -12,12 +11,12 @@ import {
 import { lowerCaseFirstLetter } from "@/lib/utils";
 import { Menu } from "lucide-react";
 import Link from "next/link";
-import ButtonWithNotisCount from "./ButtonWithNotisCount";
 import { useQuery } from "@tanstack/react-query";
 import kyInstance from "@/lib/ky";
 import { NotificationCountInfo } from "@/index/prisma/types";
 
 const sideBarOptions = [
+  "Accueil",
   "Matieres",
   "Notifications",
   // "Controles",
@@ -69,7 +68,9 @@ export default function MainSideBar({
                 className="bg-primary py-3 rounded-md flex justify-center items-center "
               >
                 <Link
-                  href={`/${lowerCaseFirstLetter(option)}`}
+                  href={`/${
+                    option === "Accueil" ? "/" : lowerCaseFirstLetter(option)
+                  }`}
                   className="text-primary-foreground"
                 >
                   {option}
@@ -92,7 +93,6 @@ export default function MainSideBar({
                       </span>
                     )}
                   </div>
-                  <span className="hidden lg:inline">Notifications</span>
                 </Link>
               </Button>
             )

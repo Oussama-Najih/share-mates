@@ -47,7 +47,7 @@ export default async function Page() {
 
   return (
     <>
-      <Header isSubjectsPage={false} isWork={false} />
+      <Header isSubjectsPage={false} />
       <main className="flex w-full min-w-0 gap-5">
         <div className="w-full min-w-0 space-y-5">
           <SessionProvider session={session}>

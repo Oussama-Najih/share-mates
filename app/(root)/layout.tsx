@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Header from "@/components/header";
 import ScrollToTop from "@/components/Utils/ScrollToTop";
 
 export const metadata: Metadata = {

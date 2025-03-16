@@ -17,7 +17,7 @@ export async function getAnnouncements() {
 }
 
 export async function createAnnouncement(data: {
-  titre: string;
+  title: string;
   mediaId?: string;
 }) {
   try {
@@ -26,7 +26,7 @@ export async function createAnnouncement(data: {
 
     await prisma.announcement.create({
       data: {
-        title: data.titre,
+        title: data.title,
         media: data.mediaId ? { connect: { id: data.mediaId } } : undefined, // Fix mediaId issue
         authorId: user.id,
       },

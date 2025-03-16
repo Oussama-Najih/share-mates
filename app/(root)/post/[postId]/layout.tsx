@@ -7,7 +7,7 @@ export default function RootLayout({
 }>) {
   return (
     <div className="flex min-h-screen flex-col container">
-      <Header isWork={false} isSubjectsPage={false} />
+      <Header isSubjectsPage={false} />
       {children}
     </div>
   );

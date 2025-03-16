@@ -27,13 +27,9 @@ export const markNotificationsAsRead = async () => {
       },
     });
 
-    return new Response(JSON.stringify({ success: true }), {
-      status: 200,
-    });
+    return { success: true };
   } catch (error) {
     console.error(error);
-    return new Response(JSON.stringify({ error: "Internal server error" }), {
-      status: 500,
-    });
+    return { success: false };
   }
 };

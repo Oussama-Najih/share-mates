@@ -74,17 +74,13 @@ export default function Posts({ userId }: { userId: string }) {
           <br /> Soyez le premier !!
         </h1>
         <br />
-        {(!matiere ||
-          !categorie ||
-          (categorie && ["TDS", "TPS"].includes(categorie) && !option)) && (
+        {(!matiere || !categorie || !option) && (
           <h2 className="mb-4">Pour créer un post, choisissez : </h2>
         )}
         <ul className="list-disc list-inside flex flex-col items-center">
           {!matiere ? <li>Une matiere</li> : null}
           {!categorie ? <li>Une categorie</li> : null}
-          {categorie && ["TDS", "TPS"].includes(categorie) && !option ? (
-            <li>Une option (Correction ou Exercices)</li>
-          ) : null}
+          {!option ? <li>Une option (Correction ou Exercices)</li> : null}
           {!mediaType ? <li>Un type de media</li> : null}
         </ul>
       </div>
