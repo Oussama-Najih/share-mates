@@ -11,9 +11,11 @@ import { Button } from "@/components/ui/button";
 export default function Comments({
   postId,
   parentId,
+  userId,
 }: {
   postId: string;
   parentId: string | null;
+  userId: string;
 }) {
   const queryKey: QueryKey = parentId
     ? ["comments", postId, parentId]
@@ -68,7 +70,7 @@ export default function Comments({
       {/* Comments List */}
       <div className="space-y-4">
         {comments.map((comment) => (
-          <Comment key={comment.id} comment={comment} />
+          <Comment userId={userId} key={comment.id} comment={comment} />
         ))}
       </div>
 
