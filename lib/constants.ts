@@ -71,21 +71,6 @@ export const matieresWithIcons = [
     icon: HardDrive,
     href: "/matieres/systemes_exploitation_2",
   },
-  {
-    name: "TP Electronique Analogique 2",
-    icon: FlaskConical,
-    href: "/matieres/tp_electronique_analogique_2",
-  },
-  {
-    name: "TP Programmation Avancée & Structure de Données 2",
-    icon: Terminal,
-    href: "/matieres/TP_structure_donnees_2",
-  },
-  {
-    name: "TP Informatique Industrielle",
-    icon: Server,
-    href: "/matieres/tp_informatique_industrielle_labview",
-  },
 ];
 
 export const categories = [
