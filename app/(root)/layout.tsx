@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import ScrollToTop from "@/components/Utils/ScrollToTop";
 
 export const metadata: Metadata = {
-  title: "Flow",
+  title: "ShareMates",
   description: "A modern school platform",
 };
 
