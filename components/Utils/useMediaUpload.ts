@@ -18,8 +18,6 @@ export default function useMediaUpload(
   const { startUpload, isUploading } = useUploadThing(mediaType, {
     //When we get a mediaId back, we can identify the corresponding file
     onBeforeUploadBegin(files) {
-      console.log("before_uplo");
-      console.log({ files });
       const renamedFiles = files.map((file) => {
         const extension = file.name.split(".").pop();
         return new File(
@@ -35,7 +33,6 @@ export default function useMediaUpload(
         ...prev,
         ...renamedFiles.map((file) => ({ file, isUploading: true })),
       ]);
-      console.log({ renamedFiles });
       return renamedFiles;
       //The return renamedFiles; inside onBeforeUploadBegin(files) is received by the useUploadThing hook.
       // Specifically, useUploadThing internally uses this return value as the new list of files to upload. Instead of uploading the original files array, it uploads renamedFiles (which contains the same file data but with new names).
@@ -43,7 +40,6 @@ export default function useMediaUpload(
     onUploadProgress: setUploadProgress,
     // The `res` parameter in `onClientUploadComplete(res)` comes from the `startUpload` function provided by `useUploadThing`.
     onClientUploadComplete(res) {
-      console.log("complete");
       setAttachments((prev) =>
         prev.map((a) => {
           const uploadResult = res.find((r) => r.name === a.file.name);
@@ -69,7 +65,7 @@ export default function useMediaUpload(
       toast.error("Veuillez attendre la fin du téléchargement en cours.");
     }
 
-    if (attachments.length && files.length > 1) {
+    if (attachments.length && files.length > 5) {
       toast.error(
         "Vous ne pouvez télécharger qu'un seul fichier joint par publication."
       );

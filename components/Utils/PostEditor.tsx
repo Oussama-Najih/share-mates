@@ -77,27 +77,32 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
     }) || "";
 
   function onSubmit() {
-    if (!attachments || !attachments.length) {
+    if (!attachments || attachments.length === 0) {
       console.error("No attachments provided");
-      return; // Handle the error or return early
+      return;
     }
 
-    const payload = {
-      matiere,
-      categorie,
-      title,
-      content: input,
-      mediaId: attachments[0].mediaId!, // We can safely access since we already checked the attachment
-      option,
-    }; // Only add `option` if it's truthy
+    for (const attachment of attachments) {
+      if (!attachment.mediaId) {
+        console.error("Skipping attachment with missing mediaId.");
+        continue;
+      }
 
-    mutation.mutate(payload, {
-      onSuccess: () => {
-        editor?.commands.clearContent();
-        resetMediaUploads();
-        setTitle("");
-      },
-    });
+      const payload = {
+        matiere,
+        categorie,
+        title,
+        content: input,
+        mediaId: attachment.mediaId, // Each post gets one attachment
+        option,
+      };
+
+      mutation.mutate(payload);
+    }
+
+    editor?.commands.clearContent();
+    setTitle("");
+    resetMediaUploads();
   }
 
   function onPaste(e: ClipboardEvent<HTMLInputElement>) {
@@ -110,7 +115,7 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function handleFileSelection(files: File[]) {
-    if (attachments.length >= 1) {
+    if (attachments.length >= 5) {
       toast.error("Un seul PDF est autorisé.");
       return;
     }
@@ -118,10 +123,10 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
     startUpload(files);
 
     // Automatically set the title for PDFs if the title is still empty
-    if (files.length > 0 && title.trim() === "") {
-      const fileName = files[0].name.replace(/\.[^/.]+$/, ""); // Remove file extension
-      setTitle(fileName);
-    }
+    // if (files.length > 0 && title.trim() === "") {
+    //   const fileName = files[0].name.replace(/\.[^/.]+$/, ""); // Remove file extension
+    //   setTitle(fileName);
+    // }
   }
 
   return (
@@ -145,7 +150,7 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
               className="w-[90vw] mx-auto h-[10rem] border-2 block"
               endpoint="attachment_pdf"
               onChange={handleFileSelection}
-              disabled={attachments.length >= 1}
+              disabled={attachments.length >= 5}
               appearance={{
                 button:
                   "text-black dark:text-primary mb-2 border-blue-200 dark:border-blue-300 border-2 hover:cursor-pointer",
@@ -188,7 +193,7 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
         {!isPdf && (
           <AddAttachmentsButton
             onFilesSelected={handleFileSelection}
-            disabled={isUploading || attachments.length >= 1}
+            disabled={isUploading || attachments.length >= 5}
           />
         )}
         <LoadingButton

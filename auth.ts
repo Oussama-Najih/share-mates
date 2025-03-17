@@ -26,7 +26,6 @@ export const config = {
         password: { type: "password" },
       },
       async authorize(credentials) {
-        console.log("authorize");
         if (credentials == null) return null;
 
         // Find user in database
@@ -60,7 +59,6 @@ export const config = {
   callbacks: {
     ...authConfig,
     async session({ session, token }) {
-      console.log("session cb");
       if (!token.sub) return session;
 
       // Fetch the latest user data from the database
@@ -78,7 +76,6 @@ export const config = {
     },
 
     async jwt({ token, user, trigger, session }) {
-      console.log("jwt cb");
 
       if (user) {
         token.id = user.id;

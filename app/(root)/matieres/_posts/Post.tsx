@@ -5,6 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import DeleteButton from "@/components/Utils/DeleteButton";
 import LikeButton from "./LikeButton";
+import Comments from "./Comments";
+import CommentCount from "../../post/[postId]/CommentCount";
+import { useState } from "react";
+import { MessageSquare } from "lucide-react";
 
 export default function Post({
   post,
@@ -13,6 +17,8 @@ export default function Post({
   post: PostData;
   userId: string;
 }) {
+  const [showComments, setShowComments] = useState(false);
+
   return (
     <article
       className="p-3 space-y-1 max-w-[480px] dark:border-blue-950 w-[70%] mx-auto rounded-md border-2 border-primary/40 bg-card shadow-sm"
@@ -54,17 +60,30 @@ export default function Post({
         </Link>
         <div className="flex relative items-end gap-4">
           <LikeButton
+            isPage={false}
             postId={post.id}
             initialState={{
               likes: post.likes.length,
               isLikedByUser: post.likes.some((like) => like.userId === userId),
             }}
           />
-          {post.authorId !== userId ? (
+          {post.authorId === userId ? (
             <DeleteButton post={post} className="absolute transition-opacity" />
           ) : null}
         </div>
       </footer>
+      <div className="rounded-lg mt-2 w-full">
+        <button
+          onClick={() => setShowComments((prev) => !prev)}
+          className="flex items-center gap-2 mb-3"
+        >
+          <MessageSquare className="size-5" />
+          <CommentCount postId={post.id} initialState={post.comments.length} />
+        </button>
+        {showComments ? (
+          <Comments userId={userId} postId={post.id} parentId={null} />
+        ) : null}
+      </div>
     </article>
   );
 }

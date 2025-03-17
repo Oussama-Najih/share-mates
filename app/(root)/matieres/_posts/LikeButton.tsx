@@ -14,9 +14,11 @@ interface LikeButtonProps {
   commentId?: string;
   postId?: string;
   initialState: LikeInfo;
+  isPage?: boolean;
 }
 
 export default function LikeButton({
+  isPage = true,
   commentId,
   postId,
   initialState,
@@ -75,7 +77,8 @@ export default function LikeButton({
         )}
       />
       <span className="text-sm font-medium tabular-nums">
-        {data.likes} <span className="hidden sm:inline">likes</span>
+        {data.likes} {isPage ? "likes" : null}
+        {/* <span className="hidden sm:inline">likes</span> */}
       </span>
     </button>
   );

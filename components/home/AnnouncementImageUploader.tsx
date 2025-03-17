@@ -26,18 +26,18 @@ export default function AnnouncementImageUploader({
   } = useMediaUpload("attachment_image");
 
   function handleFileSelection(files: File[]) {
-    if (attachments.length >= 1) {
-      toast.error("Une seule image est autorisée.");
+    if (attachments.length >= 5) {
+      toast.error("5 images au maximum sont autorisées");
 
       return;
     }
     startUpload(files);
 
     // Automatically set the title for PDFs if the title is still empty
-    if (files.length > 0 && title.trim() === "") {
-      const fileName = files[0].name.replace(/\.[^/.]+$/, ""); // Remove file extension
-      setTitle(fileName);
-    }
+    // if (files.length > 0 && title.trim() === "") {
+    //   const fileName = files[0].name.replace(/\.[^/.]+$/, ""); // Remove file extension
+    //   setTitle(fileName);
+    // }
   }
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

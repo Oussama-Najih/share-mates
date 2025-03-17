@@ -11,28 +11,26 @@ interface NotificationProps {
 }
 
 export default function Notification({ notification }: NotificationProps) {
-  console.log({ notification });
-
   const notificationTypeMap: Record<
     NotificationType,
     { message: string; icon: JSX.Element; href: string }
   > = {
     REPLY: {
-      message: `${notification.issuer.name} replied to your comment`,
+      message: `replied to your comment`,
       icon: <Reply className="size-7 text-primary" />,
       href: `/post/${notification.postId}`,
     },
     COMMENT: {
-      message: `${notification.issuer.name} commented on your post`,
+      message: `commented on your post`,
       icon: <MessageCircle className="size-7 fill-primary text-primary" />,
       href: `/post/${notification.postId}`,
     },
     LIKE: {
-      message: `${notification.issuer.name} liked your ${
-        notification.postId ? "post" : "comment"
-      }`,
+      message: `liked your ${notification.postId ? "post" : "comment"}`,
       icon: <Heart className="size-7 fill-red-500 text-red-500" />,
-      href: `/post/${notification.postId}`,
+      href: `/post/${
+        notification.postId ? notification.postId : notification.comment?.postId
+      }`,
     },
   };
 

@@ -7,7 +7,6 @@ import { NextRequest } from "next/server";
 export async function GET(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams;
-    console.log({ params: req.nextUrl.searchParams });
     const cursor = searchParams.get("cursor") || undefined;
     const matiere = searchParams.get("matiere") as keyof typeof Subject | null;
     const option = searchParams.get("option") || null;
@@ -39,8 +38,6 @@ export async function GET(req: NextRequest) {
         : {}),
     };
 
-    console.log("mediaType:", mediaType);
-    console.log("Filters:", JSON.stringify(filters, null, 2));
 
     const posts = await prisma.post.findMany({
       where: filters,
@@ -50,7 +47,6 @@ export async function GET(req: NextRequest) {
       cursor: cursor ? { id: cursor } : undefined,
     });
 
-    console.log({ posts });
 
     const nextCursor = posts.length > pageSize ? posts[pageSize].id : null;
 

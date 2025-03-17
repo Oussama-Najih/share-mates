@@ -5,7 +5,6 @@ import authConfig from "@/auth.config";
 const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
-  console.log("middleware");
   const { nextUrl } = req;
   const loggedIn = !!req.auth;
 

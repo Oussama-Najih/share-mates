@@ -14,7 +14,6 @@ const SignInPage = async (props: {
 }) => {
   const { callbackUrl } = await props.searchParams;
 
-  console.log(callbackUrl);
 
   const session = await auth();
 

@@ -42,11 +42,11 @@ export const fileRouter = {
       return { avatarUrl: newAvatarUrl };
     }),
 
-  attachment_pdf: f({ pdf: { maxFileSize: "8MB", maxFileCount: 1 } })
+  attachment_pdf: f({ pdf: { maxFileSize: "8MB", maxFileCount: 5 } })
     .middleware(authMiddleware)
     .onUploadComplete(handleAttachmentUpload("PDF")),
 
-  attachment_image: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
+  attachment_image: f({ image: { maxFileSize: "4MB", maxFileCount: 5 } })
     .middleware(authMiddleware)
     .onUploadComplete(handleAttachmentUpload("IMAGE")),
 } satisfies FileRouter;

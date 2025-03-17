@@ -102,7 +102,6 @@ export async function POST(
         : []),
     ]);
 
-    console.log({ b });
 
     return new Response();
   } catch (error) {

@@ -23,6 +23,5 @@ export async function signInWithCredentials(formData: signInFormType) {
 }
 
 export async function signOutUser() {
-  console.log("signout");
   await signOut();
 }

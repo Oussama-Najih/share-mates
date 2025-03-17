@@ -9,7 +9,6 @@ export async function submitComment(data: {
   parentId: string | null;
   message: string;
 }) {
-  console.log("submitCommentaction");
   const { postId, parentId, message } = data;
 
   const loggedInUser = await getServerUser();
@@ -67,9 +66,6 @@ export async function submitComment(data: {
 
   // Update the notification's commentId with the actual new comment ID
   if (newComment) {
-    console.log("updating comment id");
-    console.log({ newCommentId: newComment.id });
-
     await prisma.notification.updateMany({
       where: {
         issuerId: loggedInUser.id,

@@ -6,7 +6,6 @@ import { getAnnouncements } from "@/lib/actions/announcements.actions";
 
 export default async function Page() {
   const announcements = await getAnnouncements();
-  console.log({ announcements });
 
   const session = await auth();
 
