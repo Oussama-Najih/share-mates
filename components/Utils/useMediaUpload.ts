@@ -47,11 +47,12 @@ export default function useMediaUpload(
         prev.map((a) => {
           const uploadResult = res.find((r) => r.name === a.file.name);
 
-          if (!uploadResult) return a;
-          //return to frontend
+          if (!uploadResult) return a; // This prevents updates if no matching upload result is found
+
+          // Ensure mediaId exists before trying to update
           return {
             ...a,
-            mediaId: uploadResult.serverData.mediaId,
+            mediaId: uploadResult.serverData?.mediaId, // Check that mediaId is defined
             isUploading: false,
           };
         })

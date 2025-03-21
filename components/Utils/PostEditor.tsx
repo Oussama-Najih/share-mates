@@ -114,10 +114,10 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
     startUpload(files);
 
     // Automatically set the title for PDFs if the title is still empty
-    if (files.length > 0 && title.trim() === "") {
-      const fileName = files[0].name.replace(/\.[^/.]+$/, ""); // Remove file extension
-      setTitle(fileName);
-    }
+    // if (files.length > 0 && title.trim() === "") {
+    //   const fileName = files[0].name.replace(/\.[^/.]+$/, ""); // Remove file extension
+    //   setTitle(fileName);
+    // }
   }
 
   return (
@@ -151,7 +151,7 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
         </div>
       ) : (
         <div {...rootProps} className="flex items-center justify-between">
-          <h2 className="">Description</h2>
+          <h2>Description</h2>
           <div className="w-8/12">
             {" "}
             {/* Ensure this matches the Input width */}
