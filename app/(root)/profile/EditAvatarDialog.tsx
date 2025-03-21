@@ -16,17 +16,17 @@ import { useRef, useState, useEffect } from "react";
 import Resizer from "react-image-file-resizer";
 import CropImageDialog from "./CropImageDialog";
 
-interface EditProfileDialogProps {
+interface EditAvatarDialogProps {
   user: UserData;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export default function EditProfileDialog({
+export default function EditAvatarDialog({
   user,
   open,
   onOpenChange,
-}: EditProfileDialogProps) {
+}: EditAvatarDialogProps) {
   const mutation = useUpdateAvatarMutation(user.id);
   const [croppedAvatar, setCroppedAvatar] = useState<Blob | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>(""); // Initialize as empty string

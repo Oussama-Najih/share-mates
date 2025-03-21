@@ -28,10 +28,12 @@ export const config = {
       async authorize(credentials) {
         if (credentials == null) return null;
 
-        // Find user in database
         const user = await prisma.user.findFirst({
           where: {
-            name: credentials.name as string,
+            OR: [
+              { name: credentials.name as string },
+              { original_name: credentials.name as string }, // Assuming you want to match either field
+            ],
           },
         });
 
@@ -42,7 +44,6 @@ export const config = {
             user.password
           );
 
-          // If password is correct, return user
           if (isMatch) {
             return {
               id: user.id,
@@ -64,19 +65,22 @@ export const config = {
       // Fetch the latest user data from the database
       const user = await prisma.user.findUnique({
         where: { id: token.sub },
-        select: { image: true }, // Only fetch the image
+        select: { image: true, name: true }, // Only fetch the image
       });
 
       session.user.id = token.sub;
       session.user.role = token.role;
-      session.user.name = token.name!;
+      if (user) {
+        session.user.name = user.name;
+      } else {
+        session.user.name = token.name!;
+      }
       session.user.image = user?.image ?? token.image; // Always get the latest image
 
       return session;
     },
 
     async jwt({ token, user, trigger, session }) {
-
       if (user) {
         token.id = user.id;
         token.role = user.role;

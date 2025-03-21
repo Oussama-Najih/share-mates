@@ -26,8 +26,6 @@ export type UserButtonProps = {
 };
 
 export default function UserButton({ className, user }: UserButtonProps) {
-  const { theme, setTheme } = useTheme();
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

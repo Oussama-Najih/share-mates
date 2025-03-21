@@ -26,10 +26,6 @@ import { Input } from "../ui/input";
 export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
   const { theme } = useTheme();
 
-  const { data } = useSession();
-
-  if (!data) throw new Error("Not authorized");
-
   const [title, setTitle] = useState("");
 
   const searchParams = useSearchParams();
@@ -77,32 +73,27 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
     }) || "";
 
   function onSubmit() {
-    if (!attachments || attachments.length === 0) {
+    if (!attachments || !attachments.length) {
       console.error("No attachments provided");
-      return;
+      return; // Handle the error or return early
     }
 
-    for (const attachment of attachments) {
-      if (!attachment.mediaId) {
-        console.error("Skipping attachment with missing mediaId.");
-        continue;
-      }
+    const payload = {
+      matiere,
+      categorie,
+      title,
+      content: input,
+      mediaIds: attachments.map((a) => a.mediaId).filter(Boolean) as string[],
+      option,
+    }; // Only add `option` if it's truthy
 
-      const payload = {
-        matiere,
-        categorie,
-        title,
-        content: input,
-        mediaId: attachment.mediaId, // Each post gets one attachment
-        option,
-      };
-
-      mutation.mutate(payload);
-    }
-
-    editor?.commands.clearContent();
-    setTitle("");
-    resetMediaUploads();
+    mutation.mutate(payload, {
+      onSuccess: () => {
+        editor?.commands.clearContent();
+        resetMediaUploads();
+        setTitle("");
+      },
+    });
   }
 
   function onPaste(e: ClipboardEvent<HTMLInputElement>) {
@@ -115,67 +106,68 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function handleFileSelection(files: File[]) {
-    if (attachments.length >= 5) {
-      toast.error("Un seul PDF est autorisé.");
+    if (attachments.length >= 10) {
+      toast.error("10 PDFs sont autorisés dans un seul post au maximum.");
       return;
     }
 
     startUpload(files);
 
     // Automatically set the title for PDFs if the title is still empty
-    // if (files.length > 0 && title.trim() === "") {
-    //   const fileName = files[0].name.replace(/\.[^/.]+$/, ""); // Remove file extension
-    //   setTitle(fileName);
-    // }
+    if (files.length > 0 && title.trim() === "") {
+      const fileName = files[0].name.replace(/\.[^/.]+$/, ""); // Remove file extension
+      setTitle(fileName);
+    }
   }
 
   return (
     <div className="flex flex-col border-b gap-5 pt-8 mb-5 rounded-2xl bg-card p-5 shadow-sm">
-      <div className="grid grid-cols-5 px-4 items-center gap-5">
+      <div className="flex justify-between px-4 items-center gap-5">
         <h2 className="col-span-2">Titre</h2>
         <Input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="col-span-3 py-6 pl-3"
+          className="w-8/12 py-6 pl-3" // Ensure this matches the EditorContent width
           placeholder="Entrez un titre"
         />
-        {isPdf ? (
-          <div
-            {...rootProps}
-            className={`w-[90vw] ${
-              isDragActive && "outline-dashed outline-blue-300"
-            }`}
-          >
-            <UploadButton
-              className="w-[90vw] mx-auto h-[10rem] border-2 block"
-              endpoint="attachment_pdf"
-              onChange={handleFileSelection}
-              disabled={attachments.length >= 5}
-              appearance={{
-                button:
-                  "text-black dark:text-primary mb-2 border-blue-200 dark:border-blue-300 border-2 hover:cursor-pointer",
-              }}
-            />
-          </div>
-        ) : (
-          <div
-            {...rootProps}
-            className="col-span-5 flex justify-between gap-44 items-center"
-          >
-            <h2 className="col-span-2">Description</h2>
+      </div>
+      {isPdf ? (
+        <div
+          {...rootProps}
+          className={`w-[90vw]  ${
+            isDragActive && "outline-dashed outline-blue-300"
+          }`}
+        >
+          <UploadButton
+            className="w-[90vw] mx-auto h-[10rem] border-2 block"
+            endpoint="attachment_pdf"
+            onChange={handleFileSelection}
+            disabled={attachments.length >= 10}
+            appearance={{
+              button:
+                "text-black dark:text-primary mb-2 border-blue-200 dark:border-blue-300 border-2 hover:cursor-pointer",
+            }}
+          />
+        </div>
+      ) : (
+        <div {...rootProps} className="flex items-center justify-between">
+          <h2 className="">Description</h2>
+          <div className="w-8/12">
+            {" "}
+            {/* Ensure this matches the Input width */}
             <EditorContent
               editor={editor}
               className={cn(
-                "max-h-[20rem] max-w-[710px] col-span-3 border-2 w-full overflow-y-auto rounded-2xl bg-background px-5 py-3",
+                "border-2 overflow-y-auto rounded-2xl bg-background px-5 py-3 w-full", // Add w-full to ensure full width
                 isDragActive && "outline-dashed"
               )}
               onPaste={onPaste}
             />
-            {/* hidden is included in getInputProps */}
-            <input {...getInputProps()} />
           </div>
-        )}
-      </div>
+          {/* hidden is included in getInputProps */}
+          <input {...getInputProps()} />
+        </div>
+      )}
       {!!attachments.length && (
         <AttachmentPreviews
           attachments={attachments}
@@ -184,7 +176,7 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
         />
       )}
       <div className="flex items-center justify-end gap-3">
-        {isUploading && (
+        {isUploading && !isPdf && (
           <>
             <span className="text-sm">{uploadProgress ?? 0}%</span>
             <Loader2 className="size-5 animate-spin text-primary" />
@@ -193,7 +185,7 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
         {!isPdf && (
           <AddAttachmentsButton
             onFilesSelected={handleFileSelection}
-            disabled={isUploading || attachments.length >= 5}
+            disabled={isUploading || attachments.length >= 10}
           />
         )}
         <LoadingButton
@@ -234,6 +226,7 @@ function AddAttachmentsButton({
       <input
         type="file"
         accept="image/*"
+        multiple
         ref={fileInputRef}
         className="sr-only hidden"
         onChange={(e) => {

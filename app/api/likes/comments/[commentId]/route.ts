@@ -71,7 +71,7 @@ export async function POST(
     });
 
     if (!comment) {
-      return Response.json({ error: "Post not found" }, { status: 404 });
+      return Response.json({ error: "Comment not found" }, { status: 404 });
     }
 
     const [a, b] = await prisma.$transaction([
@@ -102,7 +102,6 @@ export async function POST(
         : []),
     ]);
 
-
     return new Response();
   } catch (error) {
     console.error(error);
@@ -131,7 +130,7 @@ export async function DELETE(
     });
 
     if (!comment) {
-      return Response.json({ error: "Post not found" }, { status: 404 });
+      return Response.json({ error: "Comment not found" }, { status: 404 });
     }
 
     await prisma.$transaction([

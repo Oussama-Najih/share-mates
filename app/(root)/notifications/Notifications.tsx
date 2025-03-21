@@ -11,8 +11,8 @@ import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
 import InfiniteScrollContainer from "@/components/Utils/InfiniteScrollContainer";
 import Notification from "./Notification";
-import NotificationsLoadingSkeleton from "../matieres/_posts/NotificationLoadingSkeleton";
 import { markNotificationsAsRead } from "@/lib/actions/notifications.actions";
+import NotificationsLoadingSkeleton from "@/components/posts/NotificationLoadingSkeleton";
 
 export default function Notifications() {
   const {

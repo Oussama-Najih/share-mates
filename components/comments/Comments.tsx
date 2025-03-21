@@ -3,10 +3,10 @@
 import kyInstance from "@/lib/ky";
 import { QueryKey, useInfiniteQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
-import Comment from "./Comment";
-import { CommentsPage, PostData } from "@/index/prisma/types";
-import CommentInput from "../../post/[postId]/CommentInput";
+import { CommentsPage } from "@/index/prisma/types";
+import CommentInput from "../../app/(root)/post/[postId]/CommentInput";
 import { Button } from "@/components/ui/button";
+import Comment from "./Comment";
 
 export default function Comments({
   postId,

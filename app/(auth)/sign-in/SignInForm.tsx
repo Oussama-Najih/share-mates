@@ -4,13 +4,13 @@ import { FormProvider, useForm } from "react-hook-form";
 import { TextField } from "@mui/material";
 import { signInFormType } from "@/index/validationTypes/types";
 import { useState, useTransition } from "react";
-import PasswordInput from "@/components/form/PasswordInput";
 import { signInWithCredentials } from "@/lib/actions/user.actions";
 import { sx } from "@/CSS_Configs/mui";
 import LoadingButton from "@/components/form/LoadingButton";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInFormSchema } from "@/lib/validators";
 import { signInDefaultValues } from "@/lib/constants";
+import PasswordInput from "@/components/form/MuiPasswordInput";
 
 export default function SignInForm() {
   const form = useForm<signInFormType>({

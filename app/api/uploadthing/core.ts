@@ -16,9 +16,16 @@ const authMiddleware = async () => {
 // Handler for attachments (PDF & IMAGE)
 const handleAttachmentUpload =
   (type: "PDF" | "IMAGE") =>
-  async ({ file }: { file: { ufsUrl: string } }) => {
+  async ({ file }: { file: { ufsUrl: string; name: string } }) => {
     const media = await prisma.media.create({
-      data: { url: file.ufsUrl, type },
+      data: {
+        url: file.ufsUrl,
+        type,
+        originalFileName:
+          type === "PDF"
+            ? file.name.split("/^_/")[0] ?? "unknown.pdf"
+            : undefined,
+      },
     });
     return { mediaId: media.id };
   };
@@ -46,7 +53,10 @@ export const fileRouter = {
     .middleware(authMiddleware)
     .onUploadComplete(handleAttachmentUpload("PDF")),
 
-  attachment_image: f({ image: { maxFileSize: "4MB", maxFileCount: 5 } })
+  attachment_image: f({ image: { maxFileSize: "4MB", maxFileCount: 10 } })
+    .middleware(authMiddleware)
+    .onUploadComplete(handleAttachmentUpload("IMAGE")),
+  attachment_single_image: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
     .middleware(authMiddleware)
     .onUploadComplete(handleAttachmentUpload("IMAGE")),
 } satisfies FileRouter;

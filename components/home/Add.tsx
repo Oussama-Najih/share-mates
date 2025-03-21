@@ -125,7 +125,7 @@ export default function Add() {
                 size="lg"
                 className="w-full"
                 disabled={
-                  form.watch("title").length < 3 ||
+                  !!!form.watch("title").length ||
                   !mediaId ||
                   form.formState.isSubmitting
                 }

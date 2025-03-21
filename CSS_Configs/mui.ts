@@ -46,3 +46,18 @@ export const sx3 = {
     }, // Focused border color
   },
 };
+
+export const sx4 = {
+  "& .MuiInputBase-input": {
+    color: "black",
+  },
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": { borderColor: "lightblue" }, // Default outline color
+    "&:hover fieldset": {
+      borderColor: "rgb(15, 211, 252)",
+    }, // Hover border color
+    "&.Mui-focused fieldset": {
+      borderColor: "rgb(14, 165, 233)",
+    }, // Focused border color
+  },
+};

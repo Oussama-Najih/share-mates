@@ -10,8 +10,10 @@ import { prisma } from "@/db/prisma";
 
 export default async function index({
   isSubjectsPage,
+  isCoursPage = false,
 }: {
   isSubjectsPage: boolean;
+  isCoursPage?: boolean;
 }) {
   const session = await auth();
 
@@ -47,7 +49,7 @@ export default async function index({
           <div className="flex mb-4 py-4 border-b-2 w-full justify-around gap-4 items-center">
             <SubjectsDrawer />
             <Search />
-            <OptionToggle />
+            {!isCoursPage && <OptionToggle />}
           </div>
           <MediaTypeToggle />
         </div>

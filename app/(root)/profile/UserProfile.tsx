@@ -2,10 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import UserAvatar from "@/components/user/UserAvatar";
-import EditProfileDialog from "./EditProfileDialog";
 import { useState } from "react";
 import { formatNumber } from "@/lib/utils";
 import { UserData } from "@/index/prisma/types";
+import EditAvatarDialog from "./EditAvatarDialog";
+import MainEdit from "./MainEdit";
 
 interface UserProfileProps {
   detailedLoggedInUser: UserData;
@@ -14,12 +15,16 @@ interface UserProfileProps {
 export default function UserProfile({
   detailedLoggedInUser,
 }: UserProfileProps) {
-  const [showDialog, setShowDialog] = useState(false);
+  const [showAvatarDialog, setShowAvatarDialog] = useState(false);
+  const [showMainDialog, setShowMainDialog] = useState(false);
 
   return (
-    <div className="h-fit w-full space-y-5 rounded-2xl bg-card p-5 shadow-sm">
+    <div className="h-fit w-full space-y-10 rounded-2xl bg-card p-5 shadow-sm">
       {/* Removed asChild to properly trigger onClick */}
-      <button onClick={() => setShowDialog(true)} className="block mx-auto">
+      <button
+        onClick={() => setShowAvatarDialog(true)}
+        className="block mx-auto"
+      >
         <UserAvatar
           avatarUrl={detailedLoggedInUser.image}
           size={250}
@@ -28,10 +33,23 @@ export default function UserProfile({
         />
       </button>
 
-      <EditProfileDialog
+      <EditAvatarDialog
         user={detailedLoggedInUser}
-        open={showDialog}
-        onOpenChange={setShowDialog}
+        open={showAvatarDialog}
+        onOpenChange={setShowAvatarDialog}
+      />
+
+      <Button
+        variant="default"
+        onClick={() => setShowMainDialog(true)}
+        className="block mx-auto"
+      >
+        Mettre à jour vos informations
+      </Button>
+      <MainEdit
+        user={detailedLoggedInUser}
+        open={showMainDialog}
+        onOpenChange={setShowMainDialog}
       />
 
       <div className="flex flex-wrap gap-3 sm:flex-nowrap">
@@ -48,6 +66,12 @@ export default function UserProfile({
               Comments:{" "}
               <span className="font-semibold">
                 {formatNumber(detailedLoggedInUser._count.comments)}
+              </span>
+            </span>
+            <span>
+              Announcements:{" "}
+              <span className="font-semibold">
+                {formatNumber(detailedLoggedInUser._count.announcements)}
               </span>
             </span>
           </div>

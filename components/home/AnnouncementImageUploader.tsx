@@ -23,7 +23,7 @@ export default function AnnouncementImageUploader({
     isUploading,
     uploadProgress,
     removeAttachment,
-  } = useMediaUpload("attachment_image");
+  } = useMediaUpload("attachment_single_image");
 
   function handleFileSelection(files: File[]) {
     if (attachments.length >= 5) {

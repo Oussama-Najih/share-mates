@@ -12,7 +12,7 @@ import Image from "next/image";
 import { useRef } from "react";
 import Add from "./Add";
 import { AnnouncementData } from "@/index/prisma/types";
-import DeleteButton from "../Utils/DeleteButton";
+import DeleteButton from "../posts/DeleteButton";
 
 const AnnouncementsCarousel = ({
   data,

@@ -11,9 +11,14 @@ export async function submitPost(data: {
   categorie: string;
   title: string;
   content?: string;
-  mediaId: string;
+  mediaIds: string[];
   option: string;
 }) {
+  const { mediaIds: m } = data;
+  if (!m || m.length === 0) {
+    throw new Error("No media IDs provided");
+  }
+
   const user = await getServerUser();
   if (!user) throw new Error("Unauthorized");
 
@@ -30,7 +35,20 @@ export async function submitPost(data: {
   const subject = matiere as Subject;
   const category = categorie as Categorie;
 
-  const { title, content, mediaId, option } = createPostSchema.parse(rest);
+  const d = createPostSchema.parse(rest);
+  console.log("afterParse");
+  console.log({ mediaIds: d.mediaIds });
+
+  const { title, content, mediaIds, option } = createPostSchema.parse(rest);
+
+  // console.log({
+  //   subject, // ✅ Now correctly mapped to the Subject enum
+  //   category, // ✅ Now correctly mapped to the Categorie enum
+  //   title,
+  //   content,
+  //   correction: option === "CORRECTIONS", // ✅ Simplified condition
+  //   authorId: user.id,
+  // });
 
   const newPost = await prisma.post.create({
     data: {
@@ -40,7 +58,7 @@ export async function submitPost(data: {
       content,
       authorId: user.id,
       attachment: {
-        connect: { id: mediaId },
+        connect: mediaIds.map((id) => ({ id })), // Connect multiple media items if mediaId is an array
       },
       correction: option === "CORRECTIONS", // ✅ Simplified condition
     },
@@ -69,4 +87,36 @@ export async function deletePost(id: string) {
   });
 
   return deletedPost;
+}
+
+export async function updatePost({
+  postId,
+  isTitle = true,
+  value,
+}: {
+  postId: string;
+  isTitle: boolean;
+  value: string;
+}) {
+  const user = await getServerUser();
+
+  if (!user) throw new Error("Unauthorized");
+
+  const post = await prisma.post.findUnique({
+    where: { id: postId },
+  });
+
+  if (!post) throw new Error("Post not found");
+
+  if (post.authorId !== user.id) throw new Error("Unauthorized");
+
+  const updatedPost = await prisma.post.update({
+    where: { id: postId },
+    data: {
+      [isTitle ? "title" : "content"]: value, // Conditional key assignment
+    },
+    include: getPostDataInclude(user.id),
+  });
+
+  return updatedPost;
 }

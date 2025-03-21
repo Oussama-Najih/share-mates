@@ -13,6 +13,7 @@ model User {
   name                  String
   image                 String?
   password              String
+  original_name         String?
   role                  Role           @default(USER)
   posts                 Post[]
   announcements         Announcement[]
@@ -92,14 +93,15 @@ model LikeP {
 }
 
 model Media {
-  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  postId         String?       @unique @db.Uuid
-  post           Post?         @relation(fields: [postId], references: [id], onDelete: SetNull)
-  type           MediaType
-  url            String
-  createdAt      DateTime      @default(now())
-  announcement   Announcement? @relation(fields: [announcementId], references: [id], onDelete: SetNull)
-  announcementId String?       @db.Uuid
+  id               String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  postId           String?       @db.Uuid
+  post             Post?         @relation(fields: [postId], references: [id], onDelete: SetNull)
+  type             MediaType
+  url              String
+  originalFileName String?
+  createdAt        DateTime      @default(now())
+  announcement     Announcement? @relation(fields: [announcementId], references: [id], onDelete: SetNull)
+  announcementId   String?       @db.Uuid
 }
 
 model Notification {

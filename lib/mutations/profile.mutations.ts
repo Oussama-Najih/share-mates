@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import { useUploadThing } from "@/lib/uploadthing";
 import { PostsPage } from "@/index/prisma/types";
 import toast from "react-hot-toast";
+import { updateProfileType } from "@/index/validationTypes/types";
+import { updateUserProfile } from "../actions/user.actions";
 
 export function useUpdateAvatarMutation(userId: string) {
   const router = useRouter();
@@ -71,6 +73,93 @@ export function useUpdateAvatarMutation(userId: string) {
     onError(error) {
       console.error(error);
       toast.error("Échec de la mise à jour du profil. Veuillez réessayer.");
+    },
+  });
+
+  return mutation;
+}
+
+export function useUpdateProfileMutation(
+  userId: string,
+  setError: (
+    name: keyof updateProfileType,
+    error: { type?: string; message: string }
+  ) => void,
+  onOpenChange: (value: boolean) => void
+) {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async ({ value }: { value: updateProfileType }) => {
+      return updateUserProfile(value);
+    },
+    onSuccess: async (updatedUser) => {
+      try {
+        if (!updatedUser) {
+          console.log("setError");
+          setError("name", {
+            type: "manual",
+            message:
+              "This username is already taken. Please choose another one.",
+          }); // Show error in form
+          return;
+        }
+
+        const queryFilter: QueryFilters<
+          InfiniteData<PostsPage, string | null>
+        > = {
+          queryKey: ["matieres"],
+          // predicate(query) {
+          //   return query.queryKey.includes("matieres");
+          // },
+        };
+
+        await queryClient.cancelQueries(queryFilter);
+
+        queryClient.setQueriesData<InfiniteData<PostsPage, string | null>>(
+          queryFilter,
+          (oldData) => {
+            if (!oldData) return;
+
+            return {
+              pageParams: oldData.pageParams,
+              pages: oldData.pages.map((page) => ({
+                nextCursor: page.nextCursor,
+                posts: page.posts.map((post) => {
+                  if (post.authorId === userId) {
+                    return {
+                      ...post,
+                      user: {
+                        ...updatedUser,
+                      },
+                    };
+                  }
+                  return post;
+                }),
+              })),
+            };
+          }
+        );
+
+        // Invalidate the user posts query
+        await queryClient.invalidateQueries({
+          queryKey: ["matieres", "user-posts"],
+        });
+
+        router.refresh();
+        onOpenChange(false);
+        toast.success("Profil actualisé avec succès");
+      } catch (error) {
+        toast.error("Échec de la mise à jour du profil. Veuillez réessayer.");
+      }
+    },
+    onError(error: any) {
+      console.error(error);
+      const errorMessage =
+        error?.message ||
+        "Échec de la mise à jour du profil. Veuillez réessayer.";
+      toast.error(errorMessage);
     },
   });
 

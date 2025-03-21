@@ -11,26 +11,40 @@ interface NotificationProps {
 }
 
 export default function Notification({ notification }: NotificationProps) {
+  // Constructing URLs with search parameters
+  const getNotificationUrl = () => {
+    const url = new URL(
+      `/post/${
+        notification.postId ? notification.postId : notification.comment?.postId
+      }`,
+      window.location.origin
+    );
+
+    if (notification.commentId) {
+      url.searchParams.set("commentId", notification.commentId);
+    }
+
+    return url.pathname + url.search;
+  };
+
   const notificationTypeMap: Record<
     NotificationType,
     { message: string; icon: JSX.Element; href: string }
   > = {
     REPLY: {
-      message: `replied to your comment`,
+      message: `a répondu à votre commentaire`,
       icon: <Reply className="size-7 text-primary" />,
-      href: `/post/${notification.postId}`,
+      href: getNotificationUrl(),
     },
     COMMENT: {
-      message: `commented on your post`,
+      message: `a commenté sur votre post`,
       icon: <MessageCircle className="size-7 fill-primary text-primary" />,
-      href: `/post/${notification.postId}`,
+      href: getNotificationUrl(),
     },
     LIKE: {
-      message: `liked your ${notification.postId ? "post" : "comment"}`,
+      message: `a aimé votre ${notification.postId ? "post" : "commentaire"}`,
       icon: <Heart className="size-7 fill-red-500 text-red-500" />,
-      href: `/post/${
-        notification.postId ? notification.postId : notification.comment?.postId
-      }`,
+      href: getNotificationUrl(),
     },
   };
 
@@ -51,9 +65,9 @@ export default function Notification({ notification }: NotificationProps) {
             <span className="font-bold">{notification.issuer.name}</span>{" "}
             <span>{message}</span>
           </div>
-          {notification.type != "LIKE" && (
+          {notification.type !== "LIKE" && notification.comment?.message && (
             <div className="line-clamp-3 dark:group-hover:text-primary-foreground whitespace-pre-line text-muted-foreground">
-              {notification.comment?.message}
+              {notification.comment.message}
             </div>
           )}
         </div>

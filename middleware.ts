@@ -17,6 +17,12 @@ export default auth((req) => {
     return NextResponse.next();
   }
 
+  // if (!loggedIn && nextUrl.pathname === "/profile") {
+  //   const signInUrl = new URL("/sign-in", req.url);
+  //   signInUrl.searchParams.set("callbackUrl", nextUrl.toString());
+  //   return NextResponse.redirect(signInUrl);
+  // }
+
   if (!loggedIn && nextUrl.pathname !== "/sign-in") {
     const signInUrl = new URL("/sign-in", req.url);
 

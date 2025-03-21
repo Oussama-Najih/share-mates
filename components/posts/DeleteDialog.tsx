@@ -1,4 +1,4 @@
-import { AnnouncementData, PostData } from "@/index/prisma/types";
+import { AnnouncementData, CommentData, PostData } from "@/index/prisma/types";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -13,10 +13,12 @@ import { useDeletePostMutation } from "@/lib/mutations/post.mutations";
 import { useTransition } from "react";
 import { deleteAnnouncement } from "@/lib/actions/announcements.actions";
 import toast from "react-hot-toast";
+import { useDeleteCommentMutation } from "@/lib/mutations/comment.mutations";
 
 interface DeleteDialogProps {
   post?: PostData;
   announcement?: AnnouncementData;
+  comment?: CommentData;
   message?: string;
   open: boolean;
   onClose: () => void;
@@ -25,16 +27,20 @@ interface DeleteDialogProps {
 export default function DeleteDialog({
   post,
   announcement,
+  comment,
   message,
   open,
   onClose,
 }: DeleteDialogProps) {
-  const mutation = useDeletePostMutation();
+  const { mutate: mutateP, isPending: isPendingP } = useDeletePostMutation();
+  const { mutate: mutateC, isPending: isPendingC } = useDeleteCommentMutation();
   const [isUpdating, startTransition] = useTransition();
 
   function handleDelete() {
     if (post) {
-      mutation.mutate(post.id, { onSuccess: onClose });
+      mutateP(post.id, { onSuccess: onClose });
+    } else if (comment) {
+      mutateC(comment.id, { onSuccess: onClose });
     } else if (announcement) {
       startTransition(async () => {
         const res = await deleteAnnouncement(announcement.id);
@@ -54,26 +60,31 @@ export default function DeleteDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            Supprimer {post ? "ce post" : "cette annonce"}?
+            Supprimer{" "}
+            {post
+              ? "votre post"
+              : announcement
+              ? "cette annonce"
+              : "votre commentaire"}
           </DialogTitle>
           <DialogDescription>
             {message ||
-              "Are you sure you want to delete this? This action cannot be undone."}
+              "Êtes-vous sûr de vouloir supprimer ceci ? Cette action est irréversible."}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="flex flex-row justify-end space-x-2">
           <LoadingButton
             variant="destructive"
             onClick={handleDelete}
-            loading={mutation.isPending || isUpdating}
-            disabled={mutation.isPending || isUpdating}
+            loading={isPendingP || isPendingC || isUpdating}
+            disabled={isPendingP || isPendingC || isUpdating}
           >
             Delete
           </LoadingButton>
           <Button
             variant="outline"
             onClick={onClose}
-            disabled={mutation.isPending || isUpdating}
+            disabled={isPendingP || isPendingC || isUpdating}
             autoFocus
           >
             Cancel

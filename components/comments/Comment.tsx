@@ -2,14 +2,13 @@
 
 import { formatRelativeDate } from "@/lib/utils";
 import Comments from "./Comments";
-import { useEffect, useState } from "react";
-import { Loader2, Trash } from "lucide-react";
+import { useState } from "react";
 import { CommentData } from "@/index/prisma/types";
 import { useDeleteCommentMutation } from "@/lib/mutations/comment.mutations";
-import { useSession } from "next-auth/react";
-import LikeButton from "./LikeButton";
-import { useSearchParams } from "next/navigation";
 import UserAvatar from "@/components/user/UserAvatar";
+import LikeButton from "./LikeButton";
+import DeleteButton from "../posts/DeleteButton";
+import CommentEditableInput from "../form/CommentEditInput";
 
 type CommentProps = {
   comment: CommentData;
@@ -17,15 +16,12 @@ type CommentProps = {
 };
 
 export default function Comment({ comment, userId }: CommentProps) {
-  const [areChildrenHidden, setAreChildrenHidden] = useState(true);
+  const [areChildrenHidden, setAreChildrenHidden] = useState(false);
 
   const mutation = useDeleteCommentMutation();
 
   return (
-    <div
-      id={comment.id}
-      className="mb-4 p-4 border rounded-lg bg-gray-100 dark:bg-gray-800"
-    >
+    <div className="mb-4 p-4 border rounded-lg bg-gray-100 dark:bg-gray-800">
       <div>
         <div className="flex justify-between items-center mb-2">
           <div className="flex items-center gap-4">
@@ -36,7 +32,11 @@ export default function Comment({ comment, userId }: CommentProps) {
             {formatRelativeDate(comment.createdAt)}
           </span>
         </div>
-        <p className="break-words">{comment.message}</p>
+        <CommentEditableInput
+          initialValue={comment.message}
+          comment={comment}
+          canEdit={userId === comment.userId}
+        />
       </div>
 
       <>
@@ -48,15 +48,7 @@ export default function Comment({ comment, userId }: CommentProps) {
           >
             {areChildrenHidden ? "Show Replies" : "Hide Replies"}
           </button>
-          {userId === comment.userId && (
-            <button onClick={() => mutation.mutate(comment.id)}>
-              {!mutation.isPending ? (
-                <Trash size={20} className="hover:text-destructive" />
-              ) : (
-                <Loader2 className="animate-spin" />
-              )}
-            </button>
-          )}
+          {userId === comment.userId && <DeleteButton comment={comment} />}
         </div>
         <LikeButton
           commentId={comment.id}

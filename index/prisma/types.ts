@@ -10,6 +10,7 @@ export function getUserDataSelect(loggedInUserId: string) {
       select: {
         posts: true,
         comments: true,
+        announcements: true,
       },
     },
   } satisfies Prisma.UserSelect;

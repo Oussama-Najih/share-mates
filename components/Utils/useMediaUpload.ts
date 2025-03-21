@@ -8,8 +8,10 @@ export interface Attachment {
   isUploading: boolean;
 }
 
+export const separator = "/^_/";
+
 export default function useMediaUpload(
-  mediaType: "attachment_image" | "attachment_pdf"
+  mediaType: "attachment_image" | "attachment_pdf" | "attachment_single_image"
 ) {
   const [attachments, setAttachments] = useState<Attachment[]>([]);
 
@@ -19,10 +21,11 @@ export default function useMediaUpload(
     //When we get a mediaId back, we can identify the corresponding file
     onBeforeUploadBegin(files) {
       const renamedFiles = files.map((file) => {
-        const extension = file.name.split(".").pop();
+        const fileName = file.name.split(".")[0];
+        const extension = file.name.split(".")[1];
         return new File(
           [file],
-          `attachment_${crypto.randomUUID()}.${extension}`,
+          `${fileName}${separator}${crypto.randomUUID()}.${extension}`,
           {
             type: file.type,
           }
@@ -65,7 +68,7 @@ export default function useMediaUpload(
       toast.error("Veuillez attendre la fin du téléchargement en cours.");
     }
 
-    if (attachments.length && files.length > 5) {
+    if (attachments.length && files.length > 10) {
       toast.error(
         "Vous ne pouvez télécharger qu'un seul fichier joint par publication."
       );

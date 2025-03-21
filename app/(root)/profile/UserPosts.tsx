@@ -4,9 +4,9 @@ import { PostsPage } from "@/index/prisma/types";
 import kyInstance from "@/lib/ky";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
-import PostsLoadingSkeleton from "../matieres/_posts/PostsLoadingSkeleten";
 import InfiniteScrollContainer from "@/components/Utils/InfiniteScrollContainer";
-import Post from "../matieres/_posts/Post";
+import PostsLoadingSkeleton from "@/components/posts/PostsLoadingSkeleten";
+import Post from "@/components/posts/Post";
 
 export default function UserPosts({ userId }: { userId: string }) {
   const {

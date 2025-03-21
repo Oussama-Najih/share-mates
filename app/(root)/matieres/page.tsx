@@ -2,9 +2,9 @@ import Header from "@/components/header";
 import PostEditor from "../../../components/Utils/PostEditor";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
-import Posts from "./_posts/Posts";
 import NotFound from "@/components/error/NotFound";
 import { Categorie, Subject } from "@prisma/client";
+import Posts from "@/components/posts/Posts";
 
 export default async function page(props: {
   searchParams: Promise<{
@@ -56,22 +56,22 @@ export default async function page(props: {
 
   return (
     <div>
-      <Header isSubjectsPage={true} />
+      <Header isCoursPage={categorie == "COURS"} isSubjectsPage={true} />
       <h1
         className="font-poppins border-t-2 p-2 text-xl border-b-2 border-primary
         pb-4 text-center text-primary mb-5"
       >
-        {matiere} / {categorie} / {option} / {type_Media}
+        {matiere} / {categorie} / {categorie === "COURS" ? "" : `${option} / `}
+        {type_Media}
       </h1>
 
       {/* Conditionally render PostEditor if applicable */}
       {matiere !== "Toutes les matieres" &&
         categorie !== "Toutes les categories" &&
-        option !== "Énoncés_ET_Corrections" && (
+        !(option === "Énoncés_ET_Corrections" && categorie !== "COURS") &&
+        type_Media !== "PDF_ET_IMAGE" && (
           <SessionProvider session={session}>
-            {type_Media !== "PDF_ET_IMAGE" && (
-              <PostEditor isPdf={type_Media === "PDF"} />
-            )}
+            <PostEditor isPdf={type_Media === "PDF"} />
           </SessionProvider>
         )}
 

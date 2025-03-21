@@ -1,10 +1,15 @@
 import {
   InfiniteData,
+  QueryFilters,
   QueryKey,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { deleteComment, submitComment } from "../actions/comment.actions";
+import {
+  deleteComment,
+  submitComment,
+  updateComment,
+} from "../actions/comment.actions";
 import { CommentsPage } from "@/index/prisma/types";
 import toast from "react-hot-toast";
 
@@ -104,6 +109,48 @@ export function useDeleteCommentMutation() {
       toast.error(
         "Échec de la suppression du commentaire. Veuillez réessayer."
       );
+    },
+  });
+
+  return mutation;
+}
+
+export function useUpdateCommentMutation(postId: string, parentId: string) {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: updateComment,
+    onSuccess: async (updatedComment) => {
+      const queryFilter: QueryFilters<
+        InfiniteData<CommentsPage, string | null>
+      > = {
+        queryKey: ["comments", postId, parentId],
+      };
+
+      await queryClient.cancelQueries(queryFilter);
+
+      queryClient.setQueriesData<InfiniteData<CommentsPage, string | null>>(
+        queryFilter,
+        (oldData) => {
+          if (!oldData) return;
+
+          return {
+            pageParams: oldData.pageParams,
+            pages: oldData.pages.map((page) => ({
+              nextCursor: page.nextCursor,
+              comments: page.comments.map((comment) =>
+                comment.id === updatedComment.id ? updatedComment : comment
+              ),
+            })),
+          };
+        }
+      );
+
+      toast.success(`Le commentaire a été modifié avec succès`);
+    },
+    onError(error) {
+      console.error(error);
+      toast.error(`Échec de la modification du commentaire`);
     },
   });
 

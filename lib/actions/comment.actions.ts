@@ -117,3 +117,33 @@ async function countAllChildren(commentId: string): Promise<number> {
 
   return count;
 }
+
+export async function updateComment({
+  id,
+  content,
+}: {
+  id: string;
+  content: string;
+}) {
+  const user = await getServerUser();
+
+  if (!user) throw new Error("Unauthorized");
+
+  const comment = await prisma.comment.findUnique({
+    where: { id },
+  });
+
+  if (!comment) throw new Error("Post not found");
+
+  if (comment.userId !== user.id) throw new Error("Unauthorized");
+
+  const updatedComment = await prisma.comment.update({
+    where: { id },
+    data: {
+      message: content, // Conditional key assignment
+    },
+    include: getCommentDataInclude(user.id),
+  });
+
+  return updatedComment;
+}

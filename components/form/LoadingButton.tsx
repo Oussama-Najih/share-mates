@@ -4,11 +4,13 @@ import { Button, ButtonProps } from "../ui/button";
 
 interface LoadingButtonProps extends ButtonProps {
   loading: boolean;
+  showChildren?: boolean;
 }
 
 export default function LoadingButton({
   loading,
   disabled,
+  showChildren = true,
   className,
   ...props
 }: LoadingButtonProps) {
@@ -19,7 +21,7 @@ export default function LoadingButton({
       {...props}
     >
       {loading && <Loader2 className="size-5 animate-spin" />}
-      {props.children}
+      {!showChildren && loading ? null : props.children}
     </Button>
   );
 }

@@ -12,33 +12,28 @@ export const signInFormSchema = z.object({
   credentials: z.string().optional(),
 });
 
-export const updatePasswordSchema = z
-  .string()
-  .min(6, { message: "Password must be at least 6 characters long." })
-  .max(32, { message: "Password must be at most 32 characters long." })
-  .regex(/[A-Z]/, {
-    message: "Password must contain at least one uppercase letter.",
-  })
-  .regex(/[a-z]/, {
-    message: "Password must contain at least one lowercase letter.",
-  })
-  .regex(/[0-9]/, { message: "Password must contain at least one number." })
-  .regex(/[\W_]/, {
-    message: "Password must contain at least one special character.",
-  });
-
 export const createPostSchema = z.object({
-  title: z
-    .string()
-    .min(3, { message: "Title must be atleast 3 characters long" }),
+  title: z.string(),
   content: z.string().optional(),
-  mediaId: z.string(),
+  mediaIds: z.array(z.string()).max(10, "Cannot have more than 5 attachments"),
   option: z.string(),
 });
 
 export const addAnnouncement = z.object({
-  title: z
-    .string()
-    .min(3, { message: "Title must be atleast 3 characters long" }),
+  title: z.string(),
   mediaId: z.string(),
+});
+
+export const updateProfileSchema = z.object({
+  name: requiredString,
+});
+
+export const updatePasswordSchema = z.object({
+  currentPassword: z
+    .string()
+    .min(6, "Password must at least 6 characters long."),
+  newPassword: z
+    .string()
+    .min(6, "Password must be at least 6 characters long."),
+  credentials: z.string().optional(),
 });

@@ -5,7 +5,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { deletePost, submitPost } from "../actions/post.actions";
+import { deletePost, submitPost, updatePost } from "../actions/post.actions";
 import { useSession } from "next-auth/react";
 import { PostsPage } from "@/index/prisma/types";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -181,13 +181,60 @@ export function useDeletePostMutation() {
 
       toast.success("Post supprimé avec succès");
 
-      if (pathname === `/posts/${deletedPost.id}`) {
+      if (pathname === `/post/${deletedPost.id}`) {
         router.push("/profile");
       }
     },
     onError(error) {
       console.error(error);
       toast.error("Échec de la suppression du post. Veuillez réessayer.");
+    },
+  });
+
+  return mutation;
+}
+
+export function useUpdatePostMutation(isTitle = false) {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: updatePost,
+    onSuccess: async (updatedPost) => {
+      const queryFilter: QueryFilters<InfiniteData<PostsPage, string | null>> =
+        {
+          queryKey: ["matieres"],
+        };
+
+      await queryClient.cancelQueries(queryFilter);
+
+      queryClient.setQueriesData<InfiniteData<PostsPage, string | null>>(
+        queryFilter,
+        (oldData) => {
+          if (!oldData) return;
+
+          return {
+            pageParams: oldData.pageParams,
+            pages: oldData.pages.map((page) => ({
+              nextCursor: page.nextCursor,
+              posts: page.posts.map((post) =>
+                post.id === updatedPost.id ? updatedPost : post
+              ),
+            })),
+          };
+        }
+      );
+
+      toast.success(
+        `${isTitle ? "Le titre" : "La description"} a été modifié avec succès`
+      );
+    },
+    onError(error) {
+      console.error(error);
+      toast.error(
+        `Échec de la modification ${
+          isTitle ? "du titre" : "de la description du post"
+        }. Veuillez réessayer.`
+      );
     },
   });
 

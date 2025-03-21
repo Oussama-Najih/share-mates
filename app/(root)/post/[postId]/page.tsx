@@ -6,10 +6,11 @@ import { notFound } from "next/navigation";
 import { cache, use } from "react";
 import Image from "next/image";
 import Help from "./Help";
-import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import UserAvatar from "@/components/user/UserAvatar";
+import PostEditableInput from "@/components/form/PostEditInput";
+import { Scroll } from "lucide-react";
+import ScrollToComment from "./ScrollToComment";
 
 interface PageProps {
   params: Promise<{ postId: string }>;
@@ -55,16 +56,13 @@ export default async function Page({ params }: PageProps) {
   }
 
   const { user } = session;
-
   const { postId } = await params;
-
-  //Normally they should not see this ever because we check login in layout, but we still have to handle null case
-
   const post = await getPost(postId, user.id);
 
   return (
     <main className="flex flex-col items-center w-9/12 max-w-xl py-2 px-1 mx-auto min-w-0 gap-5">
-      <section className="flex w-full  items-center gap-14 border-b-2">
+      <ScrollToComment />
+      <section className="flex w-full justify-center items-center gap-14 border-b-2">
         <h1 className="font-roboto text-primary mb-5 text-xl md:text-3xl text-center">
           @{post.author.name}
         </h1>
@@ -74,56 +72,66 @@ export default async function Page({ params }: PageProps) {
           className="size-full max-h-60 max-w-60 rounded-full"
         />
       </section>
-      {post.attachment[0].type === "IMAGE" ? (
-        <h1 className="font-serif text-xl border-b-2">{post.title}</h1>
-      ) : (
-        <a target="_blank" href={post.attachment[0].url}>
-          <h1 className="font-serif text-xl hover:underline underline-offset-8 border-b-2">
-            {post.title}
-          </h1>
-        </a>
-      )}
-
-      {post.attachment[0].type === "IMAGE" ? (
-        // <TransformWrapper
-        //   initialScale={1}
-        //   initialPositionX={100}
-        //   initialPositionY={200}
-        // >
-        //   <TransformComponent>
-        //     <Image
-        //       src={post.attachment[0].url}
-        //       alt={post.title}
-        //       width={350}
-        //       height={300}
-        //       className="w-full object-cover rounded-md"
-        //     />
-        //   </TransformComponent>
-        // </TransformWrapper>
-        <Image
-          src={post.attachment[0].url}
-          alt={post.title}
-          width={350}
-          height={300}
-          className="w-full object-cover rounded-md"
+      {post.authorId === user.id ? (
+        <PostEditableInput
+          isTitle={true}
+          initialValue={post.title}
+          postId={post.id}
         />
       ) : (
-        <a
-          target="_blank"
-          href={post.attachment[0].url}
-          className="inline-block text-blue-500 text-sm md:text-md"
-        >
-          <div className="h-[300px] aspect-square flex items-center justify-center bg-[url('/images/pdf_image.png')] bg-center bg-cover"></div>
-        </a>
+        <h1 className="text-xl font-roboto md:text:2xl">{post.title}</h1>
       )}
-      {post.content ? (
-        <h2 className="border-b-2">{post.content}</h2>
+
+      {post.attachment.length > 0 ? (
+        post.attachment[0].type === "IMAGE" ? (
+          <div className="sm:grid gap-2">
+            {post.attachment.map((attachment, index) => (
+              <a key={index} href={attachment.url}>
+                <Image
+                  src={attachment.url}
+                  alt={post.title}
+                  width={500}
+                  height={500}
+                  className="w-full object-cover rounded-md"
+                />
+              </a>
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-2">
+            {post.attachment.map((attachment, index) => (
+              <a
+                key={index}
+                target="_blank"
+                href={attachment.url}
+                className="inline-block text-black text-sm md:text-md"
+              >
+                <div className="h-[300px] aspect-square flex items-center justify-center bg-[url('/images/pdf_image.png')] bg-center bg-cover">
+                  {attachment.originalFileName}
+                </div>
+              </a>
+            ))}
+          </div>
+        )
       ) : (
-        <h1 className="font-roboto w-full text-center pb-3 border-b-2 text-xl">
-          <span className="text-blue-500">@{post.author.name}</span> didn't add
-          any description
-        </h1>
+        <p className="text-gray-500">No attachments available</p>
       )}
+
+      <div className="flex px-2 items-center font-roboto w-full text-center pb-3 border-b-2 text-md gap-5 justify-center">
+        {post.authorId === user.id ? (
+          <PostEditableInput
+            initialValue={
+              post.content || "L'auteur n'a ajouté aucune description."
+            }
+            postId={postId}
+          />
+        ) : (
+          <h1 className="text-xl font-roboto md:text:2xl">
+            {post.content || "L'auteur n'a ajouté aucune description."}
+          </h1>
+        )}
+      </div>
+
       <Help post={post} userId={user.id} />
     </main>
   );
