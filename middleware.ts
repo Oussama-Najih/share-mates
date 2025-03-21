@@ -12,7 +12,8 @@ export default auth((req) => {
   if (
     nextUrl.pathname.startsWith("/api/auth") ||
     nextUrl.pathname.startsWith("/api/uploadthing") ||
-    nextUrl.pathname.startsWith("/api/comments")
+    nextUrl.pathname.startsWith("/api/comments") ||
+    nextUrl.pathname.startsWith("/api/clear-uploads")
   ) {
     return NextResponse.next();
   }

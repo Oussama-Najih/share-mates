@@ -97,7 +97,6 @@ export function useUpdateProfileMutation(
     onSuccess: async (updatedUser) => {
       try {
         if (!updatedUser) {
-          console.log("setError");
           setError("name", {
             type: "manual",
             message:
