@@ -16,6 +16,9 @@ const eslintConfig = [
       // Disable empty interface warnings
       "@typescript-eslint/no-empty-interface": "off",
 
+      // Disable empty object type warnings (the one you're encountering)
+      "@typescript-eslint/no-empty-object-type": "off",
+
       // Disable 'any' warnings
       "@typescript-eslint/no-explicit-any": "off",
 
