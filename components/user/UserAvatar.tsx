@@ -16,7 +16,7 @@ export default function UserAvatar({
   canEdit = false, // Default to false if not provided
 }: UserAvatarProps) {
   return (
-    <div className="relative group">
+    <div className="hidden sm:block relative group">
       {" "}
       {/* Use group to enable hover effect */}
       <Image

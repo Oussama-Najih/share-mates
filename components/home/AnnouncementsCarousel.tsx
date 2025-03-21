@@ -57,7 +57,7 @@ const AnnouncementsCarousel = ({
                 alt="announcement"
                 height={200}
                 width={200}
-                className="w-full h-[300px] md:h-[450px] object-fill  lg:object-contain"
+                className="w-full h-[300px] md:h-[450px] lg:object-cover"
               />
             </div>
           </CarouselItem>

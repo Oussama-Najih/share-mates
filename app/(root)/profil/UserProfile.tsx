@@ -69,7 +69,7 @@ export default function UserProfile({
               </span>
             </span>
             <span>
-              Announcements:{" "}
+              Annonces:{" "}
               <span className="font-semibold">
                 {formatNumber(detailedLoggedInUser._count.announcements)}
               </span>

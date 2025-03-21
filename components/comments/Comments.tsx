@@ -56,7 +56,7 @@ export default function Comments({
       {/* No Comments Message */}
       {status === "success" && !comments.length && (
         <p className="text-center text-gray-500 dark:text-gray-400">
-          No comments yet.
+          Pas encore de commentaires
         </p>
       )}
 

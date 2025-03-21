@@ -182,7 +182,7 @@ export function useDeletePostMutation() {
       toast.success("Post supprimé avec succès");
 
       if (pathname === `/post/${deletedPost.id}`) {
-        router.push("/profile");
+        router.push("/profil");
       }
     },
     onError(error) {

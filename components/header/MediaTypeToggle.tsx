@@ -1,9 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { FileText, Image, CheckCircle, Camera } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { FileText, Camera, CheckCircle } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { cn } from "@/lib/utils"; // Utility for conditional classNames
+import { useEffect, useState } from "react";
 
 export default function MediaTypeToggle() {
   const router = useRouter();
@@ -24,8 +30,7 @@ export default function MediaTypeToggle() {
     { icon: <CheckCircle size={16} />, label: "Tous les posts" },
   ];
 
-  const handleSelect = (option: string) => {
-    setSelectedMediaType(option);
+  const handleSelectChange = (option: string) => {
     const params = new URLSearchParams(searchParams.toString());
 
     if (option !== "Tous les posts") {
@@ -38,22 +43,22 @@ export default function MediaTypeToggle() {
   };
 
   return (
-    <div className="flex mb-4 max-w-[50rem] mx-auto justify-between space-x-2 bg-gray-100 p-1 rounded-lg">
-      {options.map(({ icon, label }) => (
-        <button
-          key={label}
-          onClick={() => handleSelect(label)}
-          className={cn(
-            "flex flex-1 items-center justify-center px-4 py-2 text-sm font-medium rounded-md transition",
-            selectedMediaType === label
-              ? "bg-blue-600 text-white shadow"
-              : "text-gray-700 hover:bg-gray-300"
-          )}
-        >
-          {icon}
-          <span className="ml-2">{label}</span>
-        </button>
-      ))}
+    <div className="w-40 md:w-64">
+      <Select value={selectedMediaType} onValueChange={handleSelectChange}>
+        <SelectTrigger className="w-full">
+          <SelectValue>{selectedMediaType}</SelectValue>
+        </SelectTrigger>
+        <SelectContent>
+          {options.map(({ label, icon }) => (
+            <SelectItem key={label} value={label}>
+              <div className="flex items-center gap-2">
+                {icon}
+                {label}
+              </div>
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 }

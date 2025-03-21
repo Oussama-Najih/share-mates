@@ -29,17 +29,19 @@ export default function UserButton({ className, user }: UserButtonProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className={cn("flex-none rounded-full", className)}>
+        <button
+          className={cn("hidden sm:inline flex-none rounded-full", className)}
+        >
           <UserAvatar avatarUrl={user.image} size={40} />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>Logged in as @{user.name}</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <Link href={`/profile`}>
+        <Link href={`/profil`}>
           <DropdownMenuItem>
             <UserIcon className="mr-2 size-4" />
-            Profile
+            Profil
           </DropdownMenuItem>
         </Link>
         <DropdownMenuSeparator />

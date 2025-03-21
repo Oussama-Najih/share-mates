@@ -46,13 +46,11 @@ export default function LikeButton({
 
   const { mutate } = useMutation({
     mutationFn: () => {
-      console.log("whaaat");
       return data.isLikedByUser
         ? kyInstance.delete(apiUrl)
         : kyInstance.post(apiUrl);
     },
     onMutate: async () => {
-      console.log("set");
       setIsMutating(true); // Disable the button during mutation
       await queryClient.cancelQueries({ queryKey });
 

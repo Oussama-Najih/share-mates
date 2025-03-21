@@ -100,6 +100,19 @@ export default function MainSideBar({
               </Button>
             )
           )}
+          <Button
+            key="profil" // <-- Added key here
+            variant="outline"
+            asChild
+            className="flex bg-primary group py-3 rounded-md sm:hidden justify-center items-center"
+          >
+            <Link
+              href="/profil"
+              className="text-primary-foreground text-center"
+            >
+              <p>Profil</p>
+            </Link>
+          </Button>
         </div>
       </SheetContent>
     </Sheet>

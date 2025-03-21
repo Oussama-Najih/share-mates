@@ -35,23 +35,25 @@ export default async function index({
       <section className="flex justify-between border-b border-border items-center px-8 py-8  h-14 relative w-full top-0 shadow-md">
         <nav className="flex w-full items-center justify-between space-x-6 md:space-x-12">
           <MainSideBar unreadNotificationCount={unreadNotificationCount} />
-          <h1 className="text-2xl text-foreground font-poppins font-bold">
+          <h1 className="text-2xl hidden sm:block text-foreground font-poppins font-bold">
             {process.env.NEXT_PUBLIC_APP_NAME}
           </h1>
-          <div className="flex items-center space-x-6 md:space-x-12">
+          <div className="flex items-center space-x-6 sm:space-x-12">
             <ModeToggle />
             <UserButton user={user} />
           </div>
         </nav>
       </section>
       {isSubjectsPage && (
-        <div>
+        <div className="px-4">
           <div className="flex mb-4 py-4 border-b-2 w-full justify-around gap-4 items-center">
             <SubjectsDrawer />
             <Search />
-            {!isCoursPage && <OptionToggle />}
           </div>
-          <MediaTypeToggle />
+          <div className="flex pb-4 justify-around items-center">
+            {!isCoursPage && <OptionToggle />}
+            <MediaTypeToggle />
+          </div>
         </div>
       )}
     </header>

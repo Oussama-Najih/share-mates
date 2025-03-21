@@ -60,7 +60,7 @@ export default async function Page({ params }: PageProps) {
   const post = await getPost(postId, user.id);
 
   return (
-    <main className="flex flex-col items-center w-9/12 max-w-xl py-2 px-1 mx-auto min-w-0 gap-5">
+    <main className="flex w-[100vw] flex-col items-center  max-w-xl py-2 px-1 mx-auto min-w-0 gap-5">
       <ScrollToComment />
       <section className="flex w-full justify-center items-center gap-14 border-b-2">
         <h1 className="font-roboto text-primary mb-5 text-xl md:text-3xl text-center">

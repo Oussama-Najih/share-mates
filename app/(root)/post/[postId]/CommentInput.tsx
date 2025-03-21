@@ -45,7 +45,7 @@ export default function CommentInput({
   return (
     <form className="flex w-full items-center gap-2" onSubmit={onSubmit}>
       <Input
-        placeholder="Write a comment..."
+        placeholder="Écrire un commentaire..."
         value={input}
         onChange={(e) => setInput(e.target.value)}
         autoFocus

@@ -17,7 +17,7 @@ export const createPostSchema = z.object({
   title: z.string(),
   content: z.string().optional(),
   mediaIds: z.array(z.string()).max(10, "Cannot have more than 5 attachments"),
-  option: z.string(),
+  option: z.string().optional().nullable(),
 });
 
 export const addAnnouncement = z.object({

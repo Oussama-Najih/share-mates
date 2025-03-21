@@ -35,10 +35,6 @@ export async function submitPost(data: {
   const subject = matiere as Subject;
   const category = categorie as Categorie;
 
-  const d = createPostSchema.parse(rest);
-  console.log("afterParse");
-  console.log({ mediaIds: d.mediaIds });
-
   const { title, content, mediaIds, option } = createPostSchema.parse(rest);
 
   // console.log({

@@ -100,7 +100,7 @@ export function useUpdateProfileMutation(
           setError("name", {
             type: "manual",
             message:
-              "This username is already taken. Please choose another one.",
+              "Ce nom d'utilisateur est déjà pris. Veuillez en choisir un autre.",
           }); // Show error in form
           return;
         }

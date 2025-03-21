@@ -144,3 +144,8 @@
 .highlight-effect {
   animation: blink 1.5s ease-out infinite; /* Blink animation with 1.5s cycle */
 }
+
+body {
+  overflow-x: hidden;
+  width: 100%;
+}
