@@ -7,6 +7,7 @@ import CommentCount from "./CommentCount";
 import DeleteButton from "@/components/posts/DeleteButton";
 import Comments from "@/components/comments/Comments";
 import LikeButton from "@/components/comments/LikeButton";
+import CommentInput from "./CommentInput";
 
 export default function Help({
   post,
@@ -52,7 +53,7 @@ export default function Help({
             </div>
           ) : null}
         </div>
-
+        <CommentInput postId={post.id} parentId={null} />
         {showComments && (
           <div className="border-2 rounded-lg w-full">
             <Comments userId={userId} postId={post.id} parentId={null} />

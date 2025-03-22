@@ -17,7 +17,6 @@ import { formatError } from "../utils";
 /// Sign in the user with credentials
 export async function signInWithCredentials(formData: signInFormType) {
   try {
-    console.log({ formData });
     await signIn("credentials", formData);
 
     return { success: true, message: "Logged In successfully" };
@@ -101,8 +100,6 @@ export async function changePassword(
     }
 
     const isMatch = await compare(currentPassword, user.password);
-
-    console.log({ isMatch });
 
     // If password is correct, return user
     if (isMatch) {

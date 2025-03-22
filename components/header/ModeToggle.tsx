@@ -52,22 +52,24 @@ const ModeToggle = () => {
         </DropdownMenuCheckboxItem>
         <DropdownMenuSeparator />
         <DropdownMenuLabel>Other</DropdownMenuLabel>
-        <Link
-          href="/profil"
-          className="sm:hidden flex justify-center text-left text-primary-foreground"
-        >
-          <span> </span>
-          <p className="text-primary">Profil</p>
-        </Link>
-        <form action={signOutUser}>
-          <button
-            type="submit"
-            className="w-full flex justify-center mb-5
-             text-sm items-center text-left"
+        <div className="flex flex-col gap-2 text-sm">
+          <Link
+            href="/profil"
+            className="sm:hidden flex justify-center text-left text-primary-foreground"
           >
-            Log Out
-          </button>
-        </form>
+            <span> </span>
+            <p className="text-primary">Profil</p>
+          </Link>
+          <form action={signOutUser}>
+            <button
+              type="submit"
+              className="w-full flex justify-center
+                items-center text-left"
+            >
+              Log Out
+            </button>
+          </form>
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );

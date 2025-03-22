@@ -33,8 +33,9 @@ export default function Comment({ comment, userId }: CommentProps) {
               size={40}
               avatarUrl={comment.user.image}
             />
-            <h2 className="font-semibold">@{comment.user.name}</h2>
+            <h2 className="sm:hidden font-semibold">@{comment.user.name}</h2>
           </div>
+          <h2 className="font-semibold">@{comment.user.name}</h2>
           <span className="hidden md:block text-sm text-gray-500">
             {formatRelativeDate(comment.createdAt)}
           </span>
@@ -78,7 +79,7 @@ export default function Comment({ comment, userId }: CommentProps) {
           {userId === comment.userId && <DeleteButton comment={comment} />}
         </div>
         {showCommentInput ? (
-          <div className="mt-5 ">
+          <div className="mt-5">
             <CommentInput postId={comment.postId} parentId={comment.id} />
           </div>
         ) : null}
