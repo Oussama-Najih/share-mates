@@ -100,7 +100,7 @@ export default function MainSideBar({
               </Button>
             )
           )}
-          <Button
+          {/* <Button
             key="profil" // <-- Added key here
             variant="outline"
             asChild
@@ -112,7 +112,7 @@ export default function MainSideBar({
             >
               <p>Profil</p>
             </Link>
-          </Button>
+          </Button> */}
         </div>
       </SheetContent>
     </Sheet>

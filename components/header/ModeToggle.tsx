@@ -14,6 +14,7 @@ import { MoonIcon, Settings, SunIcon, SunMoon } from "lucide-react";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import { LogOutIcon } from "lucide-react"; // Assuming you have this icon available
 import { signOutUser } from "@/lib/actions/user.actions";
+import Link from "next/link";
 
 const ModeToggle = () => {
   const [mounted, setMounted] = useState(false);
@@ -50,15 +51,23 @@ const ModeToggle = () => {
           Dark
         </DropdownMenuCheckboxItem>
         <DropdownMenuSeparator />
-        <DropdownMenuLabel>Action</DropdownMenuLabel>
+        <DropdownMenuLabel>Other</DropdownMenuLabel>
         <form action={signOutUser}>
           <button
             type="submit"
-            className="w-full flex justify-center text-sm items-center text-left"
+            className="w-full flex justify-center mb-3
+             text-sm items-center text-left"
           >
             Log Out
           </button>
         </form>
+        <Link
+          href="/profil"
+          className="sm:hidden flex justify-center text-left text-primary-foreground"
+        >
+          <span> </span>
+          <p className="text-primary">Profil</p>
+        </Link>
       </DropdownMenuContent>
     </DropdownMenu>
   );
