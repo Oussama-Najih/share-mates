@@ -7,6 +7,7 @@ interface UserAvatarProps {
   size?: number;
   className?: string;
   canEdit?: boolean; // New prop to conditionally show the pencil icon
+  isInComment?: boolean; // New prop to conditionally show the pencil icon
 }
 
 export default function UserAvatar({
@@ -14,16 +15,17 @@ export default function UserAvatar({
   size,
   className,
   canEdit = false, // Default to false if not provided
+  isInComment = false,
 }: UserAvatarProps) {
   return (
-    <div className="hidden sm:block relative group">
+    <div className={cn("relative group", isInComment && "hidden sm:block")}>
       {" "}
       {/* Use group to enable hover effect */}
       <Image
         src={avatarUrl || "/images/avatar-placeHolder.png"}
         alt="User avatar"
-        width={size ?? 48}
-        height={size ?? 48}
+        width={size ?? 42}
+        height={size ?? 42}
         className={cn(
           "aspect-square h-fit flex-none rounded-full bg-secondary object-cover",
           className

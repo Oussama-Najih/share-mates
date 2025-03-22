@@ -25,8 +25,12 @@ export default function Comment({ comment, userId }: CommentProps) {
     <div className="mb-4 p-4 border rounded-lg bg-gray-100 dark:bg-gray-800">
       <div>
         <div className="flex justify-between items-center mb-2">
-          <div className="flex items-center gap-4">
-            <UserAvatar size={40} avatarUrl={comment.user.image} />
+          <div className="hidden sm:flex items-center gap-4">
+            <UserAvatar
+              isInComment={true}
+              size={40}
+              avatarUrl={comment.user.image}
+            />
             <h2 className="font-semibold">@{comment.user.name}</h2>
           </div>
           <span className="hidden md:block text-sm text-gray-500">
