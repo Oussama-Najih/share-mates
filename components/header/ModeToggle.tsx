@@ -52,6 +52,13 @@ const ModeToggle = () => {
         </DropdownMenuCheckboxItem>
         <DropdownMenuSeparator />
         <DropdownMenuLabel>Other</DropdownMenuLabel>
+        <Link
+          href="/profil"
+          className="sm:hidden flex justify-center text-left text-primary-foreground"
+        >
+          <span> </span>
+          <p className="text-primary">Profil</p>
+        </Link>
         <form action={signOutUser}>
           <button
             type="submit"
@@ -61,13 +68,6 @@ const ModeToggle = () => {
             Log Out
           </button>
         </form>
-        <Link
-          href="/profil"
-          className="sm:hidden flex justify-center text-left text-primary-foreground"
-        >
-          <span> </span>
-          <p className="text-primary">Profil</p>
-        </Link>
       </DropdownMenuContent>
     </DropdownMenu>
   );

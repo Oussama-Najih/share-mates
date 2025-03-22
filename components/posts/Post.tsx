@@ -23,7 +23,7 @@ export default function Post({
 
   return (
     <article
-      className="p-3 space-y-1 max-w-[480px] dark:border-blue-950 w-[70%] mx-auto rounded-md border-2 border-primary/40 bg-card shadow-sm relative"
+      className="w-full p-3 space-y-1 max-w-[480px] dark:border-blue-950 sm:w-[70%] mx-auto rounded-md border-2 border-primary/40 bg-card shadow-sm relative"
       key={post.id}
     >
       <section className="flex relative items-center border-b-2 pb-2 gap-10 font-roboto">

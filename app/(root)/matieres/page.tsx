@@ -75,7 +75,7 @@ export default async function page(props: {
           </SessionProvider>
         )}
 
-      <div className="flex flex-col items-center">
+      <div className="w-full flex flex-col items-center">
         <Posts userId={userId} />
       </div>
     </div>

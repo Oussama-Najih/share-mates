@@ -75,15 +75,12 @@ export default function MainEdit({ user, open, onOpenChange }: MainEditProps) {
   const [isPending, startTransition] = useTransition();
 
   const onSubmitP = (values: updatePasswordType) => {
-    console.log({ values });
     startTransition(async () => {
-      console.log("transition");
       const res = await changePassword(values, user.id);
       if (!res) {
         toast.error("La modification du mot de passe a échoué");
       }
       if (!res.success) {
-        console.log({ mess: res.message });
         passwordForm.setError("currentPassword", { message: res.message });
       } else {
         toast.success(res.message);
@@ -134,8 +131,8 @@ export default function MainEdit({ user, open, onOpenChange }: MainEditProps) {
               <CardHeader>
                 <CardTitle>Compte</CardTitle>
                 <CardDescription>
-                  Modifiez votre compte ici. Cliquez sur enregistrer lorsque
-                  vous avez terminé.
+                  Modifiez votre nom. Cliquez sur enregistrer lorsque vous avez
+                  terminé.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-2">
