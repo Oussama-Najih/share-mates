@@ -61,7 +61,7 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
         italic: false,
       }),
       Placeholder.configure({
-        placeholder: "Ajoutez une description !!",
+        placeholder: "Ajoutez une description",
       }),
     ],
     immediatelyRender: false, // ✅ Fix hydration mismatch
