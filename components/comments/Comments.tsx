@@ -12,10 +12,12 @@ export default function Comments({
   postId,
   parentId,
   userId,
+  showCommentInput = false,
 }: {
   postId: string;
   parentId: string | null;
   userId: string;
+  showCommentInput?: boolean;
 }) {
   const queryKey: QueryKey = parentId
     ? ["comments", postId, parentId]
@@ -42,9 +44,6 @@ export default function Comments({
   return (
     <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
       {/* Comment Input */}
-      <div className="mb-3">
-        <CommentInput postId={postId} parentId={parentId} />
-      </div>
 
       {/* Loading State */}
       {status === "pending" && (

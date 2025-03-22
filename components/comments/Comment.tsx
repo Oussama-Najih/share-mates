@@ -9,7 +9,8 @@ import UserAvatar from "@/components/user/UserAvatar";
 import LikeButton from "./LikeButton";
 import DeleteButton from "../posts/DeleteButton";
 import CommentEditableInput from "../form/CommentEditInput";
-import { MessageCircle } from "lucide-react";
+import { Edit, MessageCircle } from "lucide-react";
+import CommentInput from "@/app/(root)/post/[postId]/CommentInput";
 
 type CommentProps = {
   comment: CommentData;
@@ -18,6 +19,7 @@ type CommentProps = {
 
 export default function Comment({ comment, userId }: CommentProps) {
   const [areChildrenHidden, setAreChildrenHidden] = useState(false);
+  const [showCommentInput, setShowCommentInput] = useState(false);
 
   const mutation = useDeleteCommentMutation();
 
@@ -47,7 +49,7 @@ export default function Comment({ comment, userId }: CommentProps) {
       <>
         {/* Toggle Replies Button */}
         <div className="flex gap-2 justify-between items-center">
-          <div className="flex gap-2 md:gap-8 items-center">
+          <div className="flex gap-4 md:gap-8 items-end">
             <button
               onClick={() => setAreChildrenHidden((prev) => !prev)}
               className="text-sm mt-2"
@@ -68,10 +70,18 @@ export default function Comment({ comment, userId }: CommentProps) {
                 ),
               }}
             />
+            <Edit
+              size={20}
+              onClick={() => setShowCommentInput((prev) => !prev)}
+            />
           </div>
           {userId === comment.userId && <DeleteButton comment={comment} />}
         </div>
-
+        {showCommentInput ? (
+          <div className="mt-5 ">
+            <CommentInput postId={comment.postId} parentId={comment.id} />
+          </div>
+        ) : null}
         {/* Child Comments */}
         {!areChildrenHidden && (
           <div className="mt-3 pl-4 relative">
@@ -85,6 +95,7 @@ export default function Comment({ comment, userId }: CommentProps) {
 
             {/* Comments Section */}
             <Comments
+              showCommentInput={showCommentInput}
               userId={userId}
               postId={comment.postId}
               parentId={comment.id}

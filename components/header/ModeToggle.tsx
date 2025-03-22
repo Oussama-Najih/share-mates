@@ -62,7 +62,7 @@ const ModeToggle = () => {
         <form action={signOutUser}>
           <button
             type="submit"
-            className="w-full flex justify-center mb-3
+            className="w-full flex justify-center mb-5
              text-sm items-center text-left"
           >
             Log Out
