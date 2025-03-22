@@ -10,8 +10,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoonIcon, SunIcon, SunMoon } from "lucide-react";
+import { MoonIcon, Settings, SunIcon, SunMoon } from "lucide-react";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
+import { LogOutIcon } from "lucide-react"; // Assuming you have this icon available
+import { signOutUser } from "@/lib/actions/user.actions";
 
 const ModeToggle = () => {
   const [mounted, setMounted] = useState(false);
@@ -28,13 +30,7 @@ const ModeToggle = () => {
           className="focus-visible:ring-0 focus-visible:ring-offset-0"
           variant="ghost"
         >
-          {theme === "system" ? (
-            <SunMoon />
-          ) : theme === "dark" ? (
-            <MoonIcon />
-          ) : (
-            <SunIcon />
-          )}
+          <Settings />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
@@ -53,6 +49,16 @@ const ModeToggle = () => {
         >
           Dark
         </DropdownMenuCheckboxItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuLabel>Action</DropdownMenuLabel>
+        <form action={signOutUser}>
+          <button
+            type="submit"
+            className="w-full flex justify-center text-sm items-center text-left"
+          >
+            Log Out
+          </button>
+        </form>
       </DropdownMenuContent>
     </DropdownMenu>
   );
