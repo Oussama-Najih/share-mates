@@ -3,7 +3,7 @@
 import { PostData } from "@/index/prisma/types";
 import { MessageSquare } from "lucide-react";
 import { useState } from "react";
-import CommentCount from "./CommentCount";
+import CommentCount from "./CommentPostCount";
 import DeleteButton from "@/components/posts/DeleteButton";
 import Comments from "@/components/comments/Comments";
 import LikeButton from "@/components/comments/LikeButton";
@@ -28,7 +28,7 @@ export default function Help({
               initialState={{
                 likes: post.likes.length,
                 isLikedByUser: post.likes.some(
-                  (like) => like.userId === userId
+                  (like) => like.userId === userId,
                 ),
               }}
             />

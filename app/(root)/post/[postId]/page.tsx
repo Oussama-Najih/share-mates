@@ -132,6 +132,12 @@ export default async function Page({ params }: PageProps) {
         )}
       </div>
 
+      <div>
+        {post.category}
+        <span className="mx-2">|</span>
+        {post.subject}
+      </div>
+
       <Help post={post} userId={user.id} />
     </main>
   );

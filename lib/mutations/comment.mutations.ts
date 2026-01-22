@@ -50,13 +50,19 @@ export function useSubmitCommentMutation({
               ...oldData.pages.slice(1),
             ],
           };
-        }
+        },
       );
 
       queryClient.setQueryData(
         ["commentsCount", `${newComment.postId}`],
-        (oldData: number | undefined) => (oldData ?? 0) + 1 // Fix: Increase count instead of decreasing
+        (oldData: number | undefined) => (oldData ?? 0) + 1, // Fix: Increase count instead of decreasing
       );
+
+      parentId &&
+        queryClient.setQueryData(
+          ["commentsChildrenCount", `${parentId}`],
+          (oldData: number | undefined) => (oldData ?? 0) + 1, // Fix: Increase count instead of decreasing
+        );
 
       toast.success("Commentaire créé");
     },
@@ -93,13 +99,13 @@ export function useDeleteCommentMutation() {
               comments: page.comments.filter((c) => c.id !== deletedComment.id),
             })),
           };
-        }
+        },
       );
 
       queryClient.setQueryData(
         ["commentsCount", `${deletedComment.postId}`],
         (oldData: number | undefined) =>
-          Math.max((oldData ?? 0) - descendantsCount - 1, 0) // Fix: Ensure count doesn't go negative
+          Math.max((oldData ?? 0) - descendantsCount - 1, 0), // Fix: Ensure count doesn't go negative
       );
 
       toast.success("Commentaire supprimé avec succès");
@@ -107,7 +113,7 @@ export function useDeleteCommentMutation() {
     onError(error) {
       console.error(error);
       toast.error(
-        "Échec de la suppression du commentaire. Veuillez réessayer."
+        "Échec de la suppression du commentaire. Veuillez réessayer.",
       );
     },
   });
@@ -139,11 +145,11 @@ export function useUpdateCommentMutation(postId: string, parentId: string) {
             pages: oldData.pages.map((page) => ({
               nextCursor: page.nextCursor,
               comments: page.comments.map((comment) =>
-                comment.id === updatedComment.id ? updatedComment : comment
+                comment.id === updatedComment.id ? updatedComment : comment,
               ),
             })),
           };
-        }
+        },
       );
 
       toast.success(`Le commentaire a été modifié avec succès`);

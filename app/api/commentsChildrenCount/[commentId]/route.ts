@@ -3,12 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ postId: string }> },
+  { params }: { params: Promise<{ commentId: string }> },
 ) {
   try {
-    const { postId } = await params;
+    const { commentId } = await params;
     const commentsCount = await prisma.comment.count({
-      where: { postId },
+      where: { parentId: commentId },
     });
     return NextResponse.json(commentsCount);
   } catch (error) {

@@ -4,13 +4,15 @@ import { cn, formatRelativeDate } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import Comments from "../comments/Comments";
-import CommentCount from "../../app/(root)/post/[postId]/CommentCount";
+import CommentPostCount from "../../app/(root)/post/[postId]/CommentPostCount";
 import { useState } from "react";
 import { MessageSquare } from "lucide-react";
 import DeleteButton from "./DeleteButton";
 import { Media } from "@prisma/client";
 import PostSmoothEditInput from "../form/PostSmoothEditInput";
 import LikeButton from "../comments/LikeButton";
+import CommentEditableInput from "../form/CommentEditInput";
+import CommentInput from "@/app/(root)/post/[postId]/CommentInput";
 
 export default function Post({
   post,
@@ -82,10 +84,16 @@ export default function Post({
           className="flex items-center gap-2 mb-3"
         >
           <MessageSquare className="size-5" />
-          <CommentCount postId={post.id} initialState={post.comments.length} />
+          <CommentPostCount
+            postId={post.id}
+            initialState={post.comments.length}
+          />
         </button>
         {showComments ? (
-          <Comments userId={userId} postId={post.id} parentId={null} />
+          <div>
+            <CommentInput postId={post.id} parentId={null} />
+            <Comments userId={userId} postId={post.id} parentId={null} />
+          </div>
         ) : null}
       </div>
     </article>
@@ -103,7 +111,8 @@ function MediaPreviews({ attachments, postId }: MediaPreviewsProps) {
       href={`post/${postId}`}
       className={cn(
         "overflow-hidden pr-2",
-        attachments.length > 1 && "grid gap-4 md:justify-center md:grid-cols-2 "
+        attachments.length > 1 &&
+          "grid gap-4 md:justify-center md:grid-cols-2 ",
       )}
     >
       {attachments.map((m) => (

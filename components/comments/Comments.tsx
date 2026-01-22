@@ -43,17 +43,13 @@ export default function Comments({
 
   return (
     <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
-      {/* Comment Input */}
-      {parentId === null && <CommentInput postId={postId} parentId={null} />}
 
-      {/* Loading State */}
       {status === "pending" && (
         <div className="flex justify-center mt-3">
           <Loader2 className="animate-spin text-gray-500" />
         </div>
       )}
 
-      {/* No Comments Message */}
       {status === "success" && !comments.length && (
         <p className="text-center mt-3 text-gray-500 dark:text-gray-400">
           Pas encore de commentaires

@@ -11,6 +11,8 @@ import DeleteButton from "../posts/DeleteButton";
 import CommentEditableInput from "../form/CommentEditInput";
 import { Edit, MessageCircle } from "lucide-react";
 import CommentInput from "@/app/(root)/post/[postId]/CommentInput";
+import CommentCount from "./CommentCount";
+import { json } from "stream/consumers";
 
 type CommentProps = {
   comment: CommentData;
@@ -18,7 +20,7 @@ type CommentProps = {
 };
 
 export default function Comment({ comment, userId }: CommentProps) {
-  const [areChildrenHidden, setAreChildrenHidden] = useState(false);
+  const [areChildrenHidden, setAreChildrenHidden] = useState(true);
   const [showCommentInput, setShowCommentInput] = useState(false);
 
   const mutation = useDeleteCommentMutation();
@@ -51,23 +53,18 @@ export default function Comment({ comment, userId }: CommentProps) {
         {/* Toggle Replies Button */}
         <div className="flex gap-2 justify-between items-center">
           <div className="flex gap-4 md:gap-8 items-end">
-            <button
-              onClick={() => setAreChildrenHidden((prev) => !prev)}
-              className="text-sm mt-2"
-            >
-              {areChildrenHidden && (
-                <div className="flex gap-1 items-center">
-                  <MessageCircle className="text-white" />
-                  <p>{comment.children.length}</p>
-                </div>
-              )}
-            </button>
+            <CommentCount
+              commentId={comment.id}
+              initialState={comment.children.length}
+              areChildrenHidden={areChildrenHidden}
+              setAreChildrenHidden={setAreChildrenHidden}
+            />
             <LikeButton
               commentId={comment.id}
               initialState={{
                 likes: comment.likes.length,
                 isLikedByUser: comment.likes.some(
-                  (like) => like.userId === userId
+                  (like) => like.userId === userId,
                 ),
               }}
             />

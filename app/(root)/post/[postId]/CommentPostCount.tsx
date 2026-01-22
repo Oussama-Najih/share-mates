@@ -1,4 +1,4 @@
-import useCommentsCount from "@/lib/hooks";
+import { usePostCommentsCount } from "@/lib/hooks";
 
 type CommentCountProps = {
   postId: string;
@@ -9,7 +9,7 @@ export default function CommentCount({
   postId,
   initialState,
 }: CommentCountProps) {
-  const { data: count } = useCommentsCount(postId, initialState);
+  const { data: count } = usePostCommentsCount(postId, initialState);
 
   return (
     <span className="text-sm font-medium tabular-nums">
