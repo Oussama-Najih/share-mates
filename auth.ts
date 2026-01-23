@@ -37,11 +37,10 @@ export const config = {
           },
         });
 
-        // Check if user exists and if the password matches
         if (user && user.password) {
           const isMatch = await compare(
             credentials.password as string,
-            user.password
+            user.password,
           );
 
           if (isMatch) {
@@ -62,33 +61,20 @@ export const config = {
     async session({ session, token }) {
       if (!token.sub) return session;
 
-      // Fetch the latest user data from the database
-      const user = await prisma.user.findUnique({
-        where: { id: token.sub },
-        select: { image: true, name: true }, // Only fetch the image
-      });
-
       session.user.id = token.sub;
       session.user.role = token.role;
-      if (user) {
-        session.user.name = user.name;
-      } else {
-        session.user.name = token.name!;
-      }
-      session.user.image = user?.image ?? token.image; // Always get the latest image
+      session.user.name = token.name!;
+      session.user.image = token.image;
 
       return session;
     },
 
-    async jwt({ token, user, trigger, session }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
         token.role = user.role;
         token.name = user.name;
         token.image = user.image;
-      }
-      if (session?.user.image && trigger === "update") {
-        token.image = session.user.image;
       }
       return token;
     },

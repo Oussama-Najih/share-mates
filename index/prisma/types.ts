@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 
-export function getUserDataSelect(loggedInUserId: string) {
+export function getUserDataSelect() {
   return {
     id: true,
     name: true,
@@ -20,10 +20,10 @@ export type UserData = Prisma.UserGetPayload<{
   select: ReturnType<typeof getUserDataSelect>;
 }>;
 
-export function getPostDataInclude(loggedInUserId: string) {
+export function getPostDataInclude() {
   return {
     author: {
-      select: getUserDataSelect(loggedInUserId), // ✅ Fix here
+      select: getUserDataSelect(),
     },
     attachment: true,
     comments: true,
@@ -31,10 +31,10 @@ export function getPostDataInclude(loggedInUserId: string) {
   } satisfies Prisma.PostInclude;
 }
 
-export function getCommentDataInclude(loggedInUserId: string) {
+export function getCommentDataInclude() {
   return {
     user: {
-      select: getUserDataSelect(loggedInUserId),
+      select: getUserDataSelect(),
     },
     children: true,
     likes: true,
@@ -67,6 +67,7 @@ export interface LikeInfo {
 export const notificationsInclude = {
   issuer: {
     select: {
+      id: true,
       name: true,
       image: true,
     },

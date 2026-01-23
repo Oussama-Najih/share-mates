@@ -9,7 +9,6 @@ import Help from "./Help";
 import { auth } from "@/auth";
 import UserAvatar from "@/components/user/UserAvatar";
 import PostEditableInput from "@/components/form/PostEditInput";
-import { Scroll } from "lucide-react";
 import ScrollToComment from "./ScrollToComment";
 
 interface PageProps {
@@ -21,7 +20,7 @@ const getPost = cache(async (postId: string, loggedInUserId: string) => {
     where: {
       id: postId,
     },
-    include: getPostDataInclude(loggedInUserId),
+    include: getPostDataInclude(),
   });
 
   if (!post) notFound();
@@ -67,6 +66,7 @@ export default async function Page({ params }: PageProps) {
           @{post.author.name}
         </h1>
         <UserAvatar
+          userId={post.author.id}
           avatarUrl={post.author.image}
           size={250}
           className="size-full max-h-60 max-w-60 rounded-full"

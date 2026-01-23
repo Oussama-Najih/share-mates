@@ -15,19 +15,26 @@ import Image, { StaticImageData } from "next/image";
 import { useRef, useState, useEffect } from "react";
 import Resizer from "react-image-file-resizer";
 import CropImageDialog from "./CropImageDialog";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface EditAvatarDialogProps {
-  user: UserData;
+  userId: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
 export default function EditAvatarDialog({
-  user,
+  userId,
   open,
   onOpenChange,
 }: EditAvatarDialogProps) {
-  const mutation = useUpdateAvatarMutation(user.id);
+  const queryClient = useQueryClient();
+
+  const avatarUrl = queryClient.getQueryData<{ avatar: string | null }>([
+    `user-avatar-${userId}`,
+  ])?.avatar;
+
+  const mutation = useUpdateAvatarMutation(userId);
   const [croppedAvatar, setCroppedAvatar] = useState<Blob | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>(""); // Initialize as empty string
 
@@ -54,7 +61,7 @@ export default function EditAvatarDialog({
   async function onSubmit() {
     if (!croppedAvatar) return;
 
-    const newAvatarFile = new File([croppedAvatar], `avatar_${user.id}.webp`, {
+    const newAvatarFile = new File([croppedAvatar], `avatar_${userId}.webp`, {
       type: "image/webp",
     });
 
@@ -75,7 +82,7 @@ export default function EditAvatarDialog({
         <div className="space-y-1.5">
           <Label>Avatar</Label>
           <AvatarInput
-            src={previewUrl || user.image || "/images/avatar-placeholder.png"}
+            src={previewUrl || avatarUrl || "/images/avatar-placeholder.png"}
             onImageCropped={setCroppedAvatar}
           />
         </div>
@@ -116,7 +123,7 @@ function AvatarInput({ src, onImageCropped }: AvatarInputProps) {
       100,
       0,
       (uri) => setImageToCrop(uri as File),
-      "file"
+      "file",
     );
   }
 

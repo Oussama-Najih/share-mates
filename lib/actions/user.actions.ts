@@ -73,7 +73,7 @@ export async function updateUserProfile(value: updateProfileType) {
     const updatedUser = await prisma.user.update({
       where: { id: user.id },
       data: extendedData,
-      select: getUserDataSelect(user.id),
+      select: getUserDataSelect(),
     });
 
     return updatedUser;
@@ -84,7 +84,7 @@ export async function updateUserProfile(value: updateProfileType) {
 
 export async function changePassword(
   values: updatePasswordType,
-  userId: string
+  userId: string,
 ) {
   try {
     const { currentPassword, newPassword } = updatePasswordSchema.parse(values);

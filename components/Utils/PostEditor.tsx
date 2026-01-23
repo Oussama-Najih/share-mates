@@ -85,7 +85,7 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
       content: input,
       mediaIds: attachments.map((a) => a.mediaId).filter(Boolean) as string[],
       option,
-    }; // Only add `option` if it's truthy
+    };
 
     mutation.mutate(payload, {
       onSuccess: () => {
@@ -159,7 +159,7 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
               editor={editor}
               className={cn(
                 "border-2 overflow-y-auto rounded-2xl bg-background px-5 py-3 w-full", // Add w-full to ensure full width
-                isDragActive && "outline-dashed"
+                isDragActive && "outline-dashed",
               )}
               onPaste={onPaste}
             />
@@ -257,7 +257,7 @@ export function AttachmentPreviews({
     <div
       className={cn(
         "flex flex-col gap-3",
-        attachments.length > 1 && "sm:grid sm:grid-cols-2"
+        attachments.length > 1 && "sm:grid sm:grid-cols-2",
       )}
     >
       {attachments.map((attachment) => {
@@ -297,7 +297,7 @@ function AttachmentPreview({
       className={cn(
         "relative mx-auto size-fit",
         isUploading && "opacity-50",
-        "bg-background p-3 rounded-lg border border-dashed"
+        "bg-background p-3 rounded-lg border border-dashed",
       )}
     >
       {file.type.startsWith("image") ? (

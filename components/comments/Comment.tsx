@@ -31,6 +31,7 @@ export default function Comment({ comment, userId }: CommentProps) {
         <div className="flex justify-between items-center mb-2">
           <div className="hidden sm:flex items-center gap-4">
             <UserAvatar
+              userId={comment.userId}
               isInComment={true}
               size={40}
               avatarUrl={comment.user.image}
@@ -93,7 +94,6 @@ export default function Comment({ comment, userId }: CommentProps) {
 
             {/* Comments Section */}
             <Comments
-              showCommentInput={showCommentInput}
               userId={userId}
               postId={comment.postId}
               parentId={comment.id}

@@ -24,7 +24,7 @@ export function useUpdateAvatarMutation(userId: string) {
         throw new Error("Upload failed");
       }
 
-      return uploadResult[0].serverData.avatarUrl; // Extract avatar URL directly
+      return uploadResult[0].serverData.avatarUrl;
     },
     onSuccess: async (newAvatarUrl) => {
       try {
@@ -59,10 +59,12 @@ export function useUpdateAvatarMutation(userId: string) {
                 }),
               })),
             };
-          }
+          },
         );
 
-        router.refresh();
+        queryClient.invalidateQueries({
+          queryKey: [`user-avatar-${userId}`],
+        });
         toast.success("Avatar actualisé avec succès");
         return newAvatarUrl;
       } catch (error) {
@@ -83,9 +85,9 @@ export function useUpdateProfileMutation(
   userId: string,
   setError: (
     name: keyof updateProfileType,
-    error: { type?: string; message: string }
+    error: { type?: string; message: string },
   ) => void,
-  onOpenChange: (value: boolean) => void
+  onOpenChange: (value: boolean) => void,
 ) {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -138,7 +140,7 @@ export function useUpdateProfileMutation(
                 }),
               })),
             };
-          }
+          },
         );
 
         // Invalidate the user posts query

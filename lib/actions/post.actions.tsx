@@ -58,7 +58,7 @@ export async function submitPost(data: {
       },
       correction: option === "CORRECTIONS", // ✅ Simplified condition
     },
-    include: getPostDataInclude(user.id),
+    include: getPostDataInclude(),
   });
 
   return newPost;
@@ -79,7 +79,7 @@ export async function deletePost(id: string) {
 
   const deletedPost = await prisma.post.delete({
     where: { id },
-    include: getPostDataInclude(user.id),
+    include: getPostDataInclude(),
   });
 
   return deletedPost;
@@ -111,7 +111,7 @@ export async function updatePost({
     data: {
       [isTitle ? "title" : "content"]: value, // Conditional key assignment
     },
-    include: getPostDataInclude(user.id),
+    include: getPostDataInclude(),
   });
 
   return updatedPost;

@@ -26,6 +26,7 @@ export default function UserProfile({
         className="block mx-auto"
       >
         <UserAvatar
+          userId={detailedLoggedInUser.id}
           avatarUrl={detailedLoggedInUser.image}
           size={250}
           className="size-full hover:opacity-70 transition-colors duration-300 max-h-60 max-w-60 rounded-full"
@@ -34,7 +35,7 @@ export default function UserProfile({
       </button>
 
       <EditAvatarDialog
-        user={detailedLoggedInUser}
+        userId={detailedLoggedInUser.id}
         open={showAvatarDialog}
         onOpenChange={setShowAvatarDialog}
       />

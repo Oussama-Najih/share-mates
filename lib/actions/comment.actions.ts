@@ -44,7 +44,7 @@ export async function submitComment(data: {
         userId: loggedInUser.id,
         postId,
       },
-      include: getCommentDataInclude(loggedInUser.id),
+      include: getCommentDataInclude(),
     }),
     ...(!(
       (loggedInUser.id === post.authorId && parentId === null) ||
@@ -93,7 +93,7 @@ export async function deleteComment(commentId: string) {
     where: {
       id: commentId,
     },
-    include: getCommentDataInclude(user.id),
+    include: getCommentDataInclude(),
   });
 
   return {
@@ -142,7 +142,7 @@ export async function updateComment({
     data: {
       message: content, // Conditional key assignment
     },
-    include: getCommentDataInclude(user.id),
+    include: getCommentDataInclude(),
   });
 
   return updatedComment;

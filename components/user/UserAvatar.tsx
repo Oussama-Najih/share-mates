@@ -1,9 +1,15 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Pencil } from "lucide-react"; // Import the Pencil icon from lucide-react
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { QueryKey } from "@tanstack/react-query";
+import kyInstance from "@/lib/ky";
 
 interface UserAvatarProps {
-  avatarUrl: string | null | undefined;
+  userId?: string;
+  avatarUrl?: string | null;
   size?: number;
   className?: string;
   canEdit?: boolean; // New prop to conditionally show the pencil icon
@@ -11,24 +17,38 @@ interface UserAvatarProps {
 }
 
 export default function UserAvatar({
+  userId,
   avatarUrl,
   size,
   className,
-  canEdit = false, // Default to false if not provided
+  canEdit = false,
   isInComment = false,
 }: UserAvatarProps) {
+  const queryClient = useQueryClient();
+
+  const avatarQueryKey: QueryKey = [`user-avatar-${userId}`];
+
+  const apiUrl = `/api/avatar/${userId}`;
+
+  const { data } = useQuery({
+    queryKey: avatarQueryKey,
+    queryFn: () =>
+      kyInstance
+        .get(apiUrl, userId ? { searchParams: { userId } } : undefined)
+        .json<{ avatar: string | null }>(),
+  });
+
   return (
     <div className={cn("relative group", isInComment && "hidden sm:block")}>
       {" "}
-      {/* Use group to enable hover effect */}
       <Image
-        src={avatarUrl || "/images/avatar-placeHolder.png"}
+        src={data?.avatar || "/images/avatar-placeHolder.png"}
         alt="User avatar"
         width={size ?? 42}
         height={size ?? 42}
         className={cn(
           "aspect-square h-fit flex-none rounded-full bg-secondary object-cover",
-          className
+          className,
         )}
       />
       {/* Conditional rendering of the pencil icon inside the image */}

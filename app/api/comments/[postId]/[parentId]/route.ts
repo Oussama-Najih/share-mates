@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ postId: string; parentId: string }> }
+  { params }: { params: Promise<{ postId: string; parentId: string }> },
 ) {
   try {
     const { postId, parentId } = await params;
@@ -24,7 +24,7 @@ export async function GET(
 
     const comments = await prisma.comment.findMany({
       where: { postId, parentId: parentId === "root" ? null : parentId },
-      include: getCommentDataInclude(user.id),
+      include: getCommentDataInclude(),
       orderBy: { createdAt: "desc" },
       take: pageSize + 1,
       cursor: cursor ? { id: cursor } : undefined,

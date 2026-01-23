@@ -17,7 +17,7 @@ export default function Notification({ notification }: NotificationProps) {
       `/post/${
         notification.postId ? notification.postId : notification.comment?.postId
       }`,
-      window.location.origin
+      window.location.origin,
     );
 
     if (notification.commentId) {
@@ -55,12 +55,16 @@ export default function Notification({ notification }: NotificationProps) {
       <article
         className={cn(
           "flex gap-3 rounded-2xl p-5 shadow-sm transition-colors hover:bg-blue-200 group dark:hover:bg-slate-300",
-          !notification.read && "bg-primary/10"
+          !notification.read && "bg-primary/10",
         )}
       >
         <div className="my-1">{icon}</div>
         <div className="space-y-3">
-          <UserAvatar avatarUrl={notification.issuer.image} size={36} />
+          <UserAvatar
+            userId={notification.issuer.id}
+            avatarUrl={notification.issuer.image}
+            size={36}
+          />
           <div className="dark:group-hover:text-slate-500">
             <span className="font-bold">{notification.issuer.name}</span>{" "}
             <span>{message}</span>

@@ -117,7 +117,7 @@ export function useSubmitPostMutation() {
               ...oldData.pages.slice(1),
             ],
           };
-        }
+        },
       );
 
       queryClient.invalidateQueries({
@@ -130,7 +130,7 @@ export function useSubmitPostMutation() {
                   Error,
                   InfiniteData<PostsPage, string | null>,
                   readonly unknown[]
-                >
+                >,
               ) && !query.state.data
             : false;
         },
@@ -174,7 +174,7 @@ export function useDeletePostMutation() {
               posts: page.posts.filter((p) => p.id !== deletedPost.id),
             })),
           };
-        }
+        },
       );
 
       //No need for invalidateQueries because we can't delete a post if the feed is empty
@@ -217,15 +217,15 @@ export function useUpdatePostMutation(isTitle = false) {
             pages: oldData.pages.map((page) => ({
               nextCursor: page.nextCursor,
               posts: page.posts.map((post) =>
-                post.id === updatedPost.id ? updatedPost : post
+                post.id === updatedPost.id ? updatedPost : post,
               ),
             })),
           };
-        }
+        },
       );
 
       toast.success(
-        `${isTitle ? "Le titre" : "La description"} a été modifié avec succès`
+        `${isTitle ? "Le titre" : "La description"} a été modifié avec succès`,
       );
     },
     onError(error) {
@@ -233,7 +233,7 @@ export function useUpdatePostMutation(isTitle = false) {
       toast.error(
         `Échec de la modification ${
           isTitle ? "du titre" : "de la description du post"
-        }. Veuillez réessayer.`
+        }. Veuillez réessayer.`,
       );
     },
   });

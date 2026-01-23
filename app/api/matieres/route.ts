@@ -38,15 +38,13 @@ export async function GET(req: NextRequest) {
         : {}),
     };
 
-
     const posts = await prisma.post.findMany({
       where: filters,
-      include: getPostDataInclude(user.id),
+      include: getPostDataInclude(),
       orderBy: { createdAt: "desc" },
       take: pageSize + 1,
       cursor: cursor ? { id: cursor } : undefined,
     });
-
 
     const nextCursor = posts.length > pageSize ? posts[pageSize].id : null;
 

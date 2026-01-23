@@ -1,5 +1,6 @@
 import { prisma } from "@/db/prisma";
 import { getServerUser } from "@/lib/serverFuncs";
+import { revalidateTag } from "next/cache";
 import { createUploadthing, FileRouter } from "uploadthing/next";
 import { UploadThingError, UTApi } from "uploadthing/server";
 
@@ -23,7 +24,7 @@ const handleAttachmentUpload =
         type,
         originalFileName:
           type === "PDF"
-            ? file.name.split("/^_/")[0] ?? "unknown.pdf"
+            ? (file.name.split("/^_/")[0] ?? "unknown.pdf")
             : undefined,
       },
     });

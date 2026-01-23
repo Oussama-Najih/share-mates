@@ -19,7 +19,7 @@ const getUser = cache(async (loggedInUser: ExtendedUser) => {
         mode: "insensitive",
       },
     },
-    select: getUserDataSelect(loggedInUser.id),
+    select: getUserDataSelect(),
   });
 
   if (!user) notFound();

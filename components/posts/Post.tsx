@@ -29,7 +29,7 @@ export default function Post({
       key={post.id}
     >
       <section className="flex relative items-center border-b-2 pb-2 gap-10 font-roboto">
-        <UserAvatar avatarUrl={post.author.image} />
+        <UserAvatar userId={post.author.id} avatarUrl={post.author.image} />
         <div className="flex flex-col items-start">
           <p className="text-muted-foreground">@{post.author.name}</p>
           <h2 className=" text-blue-500 font-roboto text-sm md:text-md relative z-20">
