@@ -15,14 +15,12 @@ export default function OptionToggle() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // State to hold the selected option
   const [selectedOption, setSelectedOption] = useState("Tous les posts");
 
   useEffect(() => {
-    // Sync the selectedOption state with the current searchParam
     const option = searchParams.get("option") || "Tous les posts";
     setSelectedOption(option);
-  }, [searchParams]); // Re-run effect when searchParams change
+  }, [searchParams]);
 
   const options = [
     { icon: <CheckCircle size={16} />, label: "CORRECTIONS" },

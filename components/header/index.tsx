@@ -31,7 +31,7 @@ export default async function index({
   });
 
   return (
-    <header>
+    <header className="w-screen">
       <section className="flex justify-between border-b border-border items-center px-8 py-8  h-14 relative w-full top-0 shadow-md">
         <nav className="flex w-full items-center justify-between space-x-6 md:space-x-12">
           <MainSideBar unreadNotificationCount={unreadNotificationCount} />

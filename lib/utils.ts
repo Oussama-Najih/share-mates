@@ -8,15 +8,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// } else if (
-//   error instanceof Prisma.PrismaClientKnownRequestError &&
-//   error.code === "P2002"
-// ) {
-//   const field = error.meta?.targeto
-//     ? (error.meta.target as string[])[0]
-//     : "Field";
-//   return `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`;
-
 export function formatError(error: unknown): string {
   if (error instanceof ZodError) {
     return error.errors.map((e) => e.message).join(". ");
@@ -27,17 +18,14 @@ export function formatError(error: unknown): string {
   }
 }
 
-//function to lower case first letter from string
 export const lowerCaseFirstLetter = (string: string) => {
   return string.charAt(0).toLowerCase() + string.slice(1);
 };
 
-//function to capitalize first letter from string
 export const capitalizeFirstLetter = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-// Form the pagination links
 export function formUrlQuery({
   params,
   key,
@@ -58,7 +46,7 @@ export function formUrlQuery({
     },
     {
       skipNull: true,
-    }
+    },
   );
 }
 
@@ -95,7 +83,6 @@ export function formatNumber(n: number): string {
   }).format(n);
 }
 
-// Convert prisma object into a regular JS object
 export function convertToPlainObject<T>(value: T): T {
   return JSON.parse(JSON.stringify(value));
 }

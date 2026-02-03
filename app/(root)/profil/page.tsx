@@ -10,7 +10,6 @@ import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import Header from "@/components/header";
 
-//Deduplicate the 2 requests with getUser()
 const getUser = cache(async (loggedInUser: ExtendedUser) => {
   const user = await prisma.user.findFirst({
     where: {

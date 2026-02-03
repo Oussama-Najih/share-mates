@@ -63,7 +63,7 @@ export default function MainEdit({ user, open, onOpenChange }: MainEditProps) {
   const mutation = useUpdateProfileMutation(
     user.id,
     accountForm.setError,
-    onOpenChange
+    onOpenChange,
   );
 
   const passwordForm = useForm<updatePasswordType>({
@@ -89,7 +89,6 @@ export default function MainEdit({ user, open, onOpenChange }: MainEditProps) {
     });
   };
 
-  // Reset state when dialog closes
   useEffect(() => {
     if (open) {
       accountForm.reset({ name: user.name });
@@ -182,7 +181,7 @@ export default function MainEdit({ user, open, onOpenChange }: MainEditProps) {
                 <Form {...passwordForm}>
                   <form
                     className="space-y-3"
-                    onSubmit={passwordForm.handleSubmit(onSubmitP)} // Add this line
+                    onSubmit={passwordForm.handleSubmit(onSubmitP)}
                   >
                     <FormField
                       control={passwordForm.control}
@@ -199,7 +198,7 @@ export default function MainEdit({ user, open, onOpenChange }: MainEditProps) {
                               value={field.value || ""}
                               onChange={(e) => {
                                 clearErrors("credentials");
-                                field.onChange(e); // Ensure the default field handler runs
+                                field.onChange(e);
                               }}
                             />
                           </FormControl>
@@ -222,7 +221,7 @@ export default function MainEdit({ user, open, onOpenChange }: MainEditProps) {
                               value={field.value || ""}
                               onChange={(e) => {
                                 clearErrors("credentials");
-                                field.onChange(e); // Ensure the default field handler runs
+                                field.onChange(e);
                               }}
                             />
                           </FormControl>
@@ -231,7 +230,7 @@ export default function MainEdit({ user, open, onOpenChange }: MainEditProps) {
                       )}
                     />
                     <Button
-                      type="submit" // Ensure the button has type="submit"
+                      type="submit"
                       disabled={
                         isPending ||
                         passwordForm.formState.isSubmitting ||
@@ -270,7 +269,7 @@ export default function MainEdit({ user, open, onOpenChange }: MainEditProps) {
 }
 
 interface AvatarInputProps {
-  src: string | StaticImageData; // Ensure src is never null
+  src: string | StaticImageData;
   onImageCropped: (blob: Blob | null) => void;
 }
 
@@ -289,7 +288,7 @@ function AvatarInput({ src, onImageCropped }: AvatarInputProps) {
       100,
       0,
       (uri) => setImageToCrop(uri as File),
-      "file"
+      "file",
     );
   }
 

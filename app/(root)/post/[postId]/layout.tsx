@@ -6,7 +6,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex min-h-screen flex-col container">
+    <div className="w-full flex flex-col items-center container">
       <Header isSubjectsPage={false} />
       {children}
     </div>

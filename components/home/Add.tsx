@@ -29,7 +29,7 @@ import AnnouncementImageUploader from "./AnnouncementImageUploader";
 
 export default function Add() {
   const [open, setOpen] = useState(false);
-  const [mediaId, setMediaId] = useState(""); // Store uploaded mediaId
+  const [mediaId, setMediaId] = useState("");
 
   const form = useForm<z.infer<typeof addAnnouncement>>({
     resolver: zodResolver(addAnnouncement),
@@ -39,7 +39,6 @@ export default function Add() {
     },
   });
 
-  // Open Form Handler
   const handleOpenForm = () => {
     setOpen(true);
   };
@@ -50,12 +49,11 @@ export default function Add() {
     setMediaId("");
   };
 
-  // Submit Form Handler
   const onSubmit: SubmitHandler<z.infer<typeof addAnnouncement>> = async (
-    values
+    values,
   ) => {
     try {
-      const res = await createAnnouncement({ ...values }); // Include mediaId
+      const res = await createAnnouncement({ ...values });
       if (res.success) {
         toast.success(res.message);
         form.reset();
@@ -71,9 +69,8 @@ export default function Add() {
     }
   };
 
-  // Inside the component
   useEffect(() => {
-    form.setValue("mediaId", mediaId); // Sync mediaId with form state
+    form.setValue("mediaId", mediaId);
   }, [mediaId, form]);
 
   return (

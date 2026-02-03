@@ -11,7 +11,7 @@ import { CommentData } from "@/index/prisma/types";
 const CommentEditableInput = ({
   initialValue,
   comment,
-  canEdit, // Control editability
+  canEdit,
 }: {
   initialValue: string;
   comment: CommentData;
@@ -24,17 +24,15 @@ const CommentEditableInput = ({
 
   const { mutate, isPending } = useUpdateCommentMutation(
     comment.postId,
-    comment.parentId ?? "root"
+    comment.parentId ?? "root",
   );
 
-  // Focus input when entering edit mode
   useEffect(() => {
     if (isEditing) {
       inputRef.current?.focus();
     }
   }, [isEditing]);
 
-  // Save the new value
   const handleSave = () => {
     if (
       tempValue.trim() === initialValue ||
@@ -51,13 +49,13 @@ const CommentEditableInput = ({
           setLastSavedValue(tempValue);
           setIsEditing(false);
         },
-      }
+      },
     );
   };
 
   const handleCancel = () => {
     setIsEditing(false);
-    setTempValue(lastSavedValue); // Reset to the last saved value
+    setTempValue(lastSavedValue);
   };
 
   return (
@@ -69,7 +67,7 @@ const CommentEditableInput = ({
             value={tempValue}
             onChange={(e) => setTempValue(e.target.value)}
             className="py-1 px-2 border rounded-md"
-            disabled={!canEdit || isPending} // Prevent changes while loading
+            disabled={!canEdit || isPending}
           />
           <LoadingButton
             loading={isPending}
@@ -79,7 +77,7 @@ const CommentEditableInput = ({
           >
             <Check className="cursor-pointer text-green-500" />
           </LoadingButton>
-          {!isPending && ( // Hide cancel button while loading
+          {!isPending && (
             <Button onClick={handleCancel} variant="secondary">
               <X className="cursor-pointer text-red-500" />
             </Button>

@@ -4,7 +4,7 @@ import { createPostSchema } from "../validators";
 import { prisma } from "@/db/prisma";
 import { getPostDataInclude } from "@/index/prisma/types";
 import { getServerUser } from "../serverFuncs";
-import { Subject, Categorie } from "@prisma/client"; // ✅ Import Enums from Prisma
+import { Subject, Categorie } from "@prisma/client";
 
 export async function submitPost(data: {
   matiere: string;
@@ -24,7 +24,6 @@ export async function submitPost(data: {
 
   const { categorie, matiere, ...rest } = data;
 
-  // Validate and map to Prisma Enum safely
   if (!Object.values(Subject).includes(matiere as Subject)) {
     throw new Error(`Matiere invalide: ${matiere}`);
   }
@@ -37,26 +36,17 @@ export async function submitPost(data: {
 
   const { title, content, mediaIds, option } = createPostSchema.parse(rest);
 
-  // console.log({
-  //   subject, // ✅ Now correctly mapped to the Subject enum
-  //   category, // ✅ Now correctly mapped to the Categorie enum
-  //   title,
-  //   content,
-  //   correction: option === "CORRECTIONS", // ✅ Simplified condition
-  //   authorId: user.id,
-  // });
-
   const newPost = await prisma.post.create({
     data: {
-      subject, // ✅ Now correctly mapped to the Subject enum
-      category, // ✅ Now correctly mapped to the Categorie enum
+      subject,
+      category,
       title,
       content,
       authorId: user.id,
       attachment: {
-        connect: mediaIds.map((id) => ({ id })), // Connect multiple media items if mediaId is an array
+        connect: mediaIds.map((id) => ({ id })),
       },
-      correction: option === "CORRECTIONS", // ✅ Simplified condition
+      correction: option === "CORRECTIONS",
     },
     include: getPostDataInclude(),
   });
@@ -109,7 +99,7 @@ export async function updatePost({
   const updatedPost = await prisma.post.update({
     where: { id: postId },
     data: {
-      [isTitle ? "title" : "content"]: value, // Conditional key assignment
+      [isTitle ? "title" : "content"]: value,
     },
     include: getPostDataInclude(),
   });

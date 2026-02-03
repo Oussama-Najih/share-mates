@@ -23,7 +23,7 @@ export default function PasswordInput() {
         type={showPassword ? "text" : "password"}
         fullWidth
         {...register("password", {
-          onChange: () => clearErrors("credentials"), // Clear error on change
+          onChange: () => clearErrors("credentials"),
         })}
         sx={{ ...sx, mt: 2 }}
         error={!!errors.password}

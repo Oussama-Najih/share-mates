@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Pencil, Check, X } from "lucide-react"; // Removed X icon (Cancel)
+import { Pencil, Check, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { useUpdatePostMutation } from "@/lib/mutations/post.mutations";
 import LoadingButton from "./LoadingButton";
@@ -22,7 +22,6 @@ const PostEditableInput = ({
 
   const { mutate, isPending } = useUpdatePostMutation(isTitle);
 
-  // Save the new value
   const handleSave = () => {
     if (
       tempValue.trim() === initialValue ||
@@ -39,7 +38,7 @@ const PostEditableInput = ({
           setLastSavedValue(tempValue);
           setIsEditing(false);
         },
-      }
+      },
     );
   };
 
@@ -56,7 +55,7 @@ const PostEditableInput = ({
             value={tempValue}
             onChange={(e) => setTempValue(e.target.value)}
             className="py-1 px-2 border rounded-md"
-            disabled={isPending} // Prevent changes while loading
+            disabled={isPending}
           />
           <LoadingButton
             loading={isPending}
@@ -66,7 +65,7 @@ const PostEditableInput = ({
           >
             <Check className="cursor-pointer text-green-500" />
           </LoadingButton>
-          {!isPending && ( // Hide cancel button while loading
+          {!isPending && (
             <Button onClick={handleCancel} variant="secondary">
               <X className="cursor-pointer text-red-500" />
             </Button>

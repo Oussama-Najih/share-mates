@@ -9,7 +9,7 @@ export default function ReactQueryProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [client] = useState(new QueryClient()); //Use a single instance of QueryClient across renders.
+  const [client] = useState(new QueryClient());
 
   return (
     <QueryClientProvider client={client}>

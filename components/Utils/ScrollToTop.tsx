@@ -32,10 +32,8 @@ export default function ScrollButton({
       setIsAtTop(scrollY === 0);
       setIsAtBottom(scrollY + windowHeight >= fullHeight - 10);
 
-      // Show buttons while scrolling
       setIsScrolling(true);
 
-      // Hide buttons after 1.5 seconds of inactivity
       clearTimeout(scrollTimeout);
       scrollTimeout = setTimeout(() => {
         setIsScrolling(false);
@@ -69,7 +67,7 @@ export default function ScrollButton({
           "bottom-5 right-5": position === "bottom-right",
           "top-1/2 left-5 -translate-y-1/2": position === "center-left",
           "top-1/2 right-5 -translate-y-1/2": position === "center-right",
-        }
+        },
       )}
     >
       {!isAtTop && (

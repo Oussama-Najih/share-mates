@@ -15,15 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 import kyInstance from "@/lib/ky";
 import { NotificationCountInfo } from "@/index/prisma/types";
 
-const sideBarOptions = [
-  "Accueil",
-  "Matières",
-  "Notifications",
-  // "Controles",
-  // "Examens",
-  // "TDs",
-  // "TPs",
-];
+const sideBarOptions = ["Accueil", "Matières", "Notifications"];
 
 export default function MainSideBar({
   unreadNotificationCount,
@@ -61,7 +53,7 @@ export default function MainSideBar({
           {sideBarOptions.map((option) =>
             !(option === "Notifications") ? (
               <Button
-                key={option} // <-- Added key here
+                key={option}
                 variant="outline"
                 asChild
                 className="bg-primary py-3 rounded-md flex justify-center items-center "
@@ -71,8 +63,8 @@ export default function MainSideBar({
                     option === "Accueil"
                       ? ""
                       : option === "Matières"
-                      ? "matieres"
-                      : lowerCaseFirstLetter(option)
+                        ? "matieres"
+                        : lowerCaseFirstLetter(option)
                   }`}
                   className="text-primary-foreground"
                 >
@@ -81,7 +73,7 @@ export default function MainSideBar({
               </Button>
             ) : (
               <Button
-                key={option} // <-- Added key here
+                key={option}
                 variant="outline"
                 asChild
                 className="bg-primary group py-3 rounded-md flex justify-center items-center"
@@ -98,10 +90,10 @@ export default function MainSideBar({
                   </div>
                 </Link>
               </Button>
-            )
+            ),
           )}
           {/* <Button
-            key="profil" // <-- Added key here
+            key="profil" 
             variant="outline"
             asChild
             className="flex bg-primary group py-3 rounded-md sm:hidden justify-center items-center"

@@ -10,6 +10,7 @@ import { auth } from "@/auth";
 import UserAvatar from "@/components/user/UserAvatar";
 import PostEditableInput from "@/components/form/PostEditInput";
 import ScrollToComment from "./ScrollToComment";
+import AuthorName from "./AuthorName";
 
 interface PageProps {
   params: Promise<{ postId: string }>;
@@ -59,12 +60,10 @@ export default async function Page({ params }: PageProps) {
   const post = await getPost(postId, user.id);
 
   return (
-    <main className="flex w-[100vw] flex-col items-center  max-w-xl py-2 px-1 mx-auto min-w-0 gap-5">
+    <main className="flex w-full lg:max-w-5xl flex-col items-center py-2 px-1 gap-5">
       <ScrollToComment />
       <section className="flex w-full justify-center items-center gap-14 border-b-2">
-        <h1 className="font-roboto text-primary mb-5 text-xl md:text-3xl text-center">
-          @{post.author.name}
-        </h1>
+        <AuthorName postAuthorId={post.author.id} name={post.author.name} />
         <UserAvatar
           userId={post.author.id}
           avatarUrl={post.author.image}

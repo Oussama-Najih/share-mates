@@ -28,40 +28,6 @@ export function useUpdateAvatarMutation(userId: string) {
     },
     onSuccess: async (newAvatarUrl) => {
       try {
-        const queryFilter: QueryFilters<
-          InfiniteData<PostsPage, string | null>
-        > = {
-          queryKey: ["matieres"],
-        };
-
-        await queryClient.cancelQueries(queryFilter);
-
-        queryClient.setQueriesData<InfiniteData<PostsPage, string | null>>(
-          queryFilter,
-          (oldData) => {
-            if (!oldData) return oldData;
-
-            return {
-              pageParams: oldData.pageParams,
-              pages: oldData.pages.map((page) => ({
-                nextCursor: page.nextCursor,
-                posts: page.posts.map((post) => {
-                  if (post.author.id === userId) {
-                    return {
-                      ...post,
-                      author: {
-                        ...post.author,
-                        image: newAvatarUrl || post.author.image,
-                      },
-                    };
-                  }
-                  return post;
-                }),
-              })),
-            };
-          },
-        );
-
         queryClient.invalidateQueries({
           queryKey: [`user-avatar-${userId}`],
         });
@@ -103,7 +69,7 @@ export function useUpdateProfileMutation(
             type: "manual",
             message:
               "Ce nom d'utilisateur est déjà pris. Veuillez en choisir un autre.",
-          }); // Show error in form
+          });
           return;
         }
 
@@ -111,9 +77,6 @@ export function useUpdateProfileMutation(
           InfiniteData<PostsPage, string | null>
         > = {
           queryKey: ["matieres"],
-          // predicate(query) {
-          //   return query.queryKey.includes("matieres");
-          // },
         };
 
         await queryClient.cancelQueries(queryFilter);
@@ -143,7 +106,6 @@ export function useUpdateProfileMutation(
           },
         );
 
-        // Invalidate the user posts query
         await queryClient.invalidateQueries({
           queryKey: ["matieres", "user-posts"],
         });

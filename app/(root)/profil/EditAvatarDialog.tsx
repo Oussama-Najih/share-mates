@@ -36,9 +36,8 @@ export default function EditAvatarDialog({
 
   const mutation = useUpdateAvatarMutation(userId);
   const [croppedAvatar, setCroppedAvatar] = useState<Blob | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>(""); // Initialize as empty string
+  const [previewUrl, setPreviewUrl] = useState<string>("");
 
-  // Reset state when dialog closes
   useEffect(() => {
     if (!open) {
       setPreviewUrl("");
@@ -46,7 +45,6 @@ export default function EditAvatarDialog({
     }
   }, [open]);
 
-  // Generate preview URL for cropped image
   useEffect(() => {
     if (croppedAvatar) {
       const objectUrl = URL.createObjectURL(croppedAvatar);
@@ -54,7 +52,7 @@ export default function EditAvatarDialog({
 
       return () => URL.revokeObjectURL(objectUrl);
     } else {
-      setPreviewUrl(""); // Set to empty string if no cropped avatar
+      setPreviewUrl("");
     }
   }, [croppedAvatar]);
 
@@ -104,7 +102,7 @@ export default function EditAvatarDialog({
 }
 
 interface AvatarInputProps {
-  src: string | StaticImageData; // Ensure src is never null
+  src: string | StaticImageData;
   onImageCropped: (blob: Blob | null) => void;
 }
 

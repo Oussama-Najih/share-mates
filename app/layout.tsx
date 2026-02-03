@@ -18,18 +18,16 @@ export const metadata: Metadata = {
   metadataBase: new URL(SERVER_URL),
 };
 
-// Load Poppins font
 const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"], // Add the weights you need
+  weight: ["400", "500", "600", "700"],
 });
 
-// Load Poppins font
 const roboto = Roboto({
   variable: "--font-roboto",
   subsets: ["latin"],
-  weight: ["400", "500", "700"], // Add the weights you need
+  weight: ["400", "500", "700"],
 });
 
 export default function RootLayout({
@@ -37,7 +35,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${poppins.variable} ${roboto.variable} antialiased`}>
+      <body
+        className={`flex justify-center ${poppins.variable} ${roboto.variable} antialiased`}
+      >
         <NextSSRPlugin routerConfig={extractRouterConfig(fileRouter)} />
         <ReactQueryProvider>
           <ThemeProvider

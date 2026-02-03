@@ -34,16 +34,13 @@ export function useSubmitPostMutation() {
           predicate(query) {
             const qk = query.queryKey;
 
-            // Ensure `matiere`, `categorie`, `option`, and `mediaType` exist before filtering
             const includesMatiere = matiere && qk.includes(matiere);
             const includesCategorie = categorie && qk.includes(categorie);
             const includesOption = option && qk.includes(option);
             const includesMediaType = mediaType && qk.includes(mediaType);
 
-            // Base case: query with only "matieres"
             if (qk.length === 1) return true;
 
-            // Cases with one filter
             if (
               (includesMatiere ||
                 includesCategorie ||
@@ -54,7 +51,6 @@ export function useSubmitPostMutation() {
               return true;
             }
 
-            // Cases with two filters
             if (
               ((includesMatiere && includesCategorie) ||
                 (includesMatiere && includesOption) ||
@@ -67,7 +63,6 @@ export function useSubmitPostMutation() {
               return true;
             }
 
-            // Cases with three filters
             if (
               ((includesMatiere && includesCategorie && includesOption) ||
                 (includesMatiere && includesCategorie && includesMediaType) ||
@@ -78,7 +73,6 @@ export function useSubmitPostMutation() {
               return true;
             }
 
-            // Case where all filters are included
             if (
               includesMatiere &&
               includesCategorie &&
@@ -176,8 +170,6 @@ export function useDeletePostMutation() {
           };
         },
       );
-
-      //No need for invalidateQueries because we can't delete a post if the feed is empty
 
       toast.success("Post supprimé avec succès");
 

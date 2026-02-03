@@ -18,16 +18,14 @@ export default function SubjectsDrawer() {
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
 
-  // State to hold the selected subject
   const [selectedSubject, setSelectedSubject] = useState("Toutes_les_matieres");
   const selectedIcon =
     subjectsWithIcons.find((s) => s.name === selectedSubject)?.icon || School;
 
   useEffect(() => {
-    // Sync the selectedSubject state with the current searchParam
     const subject = searchParams.get("matiere") || "Toutes_les_matieres";
     setSelectedSubject(subject);
-  }, [searchParams]); // Re-run effect when searchParams change
+  }, [searchParams]);
 
   const handleSubjectClick = (subject: string) => {
     setSelectedSubject(subject);

@@ -32,25 +32,17 @@ export default function AnnouncementImageUploader({
       return;
     }
     startUpload(files);
-
-    // Automatically set the title for PDFs if the title is still empty
-    // if (files.length > 0 && title.trim() === "") {
-    //   const fileName = files[0].name.replace(/\.[^/.]+$/, ""); // Remove file extension
-    //   setTitle(fileName);
-    // }
   }
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: handleFileSelection,
   });
 
-  // Don't want to trigger file input onClick
   const { onClick, ...rootProps } = getRootProps();
 
-  // Set mediaId when attachments change
   useEffect(() => {
     if (attachments.length > 0) {
-      setMediaId(attachments[0].mediaId!); // Assuming `id` exists in attachment
+      setMediaId(attachments[0].mediaId!);
     }
   }, [attachments, setMediaId]);
 

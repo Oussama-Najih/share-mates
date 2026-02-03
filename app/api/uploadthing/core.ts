@@ -7,14 +7,12 @@ import { UploadThingError, UTApi } from "uploadthing/server";
 const f = createUploadthing();
 const utApi = new UTApi();
 
-// Middleware to check authentication
 const authMiddleware = async () => {
   const user = await getServerUser();
   if (!user) throw new UploadThingError("Unauthorized");
   return { user };
 };
 
-// Handler for attachments (PDF & IMAGE)
 const handleAttachmentUpload =
   (type: "PDF" | "IMAGE") =>
   async ({ file }: { file: { ufsUrl: string; name: string } }) => {

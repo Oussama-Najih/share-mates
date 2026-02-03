@@ -48,7 +48,7 @@ model Post {
   createdAt     DateTime       @default(now())
   author        User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId      String         @db.Uuid
-  attachment    Media[] // Removed the `@relation` field-specific arguments
+  attachment    Media[]
   correction    Boolean        @default(false)
   comments      Comment[]
   notifications Notification[]
@@ -73,8 +73,8 @@ model Comment {
 }
 
 model LikeC {
-  userId    String  @db.Uuid
-  //when we delete a user, the likes are deleted
+  userId String @db.Uuid
+
   user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   commentId String  @db.Uuid
   comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
@@ -84,7 +84,7 @@ model LikeC {
 
 model LikeP {
   userId String @db.Uuid
-  //when we delete a user, the likes are deleted
+
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   postId String @db.Uuid
   post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)

@@ -2,12 +2,7 @@ import { z } from "zod";
 
 const requiredString = z.string().trim().min(1, "Required");
 
-// Schema for signing users in
 export const signInFormSchema = z.object({
-  // .regex(/^[A-Za-z]+ [A-Za-z]+$/, {
-  //   message:
-  //     "Full name must contain exactly two words, separated by a single space.",
-  // })
   name: z.string(),
   password: z.string().min(6, "Password must be at least 6 characters long."),
   credentials: z.string().optional(),

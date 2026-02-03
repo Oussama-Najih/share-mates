@@ -13,8 +13,8 @@ import { prisma } from "@/db/prisma";
 import { getUserDataSelect } from "@/index/prisma/types";
 import { compare, hashSync } from "bcrypt-ts-edge";
 import { formatError } from "../utils";
+import { revalidatePath } from "next/cache";
 
-/// Sign in the user with credentials
 export async function signInWithCredentials(formData: signInFormType) {
   try {
     await signIn("credentials", formData);
@@ -101,14 +101,12 @@ export async function changePassword(
 
     const isMatch = await compare(currentPassword, user.password);
 
-    // If password is correct, return user
     if (isMatch) {
       await prisma.user.update({
         where: { id: userId },
         data: { password: hashSync(newPassword) },
       });
 
-      // await signOut({ redirectTo: "/sign-in?callbackUrl=/profile" });
       return {
         success: true,
         message: "Nouveau mot de passe a été enregistré",
@@ -119,9 +117,6 @@ export async function changePassword(
       message: "Mot de passe incorrect",
     };
   } catch (error) {
-    // if (isRedirectError(error)) {
-    //   throw error;
-    // }
     return {
       success: false,
       message: formatError(error),

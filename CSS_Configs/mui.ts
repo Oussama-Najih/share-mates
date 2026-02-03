@@ -5,15 +5,15 @@ export const sx = {
   },
   "& .MuiInputBase-input": {
     color: "oklch(var(--input-text-color))",
-  }, // Input text color
+  },
   "& .MuiOutlinedInput-root": {
-    "& fieldset": { borderColor: "oklch(var(--border-default))" }, // Default outline color
+    "& fieldset": { borderColor: "oklch(var(--border-default))" },
     "&:hover fieldset": {
       borderColor: "oklch(var(--hover-field))",
-    }, // Hover border color
+    },
     "&.Mui-focused fieldset": {
       borderColor: "oklch(var(--border-focus))",
-    }, // Focused border color
+    },
   },
 };
 
@@ -22,13 +22,13 @@ export const sx2 = {
     color: "white",
   },
   "& .MuiOutlinedInput-root": {
-    "& fieldset": { borderColor: "lightblue" }, // Default outline color
+    "& fieldset": { borderColor: "lightblue" },
     "&:hover fieldset": {
       borderColor: "rgb(15, 211, 252)",
-    }, // Hover border color
+    },
     "&.Mui-focused fieldset": {
       borderColor: "rgb(14, 165, 233)",
-    }, // Focused border color
+    },
   },
 };
 
@@ -37,13 +37,13 @@ export const sx3 = {
     color: "black",
   },
   "& .MuiOutlinedInput-root": {
-    "& fieldset": { borderColor: "lightblue" }, // Default outline color
+    "& fieldset": { borderColor: "lightblue" },
     "&:hover fieldset": {
       borderColor: "rgb(15, 211, 252)",
-    }, // Hover border color
+    },
     "&.Mui-focused fieldset": {
       borderColor: "rgb(14, 165, 233)",
-    }, // Focused border color
+    },
   },
 };
 
@@ -52,12 +52,12 @@ export const sx4 = {
     color: "black",
   },
   "& .MuiOutlinedInput-root": {
-    "& fieldset": { borderColor: "lightblue" }, // Default outline color
+    "& fieldset": { borderColor: "lightblue" },
     "&:hover fieldset": {
       borderColor: "rgb(15, 211, 252)",
-    }, // Hover border color
+    },
     "&.Mui-focused fieldset": {
       borderColor: "rgb(14, 165, 233)",
-    }, // Focused border color
+    },
   },
 };

@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { MoonIcon, Settings, SunIcon, SunMoon } from "lucide-react";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
-import { LogOutIcon } from "lucide-react"; // Assuming you have this icon available
+import { LogOutIcon } from "lucide-react";
 import { signOutUser } from "@/lib/actions/user.actions";
 import Link from "next/link";
 

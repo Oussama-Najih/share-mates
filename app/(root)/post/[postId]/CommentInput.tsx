@@ -18,7 +18,6 @@ export default function CommentInput({
   const mutation = useSubmitCommentMutation({ postId, parentId });
 
   async function onSubmit(e: React.FormEvent) {
-    //prevent page refresh. React hook form prevents this
     e.preventDefault();
 
     if (!input) return;
@@ -30,15 +29,8 @@ export default function CommentInput({
         message: input,
       },
       {
-        //         Both onSuccess callbacks are executed:
-        // First, the mutation’s onSuccess (inside useMutation) runs
-        // It updates the query cache
-        // It shows a success toast
-        // Then, the additional onSuccess passed to mutate() runs
-        // onClose() is executed (which likely closes the dialog)
-        // ✅ React Query ensures both are executed in the correct order.
         onSuccess: () => setInput(""),
-      }
+      },
     );
   }
 

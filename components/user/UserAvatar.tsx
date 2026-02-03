@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { Pencil } from "lucide-react"; // Import the Pencil icon from lucide-react
+import { Pencil } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { QueryKey } from "@tanstack/react-query";
 import kyInstance from "@/lib/ky";
@@ -12,8 +12,8 @@ interface UserAvatarProps {
   avatarUrl?: string | null;
   size?: number;
   className?: string;
-  canEdit?: boolean; // New prop to conditionally show the pencil icon
-  isInComment?: boolean; // New prop to conditionally show the pencil icon
+  canEdit?: boolean;
+  isInComment?: boolean;
 }
 
 export default function UserAvatar({
@@ -24,8 +24,6 @@ export default function UserAvatar({
   canEdit = false,
   isInComment = false,
 }: UserAvatarProps) {
-  const queryClient = useQueryClient();
-
   const avatarQueryKey: QueryKey = [`user-avatar-${userId}`];
 
   const apiUrl = `/api/avatar/${userId}`;
@@ -36,6 +34,7 @@ export default function UserAvatar({
       kyInstance
         .get(apiUrl, userId ? { searchParams: { userId } } : undefined)
         .json<{ avatar: string | null }>(),
+    initialData: { avatar: avatarUrl || null },
   });
 
   return (

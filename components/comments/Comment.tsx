@@ -13,6 +13,7 @@ import { Edit, MessageCircle } from "lucide-react";
 import CommentInput from "@/app/(root)/post/[postId]/CommentInput";
 import CommentCount from "./CommentCount";
 import { json } from "stream/consumers";
+import { useParentIds } from "@/lib/hooks";
 
 type CommentProps = {
   comment: CommentData;
@@ -20,7 +21,10 @@ type CommentProps = {
 };
 
 export default function Comment({ comment, userId }: CommentProps) {
-  const [areChildrenHidden, setAreChildrenHidden] = useState(true);
+  const { parentIds } = useParentIds();
+  const [areChildrenHidden, setAreChildrenHidden] = useState(
+    !parentIds.includes(comment.id),
+  );
   const [showCommentInput, setShowCommentInput] = useState(false);
 
   const mutation = useDeleteCommentMutation();

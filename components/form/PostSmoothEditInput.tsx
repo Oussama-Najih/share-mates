@@ -28,14 +28,12 @@ const PostSmoothEditInput = ({
 
   const { mutate, isPending } = useUpdatePostMutation(isTitle);
 
-  // Focus input when entering edit mode
   useEffect(() => {
     if (isEditing) {
       inputRef.current?.focus();
     }
   }, [isEditing]);
 
-  // Save the new value
   const handleSave = () => {
     if (
       tempValue.trim() === initialValue ||
@@ -52,13 +50,13 @@ const PostSmoothEditInput = ({
           setLastSavedValue(tempValue);
           setIsEditing(false);
         },
-      }
+      },
     );
   };
 
   const handleCancel = () => {
     setIsEditing(false);
-    setTempValue(lastSavedValue); // Reset to the last saved value
+    setTempValue(lastSavedValue);
   };
 
   return (
@@ -70,7 +68,7 @@ const PostSmoothEditInput = ({
             value={tempValue}
             onChange={(e) => setTempValue(e.target.value)}
             className={cn("py-1 px-2 border rounded-md", className)}
-            disabled={!canEdit || isPending} // Prevent changes while loading
+            disabled={!canEdit || isPending}
           />
           <LoadingButton
             loading={isPending}
@@ -80,7 +78,7 @@ const PostSmoothEditInput = ({
           >
             <Check className="cursor-pointer text-green-500" />
           </LoadingButton>
-          {!isPending && ( // Hide cancel button while loading
+          {!isPending && (
             <Button onClick={handleCancel} variant="secondary">
               <X className="cursor-pointer text-red-500" />
             </Button>

@@ -28,7 +28,6 @@ export default async function page(props: {
     type_Media = "PDF_ET_IMAGE",
   } = await props.searchParams;
 
-  // Validate `matiere`, `categorie`, and `option`
   if (
     matiere !== "Toutes les matieres" &&
     !Object.values(Subject).includes(matiere as Subject)
@@ -55,7 +54,7 @@ export default async function page(props: {
   }
 
   return (
-    <div>
+    <div className="w-full">
       <Header isCoursPage={categorie == "COURS"} isSubjectsPage={true} />
       <h1
         className="font-poppins border-t-2 p-2 text-xl border-b-2 border-primary

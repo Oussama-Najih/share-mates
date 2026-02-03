@@ -1,5 +1,6 @@
 import kyInstance from "@/lib/ky";
 import { useQuery } from "@tanstack/react-query";
+import { create } from "zustand";
 
 export function usePostCommentsCount(postId: string, initialState: number) {
   const query = useQuery({
@@ -25,3 +26,13 @@ export function useCommentChildrenCount(
 
   return query;
 }
+
+type ParentIdsHook = {
+  parentIds: string[];
+  setParentIds: (ids: string[]) => void;
+};
+
+export const useParentIds = create<ParentIdsHook>((set) => ({
+  parentIds: [],
+  setParentIds: (ids: string[]) => set(() => ({ parentIds: ids })),
+}));

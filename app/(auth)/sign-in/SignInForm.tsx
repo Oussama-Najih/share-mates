@@ -37,7 +37,7 @@ export default function SignInForm() {
   };
 
   return (
-    <div className="h-[100vh] flex  items-center justify-center bg-[url('/images/knowledge.jpg')] bg-center bg-cover">
+    <div className="h-[100vh] w-screen flex  items-center justify-center bg-[url('/images/knowledge.jpg')] bg-center bg-cover">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-8 backdrop-blur-sm w-4/6 max-w-[400px] mx-auto flex flex-col border-[1px] bg-transparent p-6 rounded-lg shadow-md"
@@ -53,7 +53,7 @@ export default function SignInForm() {
             error={!!errors.name}
             helperText={errors.name?.message}
             {...register("name", {
-              onChange: () => clearErrors("credentials"), // Clear error on change
+              onChange: () => clearErrors("credentials"),
             })}
             autoComplete="off"
             sx={sx}

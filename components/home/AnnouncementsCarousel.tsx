@@ -23,17 +23,17 @@ const AnnouncementsCarousel = ({
 }) => {
   const autoplayPlugin = useRef(
     Autoplay({
-      delay: 6000, // Adjust delay if needed
+      delay: 6000,
       stopOnInteraction: false,
       stopOnMouseEnter: true,
-    })
+    }),
   );
 
   return (
     <Carousel
       className="w-full mb-12"
       opts={{ loop: true }}
-      plugins={[autoplayPlugin.current]} // Use the ref instance
+      plugins={[autoplayPlugin.current]}
     >
       <div className="flex mt-8 text-primary mb-5 justify-center items-center gap-5">
         <Add />

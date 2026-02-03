@@ -24,15 +24,14 @@ export async function GET(req: NextRequest) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Validate and construct filters
     const filters: Prisma.PostWhereInput = {
       ...(matiere ? { subject: matiere as Subject } : {}),
       ...(categorie ? { category: categorie as Categorie } : {}),
-      ...(option ? { correction: option === "CORRECTIONS" } : {}), // Corrected filter for 'option'
+      ...(option ? { correction: option === "CORRECTIONS" } : {}),
       ...(mediaType
         ? {
             attachment: {
-              some: { type: mediaType as MediaType }, // Filter mediaType for attached media
+              some: { type: mediaType as MediaType },
             },
           }
         : {}),

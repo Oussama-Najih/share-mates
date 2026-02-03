@@ -2,31 +2,51 @@
 
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { useParentIds } from "@/lib/hooks";
 
 export default function ScrollToComment() {
+  const { setParentIds } = useParentIds();
   const searchParams = useSearchParams();
   const commentId = searchParams.get("commentId");
 
-  useEffect(() => {
-    if (commentId) {
-      const timeout = setTimeout(() => {
-        const element = document.getElementById(commentId);
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth", block: "center" });
+  async function fetchParentIds(commentId: string | null) {
+    if (!commentId) return [];
 
-          // Add highlight effect
-          element.classList.add("highlight-effect");
+    const ids: string[] = [];
 
-          // Remove highlight after 3 seconds
-          setTimeout(() => {
-            element.classList.remove("highlight-effect");
-          }, 3000);
-        }
-      }, 2500);
+    let currentId: string | null = commentId;
 
-      return () => clearTimeout(timeout);
+    while (currentId) {
+      ids.push(currentId);
+
+      const parentId: string = await fetch(
+        `/api/parentComment/${currentId}`,
+      ).then((res) => res.json());
+
+      currentId = parentId || null;
     }
-  }, [commentId]);
+
+    return ids.slice(1).reverse();
+  }
+
+  useEffect(() => {
+    if (!commentId) return;
+
+    fetchParentIds(commentId).then(async (ids) => {
+      setParentIds(ids);
+      console.log("Parent Ids:", ids);
+
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      const element = document.getElementById(commentId || "");
+      console.log("Scrolling to element:", element);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+
+        element.classList.add("highlight-effect");
+        setTimeout(() => element.classList.remove("highlight-effect"), 3000);
+      }
+    });
+  }, [commentId, setParentIds]);
 
   return null;
 }

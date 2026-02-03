@@ -15,13 +15,11 @@ export default function Search() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // State to hold the selected option
   const [selectedCategorie, setSelectedCategorie] = useState(
-    "Toutes_les_categories"
+    "Toutes_les_categories",
   );
 
   useEffect(() => {
-    // ✅ Ensure state updates correctly when URL changes
     const category = searchParams.get("categorie") || "Toutes_les_categories";
     setSelectedCategorie(category);
   }, [searchParams]);
@@ -38,7 +36,6 @@ export default function Search() {
       params.delete("categorie");
     }
 
-    // ✅ Update local state before routing (Prevents flicker)
     setSelectedCategorie(categorie);
     router.push(`/matieres?${params.toString()}`);
   };

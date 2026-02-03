@@ -11,7 +11,6 @@ interface NotificationProps {
 }
 
 export default function Notification({ notification }: NotificationProps) {
-  // Constructing URLs with search parameters
   const getNotificationUrl = () => {
     const url = new URL(
       `/post/${

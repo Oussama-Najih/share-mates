@@ -7,6 +7,7 @@ import { CommentsPage } from "@/index/prisma/types";
 import CommentInput from "../../app/(root)/post/[postId]/CommentInput";
 import { Button } from "@/components/ui/button";
 import Comment from "./Comment";
+import { useParentIds } from "@/lib/hooks";
 
 export default function Comments({
   postId,

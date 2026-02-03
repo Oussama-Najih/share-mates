@@ -3,13 +3,13 @@
 import { Button } from "@/components/ui/button";
 import { APP_NAME } from "@/lib/constants";
 import Image from "next/image";
-import { useRouter } from "next/navigation"; // Use Next.js router for navigation
+import { useRouter } from "next/navigation";
 
 const Warning = ({ h1, p }: { h1: string; p: string }) => {
   const router = useRouter();
 
-  const handleHomeClick = () => router.push("/"); // Navigate to the homepage
-  const handleBackClick = () => router.back(); // Navigate to the previous page
+  const handleHomeClick = () => router.push("/");
+  const handleBackClick = () => router.back();
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
@@ -27,7 +27,7 @@ const Warning = ({ h1, p }: { h1: string; p: string }) => {
           <Button
             variant="outline"
             className="mt-4 ml-2 w-36"
-            onClick={handleHomeClick} // Use router.push for home
+            onClick={handleHomeClick}
             aria-label="Go to homepage"
           >
             Page d'accueil
@@ -35,7 +35,7 @@ const Warning = ({ h1, p }: { h1: string; p: string }) => {
           <Button
             variant="outline"
             className="mt-4 ml-2"
-            onClick={handleBackClick} // Use router.back for previous page
+            onClick={handleBackClick}
             aria-label="Go back to previous page"
           >
             Page précèdente

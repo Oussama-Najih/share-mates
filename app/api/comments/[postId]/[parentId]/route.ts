@@ -40,10 +40,9 @@ export async function GET(
 
     return NextResponse.json(data);
   } catch (error) {
-    // Check if error is an object or handle it as a string
     const errorMessage =
       error instanceof Error ? error.message : "Internal server error";
-    console.error(errorMessage); // Log the error message for debugging
+    console.error(errorMessage);
 
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }

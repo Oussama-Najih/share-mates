@@ -15,14 +15,12 @@ export default function MediaTypeToggle() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // State to hold the selected media type
   const [selectedMediaType, setSelectedMediaType] = useState("Tous les posts");
 
   useEffect(() => {
-    // Sync the selectedMediaType state with the current searchParam
     const type = searchParams.get("type_Media") || "Tous les posts";
     setSelectedMediaType(type);
-  }, [searchParams]); // Re-run effect when searchParams change
+  }, [searchParams]);
 
   const options = [
     { icon: <FileText size={16} />, label: "PDF" },

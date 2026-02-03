@@ -55,7 +55,7 @@ export async function submitComment(data: {
             data: {
               issuerId: loggedInUser.id,
               recipientId,
-              commentId: null, // This will be updated after transaction
+              commentId: null,
               postId,
               type: parentId ? "REPLY" : "COMMENT",
             },
@@ -64,7 +64,6 @@ export async function submitComment(data: {
       : []),
   ]);
 
-  // Update the notification's commentId with the actual new comment ID
   if (newComment) {
     await prisma.notification.updateMany({
       where: {
@@ -102,15 +101,13 @@ export async function deleteComment(commentId: string) {
   };
 }
 
-// Recursive function to count all descendants of a comment
 async function countAllChildren(commentId: string): Promise<number> {
   const children = await prisma.comment.findMany({
     where: { parentId: commentId },
   });
 
-  let count = children.length; // Start by counting the immediate children
+  let count = children.length;
 
-  // Recursively count children of each child
   for (const child of children) {
     count += await countAllChildren(child.id);
   }
@@ -140,7 +137,7 @@ export async function updateComment({
   const updatedComment = await prisma.comment.update({
     where: { id },
     data: {
-      message: content, // Conditional key assignment
+      message: content,
     },
     include: getCommentDataInclude(),
   });

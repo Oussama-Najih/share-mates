@@ -3,22 +3,21 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 export interface Attachment {
-  file: File; //We get the file immediately
-  mediaId?: string; //Optional because we only get it after the upload is finished
+  file: File;
+  mediaId?: string;
   isUploading: boolean;
 }
 
 export const separator = "/^_/";
 
 export default function useMediaUpload(
-  mediaType: "attachment_image" | "attachment_pdf" | "attachment_single_image"
+  mediaType: "attachment_image" | "attachment_pdf" | "attachment_single_image",
 ) {
   const [attachments, setAttachments] = useState<Attachment[]>([]);
 
   const [uploadProgress, setUploadProgress] = useState<number>();
 
   const { startUpload, isUploading } = useUploadThing(mediaType, {
-    //When we get a mediaId back, we can identify the corresponding file
     onBeforeUploadBegin(files) {
       const renamedFiles = files.map((file) => {
         const fileName = file.name.split(".")[0];
@@ -28,7 +27,7 @@ export default function useMediaUpload(
           `${fileName}${separator}${crypto.randomUUID()}.${extension}`,
           {
             type: file.type,
-          }
+          },
         );
       });
 
@@ -37,25 +36,22 @@ export default function useMediaUpload(
         ...renamedFiles.map((file) => ({ file, isUploading: true })),
       ]);
       return renamedFiles;
-      //The return renamedFiles; inside onBeforeUploadBegin(files) is received by the useUploadThing hook.
-      // Specifically, useUploadThing internally uses this return value as the new list of files to upload. Instead of uploading the original files array, it uploads renamedFiles (which contains the same file data but with new names).
     },
     onUploadProgress: setUploadProgress,
-    // The `res` parameter in `onClientUploadComplete(res)` comes from the `startUpload` function provided by `useUploadThing`.
+
     onClientUploadComplete(res) {
       setAttachments((prev) =>
         prev.map((a) => {
           const uploadResult = res.find((r) => r.name === a.file.name);
 
-          if (!uploadResult) return a; // This prevents updates if no matching upload result is found
+          if (!uploadResult) return a;
 
-          // Ensure mediaId exists before trying to update
           return {
             ...a,
-            mediaId: uploadResult.serverData?.mediaId, // Check that mediaId is defined
+            mediaId: uploadResult.serverData?.mediaId,
             isUploading: false,
           };
-        })
+        }),
       );
     },
     onUploadError(e) {
@@ -71,7 +67,7 @@ export default function useMediaUpload(
 
     if (attachments.length && files.length > 10) {
       toast.error(
-        "Vous ne pouvez télécharger qu'un seul fichier joint par publication."
+        "Vous ne pouvez télécharger qu'un seul fichier joint par publication.",
       );
       return;
     }

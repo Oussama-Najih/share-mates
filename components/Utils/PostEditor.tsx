@@ -49,7 +49,6 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
     onDrop: handleFileSelection,
   });
 
-  //Don't want to trigger file input onClick
   const { onClick, ...rootProps } = getRootProps();
 
   const canSubmit = title.length >= 2 && !!attachments.length;
@@ -64,7 +63,7 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
         placeholder: "Ajoutez une description",
       }),
     ],
-    immediatelyRender: false, // ✅ Fix hydration mismatch
+    immediatelyRender: false,
   });
 
   const input =
@@ -75,7 +74,7 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
   function onSubmit() {
     if (!attachments || !attachments.length) {
       console.error("No attachments provided");
-      return; // Handle the error or return early
+      return;
     }
 
     const payload = {
@@ -112,12 +111,6 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
     }
 
     startUpload(files);
-
-    // Automatically set the title for PDFs if the title is still empty
-    // if (files.length > 0 && title.trim() === "") {
-    //   const fileName = files[0].name.replace(/\.[^/.]+$/, ""); // Remove file extension
-    //   setTitle(fileName);
-    // }
   }
 
   return (
@@ -127,7 +120,7 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
         <Input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-8/12 py-6 pl-3" // Ensure this matches the EditorContent width
+          className="w-8/12 py-6 pl-3"
           placeholder="Entrez un titre"
         />
       </div>
@@ -158,7 +151,7 @@ export default function PostEditor({ isPdf = false }: { isPdf?: boolean }) {
             <EditorContent
               editor={editor}
               className={cn(
-                "border-2 overflow-y-auto rounded-2xl bg-background px-5 py-3 w-full", // Add w-full to ensure full width
+                "border-2 overflow-y-auto rounded-2xl bg-background px-5 py-3 w-full",
                 isDragActive && "outline-dashed",
               )}
               onPaste={onPaste}
@@ -290,7 +283,7 @@ function AttachmentPreview({
   attachment: { file, mediaId, isUploading },
   onRemoveClick,
 }: AttachmentPreviewProps) {
-  const src = URL.createObjectURL(file); // Generate a URL for the file
+  const src = URL.createObjectURL(file);
 
   return (
     <div

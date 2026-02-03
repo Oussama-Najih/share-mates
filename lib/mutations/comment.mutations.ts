@@ -55,13 +55,13 @@ export function useSubmitCommentMutation({
 
       queryClient.setQueryData(
         ["commentsCount", `${newComment.postId}`],
-        (oldData: number | undefined) => (oldData ?? 0) + 1, // Fix: Increase count instead of decreasing
+        (oldData: number | undefined) => (oldData ?? 0) + 1,
       );
 
       parentId &&
         queryClient.setQueryData(
           ["commentsChildrenCount", `${parentId}`],
-          (oldData: number | undefined) => (oldData ?? 0) + 1, // Fix: Increase count instead of decreasing
+          (oldData: number | undefined) => (oldData ?? 0) + 1,
         );
 
       toast.success("Commentaire créé");
@@ -105,7 +105,7 @@ export function useDeleteCommentMutation() {
       queryClient.setQueryData(
         ["commentsCount", `${deletedComment.postId}`],
         (oldData: number | undefined) =>
-          Math.max((oldData ?? 0) - descendantsCount - 1, 0), // Fix: Ensure count doesn't go negative
+          Math.max((oldData ?? 0) - descendantsCount - 1, 0),
       );
 
       toast.success("Commentaire supprimé avec succès");
