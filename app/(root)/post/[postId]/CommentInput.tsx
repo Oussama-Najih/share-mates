@@ -9,9 +9,11 @@ import { useState } from "react";
 export default function CommentInput({
   postId,
   parentId,
+  setAreChildrenHidden,
 }: {
   postId: string;
   parentId: string | null;
+  setAreChildrenHidden: (hidden: boolean) => void;
 }) {
   const [input, setInput] = useState("");
 
@@ -29,7 +31,10 @@ export default function CommentInput({
         message: input,
       },
       {
-        onSuccess: () => setInput(""),
+        onSuccess: () => {
+          setInput("");
+          setAreChildrenHidden(false);
+        },
       },
     );
   }

@@ -82,7 +82,11 @@ export default function Comment({ comment, userId }: CommentProps) {
         </div>
         {showCommentInput ? (
           <div className="mt-5">
-            <CommentInput postId={comment.postId} parentId={comment.id} />
+            <CommentInput
+              setAreChildrenHidden={setAreChildrenHidden}
+              postId={comment.postId}
+              parentId={comment.id}
+            />
           </div>
         ) : null}
         {/* Child Comments */}
