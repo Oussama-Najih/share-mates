@@ -27,8 +27,8 @@ export const SERVER_URL =
   process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
 
 export const signInDefaultValues = {
-  name: "El Messiaf Hamza",
-  password: "Yt3$JqN@78!",
+  name: "Oussama Najih",
+  password: "Gv8$kLp@12!",
 };
 
 export const matieresWithIcons = [
