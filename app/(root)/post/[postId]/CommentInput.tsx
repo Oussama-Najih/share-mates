@@ -13,7 +13,7 @@ export default function CommentInput({
 }: {
   postId: string;
   parentId: string | null;
-  setAreChildrenHidden: (hidden: boolean) => void;
+  setAreChildrenHidden?: (hidden: boolean) => void;
 }) {
   const [input, setInput] = useState("");
 
@@ -33,7 +33,7 @@ export default function CommentInput({
       {
         onSuccess: () => {
           setInput("");
-          setAreChildrenHidden(false);
+          setAreChildrenHidden?.(false);
         },
       },
     );
