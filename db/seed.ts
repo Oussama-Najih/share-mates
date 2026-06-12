@@ -25,7 +25,7 @@
 // main();
 
 import { PrismaClient } from "@prisma/client";
-import sampleData from "../sampleData"; // Remove duplicate import
+import sampleData from "@/sampleData";
 
 async function main() {
   const prisma = new PrismaClient();
